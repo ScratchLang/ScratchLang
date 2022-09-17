@@ -9,11 +9,29 @@ echo "7. Enable Developer Mode."
 echo "8. Exit."
 read input
 if [ $input == 1 ]; then
+  dir=$(pwd)
   echo
   echo "Name your project."
   read name
   echo
   echo "You named your project $name. If you want to rename it, use the File Explorer."
+  cd $(dirname $(pwd))
+  if ! [ -d projects ]; then
+  mkdir projects
+  fi
+  cd projects
+  mkdir $name
+  cd $name
+  echo >> $name.ss
+  mkdir assets
+  cd assets
+  mkdir Sprite1
+  cd $(dirname $(pwd))
+  cd $(dirname $(pwd))
+  cd $(dirname $(pwd))
+  cp resources/costume1.svg projects/$name/assets/Sprite1
+  cp resources/costume2.svg projects/$name/assets/Sprite1
+  cd mainscripts
 elif [ $input == 2 ]; then
   if ! [ -f compile.exe ]; then
     gcc -o compile.exe 2.c
