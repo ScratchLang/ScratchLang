@@ -27,7 +27,7 @@ elif [ $input == 3 ]; then
   fi
   ./decompile.exe
 elif [ $input == 4 ]; then
-  pacman -S  #get gcc install command when internet is restored
+  ppacman -S mingw-w64-x86_64-gcc
   ./start.sh
 elif [ $input == 5 ]; then
   dir=$(pwd)
