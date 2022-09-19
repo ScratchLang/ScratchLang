@@ -129,19 +129,21 @@ elif [ h$input == h9 ]; then
   if [ -f .var/zenity ]; then
     rm .var/zenity
   fi
-  echo "Get rid of the ScratchScript alias? [Y/N]"
-  read -sn 1 yn
-  if [ h$yn == hY ] || [ h$yn == hy ]; then
-    chmod 755 ./rmaliasiloop2.sh
-    ./rmaliasiloop2.sh
-  elif [ h$yn == hN ] || [ h$yn == hn ]; then
-    if [ -f .var/.bashrc ]; then
-      rm .var/.bashrc
+  if [ -f .var/.bashrc ]; then
+    echo "Get rid of the ScratchScript alias? [Y/N]"
+    read -sn 1 yn
+    if [ h$yn == hY ] || [ h$yn == hy ]; then
+      chmod 755 ./rmaliasiloop2.sh
+      ./rmaliasiloop2.sh
+    elif [ h$yn == hN ] || [ h$yn == hn ]; then
+      if [ -f .var/.bashrc ]; then
+        rm .var/.bashrc
+      fi
+    else
+      echo "Error: $yn is not an input."
     fi
-  else
-    echo "Error: $yn is not an input."
   fi
-elif [ h$input == hA ] || [ h$input == ha]; then
+elif [ h$input == ha ] || [ h$input == hA ]; then
   if [ -f .var/alias ]; then
     rm .var/alias
   fi
@@ -162,18 +164,20 @@ elif [ h$input == hA ] || [ h$input == ha]; then
     rm -rf projects
   fi
   cd mainscripts
-  echo "Get rid of the ScratchScript alias? [Y/N]"
-  read -sn 1 yn
-  if [ h$yn == hY ] || [ h$yn == hy ]; then
-    chmod 755 ./rmaliasiloop2.sh
-    ./rmaliasiloop2.sh
-  elif [ h$yn == hN ] || [ h$yn == hn ]; then
-    if [ -f .var/.bashrc ]; then
-      rm .var/.bashrc
+  if [ -f .var/.bashrc ]; then
+    echo "Get rid of the ScratchScript alias? [Y/N]"
+    read -sn 1 yn
+    if [ h$yn == hY ] || [ h$yn == hy ]; then
+      chmod 755 ./rmaliasiloop2.sh
+      ./rmaliasiloop2.sh
+    elif [ h$yn == hN ] || [ h$yn == hn ]; then
+      if [ -f .var/.bashrc ]; then
+        rm .var/.bashrc
+      fi
+    else
+      echo "Error: $yn is not an input."
+      echo "If you want to remove the alias now, get rid of the command in the .bashrc file."
     fi
-  else
-    echo "Error: $yn is not an input."
-    echo "If you want to remove the alias now, get rid of the command in the .bashrc file."
   fi
 elif [ h$input == hB ] || [ h$input == hb ]; then
   clear
