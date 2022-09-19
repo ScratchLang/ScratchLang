@@ -24,26 +24,57 @@ if [ $input == 1 ]; then
   cd projects
   mkdir $name
   cd $name
-  echo >> $name.ss
+  echo >> .maindir "Please don't remove this file."
+  mkdir Stage
+  cd Stage
   mkdir assets
-  cd assets
+  cd $(dirname $(pwd))
+  cd $(dirname $(pwd))
+  cd $(dirname $(pwd))
+  cp resources/cd21514d0531fdffb22204e0ec5ed84a.svg projects/$name/Stage/assets
+  cd projects/$name/Stage
+  echo >> $name.ss \#There should be no empty lines.
+  echo >> $name.ss ss
+  cd $(dirname $(pwd))
   mkdir Sprite1
+  cd Sprite1
+  echo >> $name.ss \#There should be no empty lines.
+  echo >> $name.ss ss
+  mkdir assets
   cd $(dirname $(pwd))
   cd $(dirname $(pwd))
   cd $(dirname $(pwd))
-  cp resources/costume1.svg projects/$name/assets/Sprite1
-  cp resources/costume2.svg projects/$name/assets/Sprite1
+  cp resources/costume1.svg projects/$name/Sprite1/assets
+  cp resources/costume2.svg projects/$name/Sprite1/assets
   cd mainscripts
 elif [ $input == 2 ]; then
-  if ! [ -f compile.exe ]; then
-    gcc -o compile.exe 2.c
+  echo "Exe or Shell?"
+  read cs
+  if [ $cs == Exe ] || [ $cs == exe ]; then
+    if ! [ -f compile.exe ]; then
+      gcc -o compile.exe 2.c
+    fi
+    ./compile.exe
+  elif [ $cs == Shell ] || [ $cs == shell ]; then
+    chmod 755 compiler.sh
+    ./compiler.sh
+  else
+    echo "Error: $cs not an input."
   fi
-  ./compile.exe
 elif [ $input == 3 ]; then
-  if ! [ -f decompile.exe ]; then
-    gcc -o decompile.exe 3.c
+  echo "Exe or Shell?"
+  read cs
+  if [ $cs == Exe ] || [ $cs == exe ]; then
+    if ! [ -f decompiler.exe ]; then
+      gcc -o decompiler.exe 3.c
+    fi
+    ./decompile.exe
+  elif [ $cs == Shell ] || [ $cs == shell ]; then
+    chmod 755 decompiler.sh
+    ./decompiler.sh
+  else
+    echo "Error: $cs not an input."
   fi
-  ./decompile.exe
 elif [ $input == 4 ]; then
   ppacman -S mingw-w64-x86_64-gcc
   ./start.sh
