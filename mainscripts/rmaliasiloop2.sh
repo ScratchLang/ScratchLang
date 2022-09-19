@@ -6,7 +6,6 @@ read -sn 1 input2
 echo
 if [ h$input2 == hY ] || [ h$input2 == hy ]; then
   rm ~/.bashrc
-  rm .var/alias
   cp .var/.bashrc ~/
   rm .var/.bashrc
   echo "Please restart your terminal."

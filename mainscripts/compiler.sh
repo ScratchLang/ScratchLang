@@ -1,7 +1,17 @@
-echo "Do you have the command zenity? [Y/N]"
-read input3
 echo
-if [ $input3 == Y ] || [ $input3 == y ]; then
+echo "Remember, both the compiler and decompiler don't work yet."
+echo
+if ! [ -f .var/zenity ]; then
+  echo "Do you have the command zenity? [Y/N]"
+  read -sn 1 input3
+else
+  input3=y
+fi
+echo
+if [ h$input3 == hY ] || [ h$input3 == hy ]; then
+  if ! [ -f .var/zenity ]; then
+    echo >> .var/zenity
+  fi
   echo "Select the project directory."
   echo
   sleep 2
@@ -26,10 +36,11 @@ if [ $input3 == Y ] || [ $input3 == y ]; then
       fi
     done
     echo >> project.json $json #creates the project.json
+    #pack into sb3 here
   else
     echo "Error: Not a project directory."
   fi
-elif [ $input3 == n ] || [ $input3 == N ]; then
+elif [ h$input3 == hn ] || [ h$input3 == hN ]; then
   echo "Install zenity for MSYS2, or this won't work."
 else
   echo "$input3 is not an input."

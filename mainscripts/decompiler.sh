@@ -1,12 +1,22 @@
-echo "Do you have the command zenity? [Y/N]"
-read input3
 echo
-if [ $input3 == Y ] || [ $input3 == y ]; then
-  echo "Select the .sb3 you want to decompile."
-  echo
+echo "Remember, both the compiler and decompiler don't work yet. The decompiler extracts the .sb3, but it can't make it into the ScratchScript format yet."
+echo
+if ! [ -f .var/zenity ]; then
+  echo "Do you have the command zenity? [Y/N]"
+  read -sn 1 input3
+else
+  input3=y
+fi
+echo
+if [ h$input3 == hY ] || [ h$input3 == hy ]; then
+  if ! [ -f .var/zenity ]; then
+    echo >> .var/zenity
+  fi
+  echo "Select the .sb3 you want to decompile. WARNING! THE NAME OF THE FILE CANNOT HAVE ANY SPACES OR IT WILL NOT UNZIP CORRECTLY!!!"
   sleep 2
   file=$(zenity -file-selection)
-  echo "Name of project?"
+  echo
+  echo "Name of project? Keep in mind that it cannot be empty or it will not be created properly."
   read name
   cd $(dirname $(pwd))
   if ! [ -d projects ]; then
@@ -27,7 +37,7 @@ if [ $input3 == Y ] || [ $input3 == y ]; then
     cd $(dirname $(pwd))
     cd mainscripts
   fi
-elif [ $input3 == n ] || [ $input3 == N ]; then
+elif [ h$input3 == hn ] || [ h$input3 == hN ]; then
   echo "Install zenity for MSYS2, or this won't work."
 else
   echo "$input3 is not an input."
