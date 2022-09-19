@@ -43,4 +43,5 @@ Write every block in the order they appear in the editor
 ## Future: supporting custom Scratch mods?
 Probably not.
 
-![SharedScreenshot](https://user-images.githubusercontent.com/78574005/191061757-c42d69b8-8fe2-4720-a51b-58a4927b8b2f.jpg)
+
+![SharedScreenshot](https://user-images.githubusercontent.com/78574005/191063317-b043afe7-804b-48e2-87bf-82b29c5abaaf.jpg)
