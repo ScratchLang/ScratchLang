@@ -11,6 +11,3 @@
  __________/    |  |   |_________   |      |         |  |   |   |  \   |   |   |   |_________    |   |   |   |
 /               |  |             \  |      |         |  |___|   |\  \  |   |   |             \   |   |   |   |
 \_______________/   \____________/  |______|         \_________/  \__\ |___|    \____________/   |___|   |___|
-
-
-Ok, fine you caught me. The logo was intended to be designed like this. But the logo it outputs is still pretty cool.

@@ -23,21 +23,19 @@ else
   logo13="\_______________/   \____________/  |______|         \_________/  \__\ |___|    \____________/   |___|   |___|"
 
   clear
-  echo $logo1
-  echo $logo2
-  echo $logo3
-  echo $logo4
-  echo $logo5
-  echo $logo6
-  echo $logo7
-  echo $logo8
-  echo $logo9
-  echo $logo10
-  echo $logo11
-  echo $logo12
-  echo $logo13
-  echo
-  echo "This cool logo was definitally made like this on purpose"
+  echo "$logo1"
+  echo "$logo2"
+  echo "$logo3"
+  echo "$logo4"
+  echo "$logo5"
+  echo "$logo6"
+  echo "$logo7"
+  echo "$logo8"
+  echo "$logo9"
+  echo "$logo10"
+  echo "$logo11"
+  echo "$logo12"
+  echo "$logo13"
   echo
   if [ h$1 == h ]; then
     if [ -d .var ]; then
