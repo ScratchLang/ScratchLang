@@ -1,3 +1,4 @@
+#!/bin/bash
 echo
 echo "WARNING: This will revert the .bashrc to before you created the ScratchScript alias."
 echo "That means any aliases you created after creating the ScratchScript alias will be erased."

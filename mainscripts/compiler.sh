@@ -1,3 +1,4 @@
+#!/bin/bash
 echo
 echo "Remember, both the compiler and decompiler don't work yet."
 echo
@@ -20,7 +21,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   if [ -f .maindir ]; then
     echo >> .dirs $(ls -1)
     json={\"targets\":[{\"isStage\":true,\"name\":\"Stage\",\"variables\": #Start of the json
-    for each ((i=1; i<=$(sed -n '$=' .dirs); i++)) #Starts compiling the json
+    for i in {1..$(sed -n '$=' .dirs)} #Starts compiling the json
     do
       if [ $i == 1 ]; then
         cd Stage

@@ -1,3 +1,4 @@
+#!/bin/bash
 echo
 if [ h$1 == h ]; then
   echo "1. Create a project."

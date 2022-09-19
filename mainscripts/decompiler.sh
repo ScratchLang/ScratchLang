@@ -1,3 +1,4 @@
+#!/bin/bash
 echo
 echo "Remember, both the compiler and decompiler don't work yet. The decompiler extracts the .sb3, but it can't make it into the ScratchScript format yet."
 echo
