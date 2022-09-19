@@ -100,7 +100,7 @@ elif [ h$input == h4 ]; then
     echo "Error: $cs not an input."
   fi
 elif [ h$input == h5 ]; then
-  ppacman -S mingw-w64-x86_64-gcc
+  pacman -S mingw-w64-x86_64-gcc
   ./start.sh
 elif [ h$input == h6 ]; then
   dir=$(pwd)
