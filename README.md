@@ -16,7 +16,7 @@ Maybe add a decompiler
 # How to use
 Clone the repo with
 ```
-git clone https://github.com/0K9090/ScratchScript
+git clone https://github.com/0K9090/ScratchScript.git
 cd ScratchScript/mainscripts
 ```
 
@@ -28,8 +28,12 @@ chmod 755 start.sh
 # Dependencies
 ## Windows
 You need `zenity` if you plan on using the .sh and `gcc` if you want to use the exe.
+https://github.com/ncruces/zenity/wiki/Zenity-for-WSL%2C-Cygwin%2C-MSYS2
 ## Linux
 `zenity`
+```
+sudo apt-get install -y zenity
+```
 
 Please write down any dependencies I missed.
 
