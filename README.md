@@ -1,4 +1,4 @@
-# ScratchScript
+# ScratchLang
 This is for people who want to use Scratch like other programming languages.
 
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -6,7 +6,7 @@ This is for people who want to use Scratch like other programming languages.
 # The Plan
 This is mainly made in Shell Script, but if you know languages like C and Python, then you can make some stuff in that so people have many options to choose from.
 
-We need to get the compiler working first, then we can add all the blocks. A ScratchScript file (.ss) is locaded in the resources folder. Just create a project, go into the sprite folder, then replace the text from the .ss in the sprite folder with the text from the .ss in the resources folder.
+We need to get the compiler working first, then we can add all the blocks. A ScratchLang file (.ss) is locaded in the resources folder. Just create a project, go into the sprite folder, then replace the text from the .ss in the sprite folder with the text from the .ss in the resources folder.
 
 The compiler should read the testcode.ss, write the project.json, and pack it and every asset into a .sb3, that can be played and edited in Scratch
 
@@ -20,8 +20,8 @@ Someone more experienced with c could probably program the comp and decomp scrip
 # How to use
 Clone the repo with
 ```
-git clone https://github.com/0K9090/ScratchScript.git
-cd ScratchScript/mainscripts
+git clone https://github.com/0K9090/ScratchLang.git
+cd ScratchLang/mainscripts
 ```
 
 Start the project with
@@ -31,7 +31,7 @@ chmod 755 start.sh
 ```
 If you create an alias, start the project wtih
 ```
-scratchscript
+scratchlang
 ```
 
 To code, edit the .ss(es) in you favorite glorified text editor like VSC or Atom.
@@ -49,8 +49,8 @@ sudo apt-get install -y zenity
 
 Please write down any dependencies I missed.
 
-# ScratchScript Language
-## ScratchScript blocks
+# ScratchLang Language
+## ScratchLang blocks
 \nscript (Tells the compiler that it's a new script. Or maybe we could get rid of this and just detect for hat blocks.)
 
 ## Vanilla Scratch Blocks
