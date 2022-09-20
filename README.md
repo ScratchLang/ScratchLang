@@ -14,7 +14,7 @@ Each sprite (including Stage) has a asset folder. The costumes and sound will go
 
 A project.json is also included in the resources folder to help understand and reverse engineer how it's made.
 
-The decompiler (shell) can now decompile variables and lists.
+The decompiler (shell) can now decompile variables, lists, and broadcasts.
 But the c decompiler, IDK why I even tried. I suck at c.
 Someone more experienced with c could probably program the comp and decomp scripts.
 # How to use
