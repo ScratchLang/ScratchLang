@@ -62,45 +62,45 @@ var=string (Define a variable)
 ### Vanilla Scratch Blocks Checklist
 Items that are striked out are already added.
 
-move () steps
-turn cw () deg
-turn ccw () deg
-go to ()
-go to x () y ()
-glide () secs to ()
-glide () secs to x () y ()
-point in direction ()
-point towards ()
-change x by ()
-set x to ()
-change y by ()
-set y to ()
-if on edge, bounce
-set rotation style ()
-(x position)
-(y position)
-(direction)
+*move () steps
+*turn cw () deg
+*turn ccw () deg
+*go to ()
+*go to x () y ()
+*glide () secs to ()
+*glide () secs to x () y ()
+*point in direction ()
+*point towards ()
+*change x by ()
+*set x to ()
+*change y by ()
+*set y to ()
+*if on edge, bounce
+*set rotation style ()
+*(x position)
+*(y position)
+*(direction)
 
-say () for () seconds
-say ()
-think () for () seconds
-think ()
-switch costume to ()
-next costume
-switch backdrop to ()
-next backdrop
-change size by ()
-set size to ()
-change () efect by ()
-set () effect to ()
-clear graphic effects
-show
-hide
-go to () layer
-go () () layers
-(costume ())
-(backdrop ())
-(size)
+*say () for () seconds
+*say ()
+*think () for () seconds
+*think ()
+*switch costume to ()
+*next costume
+*switch backdrop to ()
+*next backdrop
+*change size by ()
+*set size to ()
+*change () efect by ()
+*set () effect to ()
+*clear graphic effects
+*show
+*hide
+*go to () layer
+*go () () layers
+*(costume ())
+*(backdrop ())
+*(size)
 
 ## Future: supporting custom Scratch mods?
 Probably not.
