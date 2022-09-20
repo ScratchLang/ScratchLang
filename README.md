@@ -1,6 +1,8 @@
 # ScratchScript
 This is for people who want to use Scratch like other programming languages.
 
+[link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
+
 # The Plan
 This is mainly made in Shell Script, but if you know languages like C and Python, then you can make some stuff in that so people have many options to choose from.
 
