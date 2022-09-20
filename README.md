@@ -125,32 +125,48 @@ wait () seconds <br />
 repeat () { <br />
 
 } <br />
+
 forever { <br />
 
 } <br />
+
 if <> then { <br />
 
 } <br />
+
 if <> then { <br />
 
 } <br />
 else { <br />
 
 } <br />
+
 wait until <> <br />
 repeat until <> { <br />
 
 } <br />
+
 while <> { <br />
 
 } <br />
+
 for each () in () { <br />
 
 } <br />
+
 stop () <br />
 when i start as a clone <br />
 create clone of () <br />
 delete this clone <br />
+
+<touching ()> <br />
+<touching color (#hex)> <br />
+<color (#hex) is touching (#hex)> <br />
+(distance to ()) <br />
+ask () and wait <br />
+(answer) <br />
+<key () pressed?> <br />
+<mouse>
 
 ## Future: supporting custom Scratch mods?
 Probably not.
