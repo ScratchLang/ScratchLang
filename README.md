@@ -59,8 +59,7 @@ var=string (Define a variable) <br />
 **list=item1,item2,item3,etc (no spaces; for an empty list, just add a comma after the equal sign)** <br />
 {broadcast}=broadcastexample (The brackets tell the program that it is not defining a variable or a list.) <br />
 
-### Vanilla Scratch Blocks Checklist
-Items that are striked out are already added.
+### Blocks to Add
 
 move () steps <br />
 turn cw () deg <br />
@@ -166,7 +165,72 @@ delete this clone <br />
 ask () and wait <br />
 (answer) <br />
 <key () pressed?> <br />
-<mouse>
+<mouse down?> <br />
+(mouse x) <br />
+(mouse y) <br />
+set drag mode () <br />
+(loudness) <br />
+(timer) <br />
+reset timer <br />
+(() of ()) <br />
+(current ()) <br />
+(days since 2000) <br />
+(username) <br />
+
+(() + ()) <br />
+(() - ()) <br />
+(() * ()) <br />
+(() / ()) <br />
+(pick random () to ()) <br />
+<() > ()> <br />
+<() < ()> <br />
+<() = ()> <br />
+<<> and <>> <br />
+<<> or <>> <br />
+<not <>> <br />
+(join ()()) <br />
+(letter () of ()) <br />
+(length of ()) <br />
+<() contains ()?> <br />
+(() mod ()) <br />
+(round ()) <br />
+(op () of ()) #abs of block <br />
+
+(my variable) <br />
+change () by () <br />
+show variable () <br />
+hide variable () <br />
+(my list) <br />
+add () to () <br />
+delete () of () <br />
+delete all of () <br />
+insert () at () of () <br />
+replace item () of () with () <br />
+(item () of ()) <br />
+(item # of () in ()) <br />
+(length of ())
+<li () contains ()?> #list contains block
+show list () <br />
+hide list () <br />
+
+def example { <br />
+
+} <br />
+
+def example -sr { <br /> #run without screen refresh
+
+} <br />
+example <br />
+
+pen|erase all <br />
+pen|stamp <br />
+pen|pen down <br />
+pen|pen up <br />
+pen|set pen color to (#hex) <br />
+pen|change pen () by () <br />
+pen|set pen () to () <br />
+pen|change pen size by () <br />
+pen|set pen size to () <br />
 
 ## Future: supporting custom Scratch mods?
 Probably not.
