@@ -102,6 +102,56 @@ go () () layers <br />
 (backdrop ()) <br />
 (size) <br />
 
+play sound () until done <br />
+start sound () <br />
+stop all sounds <br />
+change () effect by () <br />
+set () effect to () <br />
+clear sound effects <br />
+change volume by () <br />
+set volume to () <br />
+(volume) <br />
+
+when flag clicked <br />
+when () key pressed <br />
+when this sprite clicked <br />
+when backdrop switches to () <br />
+when () > () <br />
+when i receive () <br />
+broadcast () <br />
+broadcast () and wait <br />
+
+wait () seconds <br />
+repeat () { <br />
+
+} <br />
+forever { <br />
+
+} <br />
+if <> then { <br />
+
+} <br />
+if <> then { <br />
+
+} <br />
+else { <br />
+
+} <br />
+wait until <> <br />
+repeat until <> { <br />
+
+} <br />
+while <> { <br />
+
+} <br />
+for each () in () { <br />
+
+} <br />
+stop () <br />
+when i start as a clone <br />
+create clone of () <br />
+delete this clone <br />
+
 ## Future: supporting custom Scratch mods?
 Probably not.
 
