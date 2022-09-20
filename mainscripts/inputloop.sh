@@ -106,7 +106,7 @@ elif [ h$input == h6 ]; then
   if ! [ -f .var/alias ]; then
     cp ~/.bashrc .var
     echo >> ~/.bashrc
-    echo >> ~/.bashrc "alias ScratchScript='cd $dir && ./start.sh'"
+    echo >> ~/.bashrc "alias scratchscript='cd $dir && ./start.sh'"
     echo >> .var/alias "This file tells the program that the alias is already created. Please don't touch this."
     echo
     echo "Please restart your terminal."
