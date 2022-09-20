@@ -1,7 +1,7 @@
 #!/bin/bash
 echo
-echo "WARNING: This will revert the .bashrc to before you created the ScratchScript alias."
-echo "That means any aliases you created after creating the ScratchScript alias will be erased."
+echo "WARNING: This will revert the .bashrc to before you created the ScratchLang alias."
+echo "That means any aliases you created after creating the ScratchLang alias will be erased."
 echo "Continue? [Y/N]"
 read -sn 1 input2
 echo

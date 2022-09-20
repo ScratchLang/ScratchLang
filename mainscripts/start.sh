@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ h$1 == h-help ]; then
-  echo "ScratchScript (or ./start.sh if you haven't made an alias)"
+  echo "scratchlang (or ./start.sh if you haven't made an alias)"
   echo
   echo "  -1      Create a project"
   echo "  -2      Remove a project"
@@ -40,7 +40,7 @@ else
 
   if [ h$1 == h ]; then
     if [ -d .var ]; then
-      echo "Welcome to ScratchScript."
+      echo "Welcome to ScratchLang. (Name suggested by @MagicCrayon9342 on Scratch)"
       echo "Please select an option."
       if ! [ -f .var/devmode ]; then
         chmod 755 inputloop.sh

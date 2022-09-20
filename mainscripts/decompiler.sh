@@ -301,6 +301,70 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       break
     fi
   done #Load broadcasts next
+  echo "Loading broadcasts..."
+  echo
+  i=$(expr $i + 14)
+  b=0
+  novars=0
+  while : #repeat until char = [
+  do
+    ((i++))
+    getchar -\"
+    if [ $b == 1 ]; then
+      break
+    fi
+    getchar -\}
+    if [ $b == 1 ]; then
+      novars=1
+      break
+    fi
+  done
+  if [ $novars == 0 ]; then
+    while :
+    do
+      ((i++))
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varname=
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >> Stage/$name.ss {broadcast}=$varname
+      echo "Loaded broadcast $varname"
+      echo
+      ((i++))
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        break
+      fi
+      ((i++))
+      ((i++))
+    done
+  fi
   if [ 1 == 1 ]; then
     cd $(dirname $(pwd))
     cd $(dirname $(pwd))

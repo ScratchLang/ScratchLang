@@ -108,7 +108,7 @@ elif [ h$input == h6 ]; then
   if ! [ -f .var/alias ]; then
     cp ~/.bashrc .var
     echo >> ~/.bashrc
-    echo >> ~/.bashrc "alias scratchscript='cd $dir && ./start.sh'"
+    echo >> ~/.bashrc "alias scratchlang='cd $dir && ./start.sh'"
     echo >> .var/alias "This file tells the program that the alias is already created. Please don't touch this."
     echo "Please restart your terminal."
   else
@@ -131,7 +131,7 @@ elif [ h$input == h9 ]; then
     rm .var/zenity
   fi
   if [ -f .var/.bashrc ]; then
-    echo "Get rid of the ScratchScript alias? [Y/N]"
+    echo "Get rid of the ScratchLang alias? [Y/N]"
     read -sn 1 yn
     if [ h$yn == hY ] || [ h$yn == hy ]; then
       chmod 755 ./rmaliasiloop2.sh
@@ -166,7 +166,7 @@ elif [ h$input == ha ] || [ h$input == hA ]; then
   fi
   cd mainscripts
   if [ -f .var/.bashrc ]; then
-    echo "Get rid of the ScratchScript alias? [Y/N]"
+    echo "Get rid of the ScratchLang alias? [Y/N]"
     read -sn 1 yn
     if [ h$yn == hY ] || [ h$yn == hy ]; then
       chmod 755 ./rmaliasiloop2.sh
