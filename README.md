@@ -55,52 +55,52 @@ Please write down any dependencies I missed.
 ### Added blocks
 Write every block in the order they are defined.
 
-var=string (Define a variable)
-**list=item1,item2,item3,etc (no spaces; for an empty list, just add a comma after the equal sign)**
-{broadcast}=broadcastexample (The brackets tell the program that it is not defining a variable or a list.)
+var=string (Define a variable) <br />
+**list=item1,item2,item3,etc (no spaces; for an empty list, just add a comma after the equal sign)** <br />
+{broadcast}=broadcastexample (The brackets tell the program that it is not defining a variable or a list.) <br />
 
 ### Vanilla Scratch Blocks Checklist
 Items that are striked out are already added.
 
-*move () steps
-*turn cw () deg
-*turn ccw () deg
-*go to ()
-*go to x () y ()
-*glide () secs to ()
-*glide () secs to x () y ()
-*point in direction ()
-*point towards ()
-*change x by ()
-*set x to ()
-*change y by ()
-*set y to ()
-*if on edge, bounce
-*set rotation style ()
-*(x position)
-*(y position)
-*(direction)
+move () steps <br />
+turn cw () deg <br />
+turn ccw () deg <br />
+go to () <br />
+go to x () y () <br />
+glide () secs to () <br />
+glide () secs to x () y () <br />
+point in direction () <br />
+point towards () <br />
+change x by ()
+set x to () <br />
+change y by () <br />
+set y to () <br />
+if on edge, bounce <br />
+set rotation style () <br />
+(x position) <br />
+(y position) <br />
+(direction) <br />
 
-*say () for () seconds
-*say ()
-*think () for () seconds
-*think ()
-*switch costume to ()
-*next costume
-*switch backdrop to ()
-*next backdrop
-*change size by ()
-*set size to ()
-*change () efect by ()
-*set () effect to ()
-*clear graphic effects
-*show
-*hide
-*go to () layer
-*go () () layers
-*(costume ())
-*(backdrop ())
-*(size)
+say () for () seconds <br />
+say () <br />
+think () for () seconds <br />
+think () <br />
+switch costume to () <br />
+next costume <br />
+switch backdrop to () <br />
+next backdrop <br />
+change size by () <br />
+set size to () <br />
+change () efect by () <br />
+set () effect to () <br />
+clear graphic effects <br />
+show <br />
+hide <br />
+go to () layer <br />
+go () () layers <br />
+(costume ()) <br />
+(backdrop ()) <br />
+(size) <br />
 
 ## Future: supporting custom Scratch mods?
 Probably not.
