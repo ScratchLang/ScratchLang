@@ -1,4 +1,5 @@
-# ScratchLang
+# ![291f683c048c449b1313ce8966fbb590 (2) (1)](https://user-images.githubusercontent.com/78574005/191551636-60492db2-683e-4a41-8737-ae7118e7584d.png)
+###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 This is for people who want to use Scratch like other programming languages.
 
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
