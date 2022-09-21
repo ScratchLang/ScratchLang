@@ -15,7 +15,7 @@ Each sprite (including Stage) has a asset folder. The costumes and sound will go
 A project.json is also included in the resources folder to help understand and reverse engineer how it's made.
 
 The decompiler (shell) can now decompile variables, lists, and broadcasts.
-And now, it can compile 4 blocks! (See ## Vanilla Scratch Blocks) If you want to try it out, a .sb3 is in the resources folder.
+And now, it can compile 3 blocks! (See ## Vanilla Scratch Blocks) If you want to try it out, a .sb3 is in the resources folder.
 But the c decompiler, IDK why I even tried. I suck at c.
 Someone more experienced with c could probably program the comp and decomp scripts.
 # How to use
