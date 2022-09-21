@@ -244,4 +244,4 @@ The variable or list is probably long.
 # Bugs
 No known bugs yet.
 
-![SharedScreenshot](https://user-images.githubusercontent.com/78574005/191063317-b043afe7-804b-48e2-87bf-82b29c5abaaf.jpg)
+![image_2022-09-20_190744081](https://user-images.githubusercontent.com/78574005/191398176-fe011d14-62e9-45ed-ad43-80db3ef49152.png)
