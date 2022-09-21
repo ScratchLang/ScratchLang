@@ -1,9 +1,9 @@
 # ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png)
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
-This is for people who want to use Scratch like other programming languages.
-
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
+
+This is for people who want to use Scratch like other programming languages.
 
 # The Plan
 This is mainly made in Shell Script, but if you know languages like C and Python, then you can make some stuff in that so people have many options to choose from.
