@@ -5,7 +5,7 @@ if [ h$1 == h ]; then
   echo "2. Remove a project."
   echo "3. Compile a project"
   echo "4. Decompile a .sb3 file."
-  echo "5. Are options 1 and 2 not working? Input 4 to install dependencies."
+  echo "5. Are options 3 and 4 not working? Input 5 to install dependencies."
   echo "6. Create alias."
   echo "7. Remove alias."
   echo "8. Enable Developer Mode."
@@ -25,7 +25,10 @@ if [ h$input == h1 ]; then
   echo
   echo "Name your project. Keep in mind that it cannot be empty or it will not be created properly."
   read name
-  echo
+  if [ h$name == h ]; then
+    echo "Error: Project name empty."
+    exit
+  fi
   echo "You named your project $name. If you want to rename it, use the File Explorer."
   cd $(dirname $(pwd))
   if ! [ -d projects ]; then
@@ -43,22 +46,26 @@ if [ h$input == h1 ]; then
   cd $(dirname $(pwd))
   cp resources/cd21514d0531fdffb22204e0ec5ed84a.svg projects/$name/Stage/assets
   cd projects/$name/Stage
-  echo >> $name.ss \#There should be no empty lines.
-  echo >> $name.ss ss
+  echo >> $name.sl \#There should be no empty lines.
+  echo >> $name.sl sl
   cd $(dirname $(pwd))
   mkdir Sprite1
   cd Sprite1
-  echo >> $name.ss \#There should be no empty lines.
-  echo >> $name.ss ss
+  echo >> $name.sl \#There should be no empty lines.
+  echo >> $name.sl sl
   mkdir assets
   cd $(dirname $(pwd))
   cd $(dirname $(pwd))
   cd $(dirname $(pwd))
-  cp resources/costume1.svg projects/$name/Sprite1/assets
-  cp resources/costume2.svg projects/$name/Sprite1/assets
+  cp resources/341ff8639e74404142c11ad52929b021.svg projects/$name/Sprite1/assets
+  cp resources/c9466893cdbdda41de3ec986256e5a47.svg projects/$name/Sprite1/assets
   cd mainscripts
 elif [ h$input == h2 ]; then
   cd $(dirname $(pwd))
+  if ! [ -d projects ]; then
+    echo "Error: there are no projects to delete."
+    exit
+  fi
   cd projects
   echo
   ls -1
@@ -68,6 +75,8 @@ elif [ h$input == h2 ]; then
   if ! [ h$pgrd == h ]; then
     if [ -d $pgrd ]; then
       rm -rf $pgrd
+    else
+      echo "Error: directory $pgrd does not exist."
     fi
   fi
 elif [ h$input == h3 ]; then

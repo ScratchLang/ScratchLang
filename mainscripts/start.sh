@@ -53,7 +53,8 @@ fi
 cd $(dirname $(pwd))
 if [ -d projects ]; then
   cd projects
-  if [ h$(ls) == h ]; then
+  h=h$(ls)
+  if [ "$h" == h ]; then
     cd $(dirname $(pwd))
     rm -rf projects
     cd mainscripts

@@ -1,5 +1,9 @@
 #!/bin/bash
 echo
+if ! [ -f .var/alias ]; then
+  echo "Error: alias has not been created or .var/alias file has been deleted."
+  exit
+fi
 echo "WARNING: This will revert the .bashrc to before you created the ScratchLang alias."
 echo "That means any aliases you created after creating the ScratchLang alias will be erased."
 echo "Continue? [Y/N]"

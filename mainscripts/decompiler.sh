@@ -65,9 +65,6 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       fi
     fi
   }
-  writetoss () {
-    echo >> $1/$name.ss $2
-  }
   #Decompile variables
   echo "Defining variables..."
   echo
@@ -133,11 +130,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
           break
         fi
       done
-      if ! [ -f Stage/$name.ss ]; then
-        writetoss Stage "#There should be no empty lines."
-        writetoss Stage ss
+      if ! [ -f Stage/$name.sl ]; then
+        echo >> Stage/$name.sl "#There should be no empty lines."
+        echo >> Stage/$name.sl sl
+        echo >> Stage/$name.sl "\prep"
       fi
-      echo >> Stage/$name.ss $varname=$varvalue #Use echo >> if 2nd arg contains variables
+      echo >> Stage/$name.sl $varname=$varvalue #Use echo >> if 2nd arg contains variables
       echo "Added variable \"$varname\". Value:"
       echo $varvalue
       echo
@@ -153,8 +151,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       i=$(expr $i - $isub)
     fi 
     if [ $novars == 1 ]; then
-      writetoss Stage "#There should be no empty lines."
-      writetoss Stage ss
+      echo >> Stage/$name.sl "#There should be no empty lines."
+      echo >> Stage/$name sl
+      echo >> Stage/$name.sl "\prep"
       break
     fi
   done #Finish compiling variables, lists next
@@ -275,13 +274,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             fi
           done
         fi
-        echo >> Stage/$name.ss $listname=$(echo $(cat lists) | sed 's/ //g')
+        echo >> Stage/$name.sl $listname=$(echo $(cat lists) | sed 's/ //g')
         echo "Added list \"$listname\". Contents:"
         echo $(cat lists) | sed 's/ //g'
         echo
         rm lists
       else
-        echo >> Stage/$name.ss $listname=, 
+        echo >> Stage/$name.sl $listname=, 
         echo "Added list \"$listname\". Contents:"
         echo "Nothing."
         echo
@@ -352,7 +351,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varname+=$char
       done
-      echo >> Stage/$name.ss {broadcast}=$varname
+      echo >> Stage/$name.sl {broadcast}=$varname
       echo "Loaded broadcast $varname"
       echo
       ((i++))
@@ -363,6 +362,841 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       fi
       ((i++))
       ((i++))
+    done
+  fi
+  echo "Making blocks..."
+  echo
+  addblock () {
+    parent=0
+    if [ $1 == event_broadcast ]; then
+      ((i++))
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >> Stage/$name.sl "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+         ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+         ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varvalue=
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      echo >> Stage/$name.sl "broadcast ($varvalue)"
+      echo "Added block: \"broadcast ($varvalue)\""
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+      if ! [ h$done == h1 ]; then
+        if [ $parent == 1 ]; then
+          b=0
+          while :
+          do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          while :
+          do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          while :
+          do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          while :
+          do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+        fi
+      fi
+    elif [ $1 == motion_movesteps ]; then
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >> Stage/$name.sl "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+         ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+         ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varvalue=
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      echo >> Stage/$name.sl "move ($varvalue) steps"
+      echo "Added block: \"move ($varvalue) steps\""
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+      if ! [ h$done == h1 ]; then
+        if [ $parent == 1 ]; then
+          b=0
+          while :
+          do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          while :
+          do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          while :
+          do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          while :
+          do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+        fi
+      fi
+    elif [ $1 == control_wait ]; then
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >> Stage/$name.sl "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+         ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+         ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varvalue=
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      echo >> Stage/$name.sl "wait ($varvalue) seconds"
+      echo "Added block: \"wait ($varvalue) seconds\""
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+      if ! [ h$done == h1 ]; then
+        if [ $parent == 1 ]; then
+          b=0
+          while :
+          do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          while :
+          do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          while :
+          do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          while :
+          do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+        fi
+      fi
+    fi
+  }
+  i=$(expr $i + 11)
+  b=0
+  novars=0
+  while :
+  do
+    ((i++))
+    getchar -\"
+    if [ $b == 1 ]; then
+      break
+    fi
+    getchar -\}
+    if [ $b == 1 ]; then
+      novars=1
+      break
+    fi
+  done
+  if [ $novars = 0 ]; then
+    while :
+    do
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i++))
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i++))
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i++))
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varname=
+      while :
+      do
+      ((i++))
+      getchar -\"
+      if [ $b == 1 ]; then
+        break
+      fi
+      varname+=$char
+      done
+      addblock $varname
+      if [ h$done == h1 ]; then
+        break
+      fi
     done
   fi
   if [ 1 == 1 ]; then
