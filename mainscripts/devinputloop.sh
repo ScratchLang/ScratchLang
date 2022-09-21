@@ -48,13 +48,13 @@ fi
   cd $(dirname $(pwd))
   cp resources/cd21514d0531fdffb22204e0ec5ed84a.svg projects/$name/Stage/assets
   cd projects/$name/Stage
-  echo >> $name.sl \#There should be no empty lines.
-  echo >> $name.sl sl
+  echo >> $name.slg \#There should be no empty lines.
+  echo >> $name.slg slg
   cd $(dirname $(pwd))
   mkdir Sprite1
   cd Sprite1
-  echo >> $name.sl \#There should be no empty lines.
-  echo >> $name.sl sl
+  echo >> $name.slg \#There should be no empty lines.
+  echo >> $name.slg slg
   mkdir assets
   cd $(dirname $(pwd))
   cd $(dirname $(pwd))

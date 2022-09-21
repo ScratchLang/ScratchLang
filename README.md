@@ -8,11 +8,11 @@ This is for people who want to use Scratch like other programming languages.
 # The Plan
 This is mainly made in Shell Script, but if you know languages like C and Python, then you can make some stuff in that so people have many options to choose from.
 
-We need to get the compiler working first, then we can add all the blocks. A ScratchLang file (.sl) is locaded in the resources folder. Just create a project, go into the sprite folder, then replace the text from the .sl in the sprite folder with the text from the .sl in the resources folder.
+We need to get the compiler working first, then we can add all the blocks. A ScratchLang file (.slg) is locaded in the resources folder. Just create a project, go into the sprite folder, then replace the text from the .slg in the sprite folder with the text from the .slg in the resources folder.
 
-The compiler should read the testcode.sl, write the project.json, and pack it and every asset into a .sb3, that can be played and edited in Scratch
+The compiler should read the testcode.slg, write the project.json, and pack it and every asset into a .sb3, that can be played and edited in Scratch
 
-Each sprite (including Stage) has a asset folder. The costumes and sound will go there. It also has a .sl file, which is where the code is.
+Each sprite (including Stage) has a asset folder. The costumes and sound will go there. It also has a .slg file, which is where the code is.
 
 A project.json is also included in the resources folder to help understand and reverse engineer how it's made.
 
@@ -37,7 +37,7 @@ If you create an alias, start the project wtih
 scratchlang
 ```
 
-To code, edit the .sl(es) in you favorite glorified text editor like VSC or Atom.
+To code, edit the .slg(es) in you favorite glorified text editor like VSC or Atom.
 
 To add assets, put them in the "assets" folder for the chosen sprite (or stage)
 # Dependencies
