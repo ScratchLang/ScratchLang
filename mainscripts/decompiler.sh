@@ -130,12 +130,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
           break
         fi
       done
-      if ! [ -f Stage/$name.sl ]; then
-        echo >> Stage/$name.sl "#There should be no empty lines."
-        echo >> Stage/$name.sl sl
-        echo >> Stage/$name.sl "\prep"
+      if ! [ -f Stage/$name.slg ]; then
+        echo >> Stage/$name.slg "#There should be no empty lines."
+        echo >> Stage/$name.slg slg
+        echo >> Stage/$name.slg "\prep"
       fi
-      echo >> Stage/$name.sl $varname=$varvalue #Use echo >> if 2nd arg contains variables
+      echo >> Stage/$name.slg $varname=$varvalue #Use echo >> if 2nd arg contains variables
       echo "Added variable \"$varname\". Value:"
       echo $varvalue
       echo
@@ -151,9 +151,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       i=$(expr $i - $isub)
     fi 
     if [ $novars == 1 ]; then
-      echo >> Stage/$name.sl "#There should be no empty lines."
-      echo >> Stage/$name sl
-      echo >> Stage/$name.sl "\prep"
+      echo >> Stage/$name.slg "#There should be no empty lines."
+      echo >> Stage/$name slg
+      echo >> Stage/$name.slg "\prep"
       break
     fi
   done #Finish compiling variables, lists next
@@ -274,13 +274,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             fi
           done
         fi
-        echo >> Stage/$name.sl $listname=$(echo $(cat lists) | sed 's/ //g')
+        echo >> Stage/$name.slg $listname=$(echo $(cat lists) | sed 's/ //g')
         echo "Added list \"$listname\". Contents:"
         echo $(cat lists) | sed 's/ //g'
         echo
         rm lists
       else
-        echo >> Stage/$name.sl $listname=, 
+        echo >> Stage/$name.slg $listname=, 
         echo "Added list \"$listname\". Contents:"
         echo "Nothing."
         echo
@@ -351,7 +351,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varname+=$char
       done
-      echo >> Stage/$name.sl {broadcast}=$varname
+      echo >> Stage/$name.slg {broadcast}=$varname
       echo "Loaded broadcast $varname"
       echo
       ((i++))
@@ -429,7 +429,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >> Stage/$name.sl "\nscript"
+        echo >> Stage/$name.slg "\nscript"
         parent=1
       fi
       ((i--))
@@ -510,7 +510,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      echo >> Stage/$name.sl "broadcast ($varvalue)"
+      echo >> Stage/$name.slg "broadcast ($varvalue)"
       echo "Added block: \"broadcast ($varvalue)\""
       b=0
       while :
@@ -686,7 +686,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >> Stage/$name.sl "\nscript"
+        echo >> Stage/$name.slg "\nscript"
         parent=1
       fi
       ((i--))
@@ -767,7 +767,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      echo >> Stage/$name.sl "move ($varvalue) steps"
+      echo >> Stage/$name.slg "move ($varvalue) steps"
       echo "Added block: \"move ($varvalue) steps\""
       b=0
       while :
@@ -925,7 +925,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >> Stage/$name.sl "\nscript"
+        echo >> Stage/$name.slg "\nscript"
         parent=1
       fi
       ((i--))
@@ -1006,7 +1006,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      echo >> Stage/$name.sl "wait ($varvalue) seconds"
+      echo >> Stage/$name.slg "wait ($varvalue) seconds"
       echo "Added block: \"wait ($varvalue) seconds\""
       b=0
       while :
