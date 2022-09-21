@@ -68,7 +68,6 @@ move (num) steps (Move an amount of steps.) <br />
 
 ### Blocks to Add
 
-move () steps <br />
 turn cw () deg <br />
 turn ccw () deg <br />
 go to () <br />
@@ -124,10 +123,8 @@ when this sprite clicked <br />
 when backdrop switches to () <br />
 when () > () <br />
 when i receive () <br />
-broadcast () <br />
 broadcast () and wait <br />
 
-wait () seconds <br />
 repeat () { <br />
 
 } <br />
