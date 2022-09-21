@@ -5,7 +5,7 @@
 #
 #
 echo
-echo "Remember, both the compiler and decompiler don't work yet. The decompiler can extract the sb3, define variables, build lists, and load broadcasts, but it can't do anything else yet."
+echo "Remember, both the compiler and decompiler don't work yet. The decompiler can extract the sb3, define variables, build lists, load broadcasts, and decompile some blocks, but it can't do anything else yet."
 echo
 if ! [ -f .var/zenity ]; then
   echo "Do you have the command zenity? [Y/N]"
