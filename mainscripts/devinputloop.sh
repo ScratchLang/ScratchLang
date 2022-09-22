@@ -110,8 +110,33 @@ elif [ h$input == h4 ]; then
     echo "Error: $cs not an input."
   fi
 elif [ h$input == h5 ]; then
-  pacman -S mingw-w64-x86_64-gcc
-  ./start.sh
+  echo "This only works for MSYS2. Continue? [Y/N]"
+  read -sn 1 con
+  if [ h$con == hY ] || [ h$con == hy ]; then
+    pacman -S mingw-w64-x86_64-gcc
+    bit=$(getconf LONG_BIT)
+    dir=$(pwd)
+    cd
+    mkdir zenity
+    cd zenity
+    if [ $bit == 64 ]; then
+      wget https://github.com/ncruces/zenity/releases/download/v0.9.0/zenity_win64.zip
+      version=zenity_win64
+    else
+      wget https://github.com/ncruces/zenity/releases/download/v0.9.0/zenity_win32.zip
+      version=zenity_win32
+    fi
+    unzip -n $version.zip
+    cp zenity.exe /c/msys64/usr/bin
+    cd $(dirname $(pwd))
+    rm -rf zenity
+    cd $dir
+    ./start.sh
+  elif [ h$con == hN ] || [ h$con == hn ]; then
+    echo
+  else
+    echo "Error: $con not an input."
+  fi
 elif [ h$input == h6 ]; then
   dir=$(pwd)
   if ! [ -f .var/alias ]; then
