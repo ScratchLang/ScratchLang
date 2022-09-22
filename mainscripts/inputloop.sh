@@ -46,13 +46,13 @@ if [ h$input == h1 ]; then
   cd $(dirname $(pwd))
   cp resources/cd21514d0531fdffb22204e0ec5ed84a.svg projects/$name/Stage/assets
   cd projects/$name/Stage
-  echo >> $name.slg \#There should be no empty lines.
-  echo >> $name.slg slg
+  echo >> $name.ss \#There should be no empty lines.
+  echo >> $name.ss ss
   cd $(dirname $(pwd))
   mkdir Sprite1
   cd Sprite1
-  echo >> $name.slg \#There should be no empty lines.
-  echo >> $name.slg slg
+  echo >> $name.ss \#There should be no empty lines.
+  echo >> $name.ss ss
   mkdir assets
   cd $(dirname $(pwd))
   cd $(dirname $(pwd))
