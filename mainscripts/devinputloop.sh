@@ -6,8 +6,8 @@ if [ h$1 == h ]; then
   echo "3. Compile a project"
   echo "4. Decompile a .sb3 file."
   echo "5. Are options 3 and 5 not working? Input 5 to install dependencies."
-  echo "6. Create alias."
-  echo "7. Remove alias."
+  echo "6. Create scratchlang command."
+  echo "7. Remove scratchlang command."
   echo "8. Disable Developer Mode."
   echo "9. Delete all variables."
   echo "A. Prepare for commit and push."
@@ -82,38 +82,16 @@ elif [ h$input == h2 ]; then
     fi
   fi
 elif [ h$input == h3 ]; then
-  echo "Exe or Shell?"
-  read cs
-  if [ h$cs == hExe ] || [ h$cs == hexe ]; then
-    if ! [ -f compile.exe ]; then
-      gcc -o compile.exe 2.c
-    fi
-    ./compile.exe
-  elif [ h$cs == hShell ] || [ h$cs == hshell ]; then
-    chmod 755 compiler.sh
-    ./compiler.sh
-  else
-    echo "Error: $cs not an input."
-  fi
+  chmod 755 compiler.sh
+  ./compiler.sh
 elif [ h$input == h4 ]; then
-  echo "Exe or Shell?"
-  read cs
-  if [ h$cs == hExe ] || [ $cs == hexe ]; then
-    if ! [ -f decompiler.exe ]; then
-      gcc -o decompiler.exe 3.c
-    fi
-    ./decompile.exe
-  elif [ h$cs == hShell ] || [ h$cs == hshell ]; then
-    chmod 755 decompiler.sh
-    ./decompiler.sh
-  else
-    echo "Error: $cs not an input."
-  fi
+  chmod 755 decompiler.sh
+  ./decompiler.sh
 elif [ h$input == h5 ]; then
   echo "This only works for MSYS2. Continue? [Y/N]"
   read -sn 1 con
   if [ h$con == hY ] || [ h$con == hy ]; then
-    pacman -S mingw-w64-x86_64-gcc
+    echo
     bit=$(getconf LONG_BIT)
     dir=$(pwd)
     cd
@@ -140,11 +118,8 @@ elif [ h$input == h5 ]; then
 elif [ h$input == h6 ]; then
   dir=$(pwd)
   if ! [ -f .var/alias ]; then
-    cp ~/.bashrc .var
-    echo >> ~/.bashrc
-    echo >> ~/.bashrc "alias scratchlang='cd $dir && ./start.sh'"
-    echo >> .var/alias "This file tells the program that the alias is already created. Please don't touch this."
-    echo "Please restart your terminal."
+    echo >> /c/msys64/usr/bin/scratchlang "cd $dir && ./start.sh \$1 && cd"
+    echo >> .var/alias "This file tells the program that the command is already created. Please don't touch this."
   else
     echo "alias has already been created."
   fi
@@ -155,33 +130,27 @@ elif [ h$input == h8 ]; then
   rm .var/devmode
   ./start.sh
 elif [ h$input == h9 ]; then
-  if [ -f .var/alias ]; then
-    rm .var/alias
-  fi
   if [ -f .var/devmode ]; then
     rm .var/devmode
   fi
   if [ -f .var/zenity ]; then
     rm .var/zenity
   fi
-  if [ -f .var/.bashrc ]; then
-    echo "Get rid of the ScratchLang alias? [Y/N]"
+  if [ -f .var/alias ]; then
+    echo "Get rid of the scratchlang command? [Y/N]"
     read -sn 1 yn
     if [ h$yn == hY ] || [ h$yn == hy ]; then
-      chmod 755 ./rmaliasiloop2.sh
-      ./rmaliasiloop2.sh
+      chmod 755 ./rmaliasiloop.sh
+      ./rmaliasiloop.sh
     elif [ h$yn == hN ] || [ h$yn == hn ]; then
-      if [ -f .var/.bashrc ]; then
-        rm .var/.bashrc
+      if [ -f .var/alias ]; then
+        rm .var/alias
       fi
     else
       echo "Error: $yn is not an input."
     fi
   fi
 elif [ h$input == ha ] || [ h$input == hA ]; then
-  if [ -f .var/alias ]; then
-    rm .var/alias
-  fi
   if [ -f .var/devmode ]; then
     rm .var/devmode
   fi
@@ -199,15 +168,15 @@ elif [ h$input == ha ] || [ h$input == hA ]; then
     rm -rf projects
   fi
   cd mainscripts
-  if [ -f .var/.bashrc ]; then
-    echo "Get rid of the ScratchLang alias? [Y/N]"
+  if [ -f .var/alias ]; then
+    echo "Get rid of the scratchlang command? [Y/N]"
     read -sn 1 yn
     if [ h$yn == hY ] || [ h$yn == hy ]; then
-      chmod 755 ./rmaliasiloop2.sh
-      ./rmaliasiloop2.sh
+      chmod 755 ./rmaliasiloop.sh
+      ./rmaliasiloop.sh
     elif [ h$yn == hN ] || [ h$yn == hn ]; then
-      if [ -f .var/.bashrc ]; then
-        rm .var/.bashrc
+      if [ -f .var/alias ]; then
+        rm .var/alias
       fi
     else
       echo "Error: $yn is not an input."

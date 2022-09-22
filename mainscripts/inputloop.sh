@@ -6,8 +6,8 @@ if [ h$1 == h ]; then
   echo "3. Compile a project"
   echo "4. Decompile a .sb3 file."
   echo "5. Are options 3 and 4 not working? Input 5 to install dependencies."
-  echo "6. Create alias."
-  echo "7. Remove alias."
+  echo "6. Create scratchlang command."
+  echo "7. Remove scratchlang command."
   echo "8. Enable Developer Mode."
   echo "9. Exit."
   read -sn 1 input
@@ -80,38 +80,16 @@ elif [ h$input == h2 ]; then
     fi
   fi
 elif [ h$input == h3 ]; then
-  echo "Exe or Shell?"
-  read cs
-  if [ h$cs == hExe ] || [ h$cs == hexe ]; then
-    if ! [ -f compile.exe ]; then
-      gcc -o compile.exe 2.c
-    fi
-    ./compile.exe
-  elif [ h$cs == hShell ] || [ h$cs == hshell ]; then
-    chmod 755 compiler.sh
-    ./compiler.sh
-  else
-    echo "Error: $cs not an input."
-  fi
+  chmod 755 compiler.sh
+  ./compiler.sh
 elif [ h$input == h4 ]; then
-  echo "Exe or Shell?"
-  read cs
-  if [ h$cs == hExe ] || [ h$cs == hexe ]; then
-    if ! [ -f decompiler.exe ]; then
-      gcc -o decompiler.exe 3.c
-    fi
-    ./decompile.exe
-  elif [ h$cs == hShell ] || [ h$cs == hshell ]; then
-    chmod 755 decompiler.sh
-    ./decompiler.sh
-  else
-    echo "Error: $cs not an input."
-  fi
+  chmod 755 decompiler.sh
+  ./decompiler.sh
 elif [ h$input == h5 ]; then
   echo "This only works for MSYS2. Continue? [Y/N]"
   read -sn 1 con
   if [ h$con == hY ] || [ h$con == hy ]; then
-    pacman -S mingw-w64-x86_64-gcc
+    echo
     bit=$(getconf LONG_BIT)
     dir=$(pwd)
     cd
@@ -125,7 +103,7 @@ elif [ h$input == h5 ]; then
       version=zenity_win32
     fi
     unzip -n $version.zip
-    cp zenity.exe /c/msys64/usr/bin
+    cp zenity.exe /usr/bin
     cd $(dirname $(pwd))
     rm -rf zenity
     cd $dir
@@ -138,18 +116,15 @@ elif [ h$input == h5 ]; then
 elif [ h$input == h6 ]; then
   dir=$(pwd)
   if ! [ -f .var/alias ]; then
-    cp ~/.bashrc .var
-    echo >> ~/.bashrc
-    echo >> ~/.bashrc "alias scratchlang='cd $dir && ./start.sh'"
-    echo >> .var/alias "This file tells the program that the alias is already created. Please don't touch this."
-    echo
-    echo "Please restart your terminal."
+
+    echo >> /usr/bin/scratchlang "cd $dir && ./start.sh \$1 && cd"
+    echo >> .var/alias "This file tells the program that the command is already created. Please don't touch this."
   else
     echo "alias has already been created."
   fi
 elif [ h$input == h7 ]; then
   chmod 755 rmaliasiloop.sh
-  ./rmaliasiloop.sh
+  ./rmaliasiloop9.sh
 elif [ h$input == h8 ]; then
   echo >> .var/devmode "This is a devmode file. You can manually remove it to disable dev mode if you don't want to use the program to disable it for some reason."
   ./start.sh

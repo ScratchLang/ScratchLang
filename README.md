@@ -5,6 +5,9 @@
 
 This is for people who want to use Scratch like other programming languages.
 
+# Latest updates
+Added all backdrop "looks" blocks!
+
 # The Plan
 This is mainly made in Shell Script, but if you know languages like C and Python, then you can make some stuff in that so people have many options to choose from.
 
@@ -16,10 +19,14 @@ Each sprite (including Stage) has a asset folder. The costumes and sound will go
 
 A project.json is also included in the resources folder to help understand and reverse engineer how it's made.
 
-The decompiler (shell) can now decompile variables, lists, and broadcasts.
-And now, it can compile 3 blocks! (See ## Vanilla Scratch Blocks) If you want to try it out, a .sb3 is in the resources folder.
-But the c decompiler, IDK why I even tried. I suck at c.
-Someone more experienced with c could probably program the comp and decomp scripts.
+I'm programming the decompiler. First I'm gonna program it to decompile all the global and stage-exclusive blocks, then sprite-exclusive blocks.
+
+## Contributing to the decompiler
+If you want to help with the decompiler but you don't understand any of the code, just ask and I'll link a discussion explaining it. If there is no discussion, I'll create one.
+
+## Notice
+Im wondering if there's a more efficient way to decompile the .json. Just 12 blocks added 2827 lines, and if I did the math correctly ((3466-379)/10*141), adding every block will add about 44,000 lines of code (including the eight already added) :(
+
 # How to use
 Clone the repo with
 ```
@@ -32,7 +39,7 @@ Start the project with
 chmod 755 start.sh
 ./start.sh
 ```
-If you create an alias, start the project wtih
+If you create a scratchlang command, start the project wtih
 ```
 scratchlang
 ```
@@ -42,8 +49,8 @@ To code, edit the .ss(es) in you favorite glorified text editor like VSC or Atom
 To add assets, put them in the "assets" folder for the chosen sprite (or stage)
 # Dependencies
 ## Windows
-You need `zenity` if you plan on using the .sh and `gcc` if you want to use the exe.
-https://github.com/ncruces/zenity/wiki/Zenity-for-WSL%2C-Cygwin%2C-MSYS2
+You need `zenity`.
+https://github.com/ncruces/zenity/wiki/Zenity-for-WSL%2C-Cygwin%2C-MSYS2 Download here, or you can run ./start.sh and input 5 to install zenity.
 ## Linux
 You need the command `zenity` to run the .sh.
 ```
@@ -54,19 +61,26 @@ Please write down any dependencies I missed.
 
 # ScratchLang Language
 ## ScratchLang blocks
-\nscript (Tells the compiler that it's a new script. Or maybe we could get rid of this and just detect for hat blocks.) <br />
-**\prep (Everything below this [until \nscript] is used for compiling the .json) <br />
+\nscript - (Tells the compiler that it's a new script. Or maybe we could get rid of this and just detect for hat blocks.) <br />
+**\prep - (Everything below this [until \nscript] is used for compiling the .json)** <br />
 
 ## Vanilla Scratch Blocks
 ### Added blocks
 Write every block in the order they are defined.
 
-var=string (Define a variable) <br />
-**list=item1,item2,item3,etc (no spaces; for an empty list, just add a comma after the equal sign)** <br />
-{broadcast}=broadcastexample (Define a broadcast. The brackets tell the program that it is not defining a variable or a list.) <br />
-**broadcast (message) (Use a broadcast.)** <br />
+var=string - (Define [or set] a variable) <br />
+**list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma after the equal sign.)** <br />
+{broadcast}=broadcastexample - (Define a broadcast. The brackets tell the program that it is not defining a variable or a list.) <br />
+**broadcast (message) - (Use a broadcast.)** <br />
 move (num) steps (Move an amount of steps.) <br />
-**wait (num) seconds (Wait for an amount of seconds.)** <br />
+**wait (num) seconds - (Wait for an amount of seconds.)** <br />
+switch backdrop to () - (Changes backdrop.) <br />
+**switch backdrop to () and wait -  (Changes backdrop and waits.)** <br />
+next backdrop - (Changes backdrop by 1.)
+**change (EFFECT #has to be in caps) effect by (num) - (Change an effect by an amount.)** <br />
+set (EFFECT) effect to (num) - (Sets an effect to an amount.) <br />
+**clear graphic effects - (Clears all effects applied to the stage or sprite.)** <br />
+(backdrop (number/name)) - (Reports the number or name of the backdrop.)
 
 ### Blocks to Add
 
@@ -94,19 +108,13 @@ think () for () seconds <br />
 think () <br />
 switch costume to () <br />
 next costume <br />
-switch backdrop to () <br />
-next backdrop <br />
 change size by () <br />
 set size to () <br />
-change () efect by () <br />
-set () effect to () <br />
-clear graphic effects <br />
 show <br />
 hide <br />
 go to () layer <br />
 go () () layers <br />
 (costume ()) <br />
-(backdrop ()) <br />
 (size) <br />
 
 play sound () until done <br />
@@ -244,8 +252,10 @@ Probably not.
 # Troubleshooting
 ## Variable or List taking a very long time to decompile?
 The variable or list is probably long.
+## Decompiler just stops or is outputting random junk
+The decompiler is not complete yet, which means stuff like that will happen.
 
 # Bugs
-No known bugs yet.
+Loads broadcasts even if there are none (Try decompiling decompilerteset.sb3 which is in the resources folder)
 
 ![image_2022-09-20_190744081](https://user-images.githubusercontent.com/78574005/191398176-fe011d14-62e9-45ed-ad43-80db3ef49152.png)

@@ -25,14 +25,24 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   echo "Name of project? Keep in mind that it cannot be empty or it will not be created properly."
   read name
   echo
-  echo "Decompiling project..."
-  echo
-  sleep 1
   cd $(dirname $(pwd))
   if ! [ -d projects ]; then
     mkdir projects
   fi
   cd projects
+  if [ -d $name ]; then
+    echo "Project $name already exists. Replace? [Y/N]"
+    read -sn 1 anss
+    if [ h$anss == hY ] || [ h$anss == hy ]; then
+      rm -rf $name
+    else
+      exit
+    fi
+    echo
+  fi
+  echo "Decompiling project..."
+  echo
+  sleep 1
   mkdir $name
   cd $name
   echo "Extracting .sb3..."
@@ -389,23 +399,31 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :
-      do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
       b=0
       while :
       do
@@ -596,6 +614,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       ((i--))
+      done=0
       b=0
       getchar -\}
       if [ $b == 1 ]; then
@@ -663,6 +682,32 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
           break
         fi
       done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
       b=0
       while :
       do
@@ -903,6 +948,32 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
       while :
       do
         ((i++))
@@ -1122,9 +1193,2333 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
           done
         fi
       fi
+    elif [ $1 == looks_switchbackdropto ]; then
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >> Stage/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+         ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+         ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varvalue=
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      echo >> Stage/$name.ss "switch backdrop to ($varvalue)"
+      echo "Added block: \"switch backdrop to ($varvalue)\""
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+    elif [ $1 == looks_switchbackdroptoandwait ]; then
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >> Stage/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+         ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+         ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+      ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varvalue=
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      echo >> Stage/$name.ss "switch backdrop to ($varvalue) and wait"
+      echo "Added block: \"switch backdrop to ($varvalue) and wait\""
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+    elif [ $1 == looks_nextbackdrop ]; then
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >> Stage/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $parent == 0 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      echo >> Stage/$name.ss "next backdrop"
+      echo "Added block: \"next backdrop\""
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+    elif [ $1 == looks_changeeffectby ]; then
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+      echo >> Stage/$name.ss "\nscript"
+      parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varvalue=
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varname=
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >> Stage/$name.ss "change ($varname) effect by ($varvalue)"
+      echo "Added block: \"change ($varname) effect by ($varvalue)\""
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+    elif [ $1 == looks_seteffectto ]; then
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >> Stage/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varvalue=
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varname=
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >> Stage/$name.ss "set ($varname) effect to ($varvalue)"
+      echo "Added block: \"set ($varname) effect to ($varvalue)\""
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+    elif [ $1 == looks_cleargraphiceffects ]; then
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >> Stage/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      echo >> Stage/$name.ss "clear graphic effects"
+      echo "Added block: \"clear graphic effects\""
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+    elif [ $1 == looks_backdropnumbername ]; then
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >> Stage/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varname=
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >> Stage/$name.ss "(backdrop ($varname))"
+      echo "Added block: \"(backdrop ($varname))\""
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+          b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :
+        do
+        ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :
+      do
+       ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
     fi
   }
-  i=$(expr $i + 11)
+  i=$(expr $i + 10)
   b=0
   novars=0
   while :
