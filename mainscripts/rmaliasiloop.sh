@@ -9,7 +9,7 @@ echo "Continue? [Y/N]"
 read -sn 1 input2
 echo
 if [ h$input2 == hY ] || [ h$input2 == hy ]; then
-  rm /c/msys64/usr/bin/scratchlang
+  rm /usr/bin/scratchlang
   rm .var/alias
 elif [ h$input2 == hn ] || [ h$input2 == hN ]; then
   echo

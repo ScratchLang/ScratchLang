@@ -20,7 +20,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   fi
   echo "Select the .sb3 you want to decompile. WARNING! THE NAME OF THE FILE CANNOT HAVE ANY SPACES OR IT WILL NOT UNZIP CORRECTLY!!!"
   sleep 2
-  file=$(zenity -file-selection)
+  file=$(zenity -file-selection -file-filter 'Scratch SB3 *.sb3')
   echo
   echo "Name of project? Keep in mind that it cannot be empty or it will not be created properly."
   read name

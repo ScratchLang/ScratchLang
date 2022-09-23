@@ -5,7 +5,7 @@
 
 This is for people who want to use Scratch like other programming languages.
 
-# Latest updates
+# Latest big updates
 Added all backdrop "looks" blocks!
 
 # The Plan
@@ -47,6 +47,9 @@ scratchlang
 To code, edit the .ss(es) in you favorite glorified text editor like VSC or Atom.
 
 To add assets, put them in the "assets" folder for the chosen sprite (or stage)
+
+You don't need ScratchLang to program ScratchScript (.ss) files, you can use a text editor. You just need ScratchLang to compile your project so it can run in Scratch.
+
 # Dependencies
 ## Windows
 You need `zenity`.
@@ -58,6 +61,13 @@ sudo apt-get install -y zenity
 ```
 
 Please write down any dependencies I missed.
+
+# Jobs
+This is what people will do.
+
+### 0K9090
+Program the decompiler
+###
 
 # ScratchLang Language
 ## ScratchLang blocks
