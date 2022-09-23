@@ -38,12 +38,12 @@ if [ h$input == h1 ]; then
   echo "You named your project $name. If you want to rename it, use the File Explorer."
   cd $(dirname $(pwd))
   if ! [ -d projects ]; then
-  mkdir projects
+    mkdir projects
   fi
   cd projects
   mkdir $name
   cd $name
-  echo >> .maindir "Please don't remove this file."
+  echo >>.maindir "Please don't remove this file."
   mkdir Stage
   cd Stage
   mkdir assets
@@ -52,13 +52,13 @@ if [ h$input == h1 ]; then
   cd $(dirname $(pwd))
   cp resources/cd21514d0531fdffb22204e0ec5ed84a.svg projects/$name/Stage/assets
   cd projects/$name/Stage
-  echo >> $name.ss \#There should be no empty lines.
-  echo >> $name.ss ss
+  echo >>$name.ss \#There should be no empty lines.
+  echo >>$name.ss ss
   cd $(dirname $(pwd))
   mkdir Sprite1
   cd Sprite1
-  echo >> $name.ss \#There should be no empty lines.
-  echo >> $name.ss ss
+  echo >>$name.ss \#There should be no empty lines.
+  echo >>$name.ss ss
   mkdir assets
   cd $(dirname $(pwd))
   cd $(dirname $(pwd))
@@ -105,7 +105,7 @@ elif [ h$input == h5 ]; then
   read pgrd
   if ! [ h$pgrd == h ]; then
     if [ -d $pgrd ]; then
-      tar -cf $pgrd.ssa $pgrd #ScratchScript Archive 
+      tar -cf $pgrd.ssa $pgrd #ScratchScript Archive
       cd $(dirname $(pwd))
       cp projects/$pgrd.ssa exports
       rm projects/$pgrd.ssa
@@ -121,7 +121,7 @@ elif [ h$input == h6 ]; then
   else
     input3=y
   fi
-  if [ h$input3 == hY ] ||[ h$input3 == hy ]; then
+  if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     import=$(zenity -file-selection -file-filter 'ScratchScript\ Archive *.ssa')
     cd $(dirname $(pwd))
     if ! [ -d projects ]; then
@@ -171,8 +171,8 @@ elif [ h$input == h8 ]; then
   dir=$(pwd)
   if ! [ -f .var/alias ]; then
 
-    echo >> /usr/bin/scratchlang "cd $dir && ./start.sh \$1 && cd"
-    echo >> .var/alias "This file tells the program that the command is already created. Please don't touch this."
+    echo >>/usr/bin/scratchlang "cd $dir && ./start.sh \$1 && cd"
+    echo >>.var/alias "This file tells the program that the command is already created. Please don't touch this."
   else
     echo "alias has already been created."
   fi
@@ -180,7 +180,7 @@ elif [ h$input == h9 ]; then
   chmod 755 rmaliasiloop.sh
   ./rmaliasiloop9.sh
 elif [ h$input == hA ] || [ h$input == ha ]; then
-  echo >> .var/devmode "This is a devmode file. You can manually remove it to disable dev mode if you don't want to use the program to disable it for some reason."
+  echo >>.var/devmode "This is a devmode file. You can manually remove it to disable dev mode if you don't want to use the program to disable it for some reason."
   ./start.sh
 elif [ h$input == hB ] || [ h$input == hb ]; then
   clear

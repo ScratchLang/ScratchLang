@@ -16,7 +16,7 @@ fi
 echo
 if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   if ! [ -f .var/zenity ]; then
-    echo >> .var/zenity
+    echo >>.var/zenity
   fi
   echo "Select the .sb3 you want to decompile. WARNING! THE NAME OF THE FILE CANNOT HAVE ANY SPACES OR IT WILL NOT UNZIP CORRECTLY!!!"
   sleep 2
@@ -49,7 +49,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   echo
   unzip $file
   echo
-  echo >> .maindir "Please don't remove this file."
+  echo >>.maindir "Please don't remove this file."
   mkdir Stage
   cd Stage
   mkdir assets
@@ -57,7 +57,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   cd $(dirname $(pwd))
   jsonfile=$(cat project.json)
   i=55
-  getchar () { #stops loop when it detects char $1
+  getchar() { #stops loop when it detects char $1
     if ! [ -$2 == -++ ]; then
       char=${jsonfile:$i:1}
       if [ -$char == "$1" ]; then
@@ -78,11 +78,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   #Decompile variables
   echo "Defining variables..."
   echo
-  while :
-  do
+  while :; do
     b=0
-    while :
-    do
+    while :; do
       ((i++))
       getchar -\"
       if [ $b == 1 ]; then
@@ -91,8 +89,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     done
     ((i++))
     b=0
-    while :
-    do
+    while :; do
       ((i++))
       getchar -\"
       if [ $b == 1 ]; then
@@ -101,10 +98,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     done
     b=0
     novars=0
-    while : #repeat until char = [
-    do
+    while :; do #repeat until char = [
       ((i++))
-      getchar -\[ 
+      getchar -\[
       if [ $b == 1 ]; then
         break
       fi
@@ -118,21 +114,19 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       b=0
       varname=
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\" ++
         varname+=$char
         if [ $b == 1 ]; then
-        break
+          break
         fi
       done
       ((i++))
       ((i++))
       b=0
       varvalue=
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\] ++
         varvalue+=$char
@@ -141,11 +135,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       if ! [ -f Stage/$name.ss ]; then
-        echo >> Stage/$name.ss "#There should be no empty lines."
-        echo >> Stage/$name.ss ss
-        echo >> Stage/$name.ss "\prep"
+        echo >>Stage/$name.ss "#There should be no empty lines."
+        echo >>Stage/$name.ss ss
+        echo >>Stage/$name.ss "\prep"
       fi
-      echo >> Stage/$name.ss $varname=$varvalue #Use echo >> if 2nd arg contains variables
+      echo >>Stage/$name.ss $varname=$varvalue #Use echo >> if 2nd arg contains variables
       echo "Added variable \"$varname\". Value:"
       echo $varvalue
       echo
@@ -159,22 +153,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         break
       fi
       i=$(expr $i - $isub)
-    fi 
+    fi
     if [ $novars == 1 ]; then
-      echo >> Stage/$name.ss "#There should be no empty lines."
-      echo >> Stage/$name ss
-      echo >> Stage/$name.ss "\prep"
+      echo >>Stage/$name.ss "#There should be no empty lines."
+      echo >>Stage/$name ss
+      echo >>Stage/$name.ss "\prep"
       break
     fi
   done #Finish compiling variables, lists next
   echo "Building lists..."
   echo
   i=$(expr $i + 9)
-  while :
-  do
+  while :; do
     b=0
-    while :
-    do
+    while :; do
       ((i++))
       getchar -\"
       if [ $b == 1 ]; then
@@ -183,8 +175,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     done
     ((i++))
     b=0
-    while :
-    do
+    while :; do
       ((i++))
       getchar -\"
       if [ $b == 1 ]; then
@@ -193,10 +184,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     done
     b=0
     novars=0
-    while :
-    do
+    while :; do
       ((i++))
-      getchar -\[ 
+      getchar -\[
       if [ $b == 1 ]; then
         break
       fi
@@ -210,13 +200,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       b=0
       listname=
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\" ++
         listname+=$char
         if [ $b == 1 ]; then
-        break
+          break
         fi
       done
       ((i++))
@@ -230,12 +219,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         getchar -\"
         if ! [ $b == 0 ]; then
           b=0
-          while :
-          do
+          while :; do
             b=0
             varname=
-            while :
-            do
+            while :; do
               ((i++))
               getchar -\"
               if [ $b == 1 ]; then
@@ -247,22 +234,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             b=0
             getchar -\]
             if ! [ $b == 1 ]; then
-              echo >> lists $varname,
+              echo >>lists $varname,
               ((i++))
             else
-              echo >> lists $varname
+              echo >>lists $varname
               break
             fi
           done
         else
           b=0
           ((i--))
-          while :
-          do
+          while :; do
             b=0
             varname=
-            while :
-            do
+            while :; do
               ((i++))
               getchar -,
               if [ $b == 1 ]; then
@@ -277,20 +262,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             b=0
             getchar -\]
             if ! [ $b == 1 ]; then
-              echo >> lists $varname,
+              echo >>lists $varname,
             else
-              echo >> lists $varname
+              echo >>lists $varname
               break
             fi
           done
         fi
-        echo >> Stage/$name.ss $listname=$(echo $(cat lists) | sed 's/ //g')
+        echo >>Stage/$name.ss $listname=$(echo $(cat lists) | sed 's/ //g')
         echo "Added list \"$listname\". Contents:"
         echo $(cat lists) | sed 's/ //g'
         echo
         rm lists
       else
-        echo >> Stage/$name.ss $listname=, 
+        echo >>Stage/$name.ss $listname=,
         echo "Added list \"$listname\". Contents:"
         echo "Nothing."
         echo
@@ -315,8 +300,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   i=$(expr $i + 14)
   b=0
   novars=0
-  while : #repeat until char = [
-  do
+  while :; do #repeat until char = [
     ((i++))
     getchar -\"
     if [ $b == 1 ]; then
@@ -329,12 +313,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     fi
   done
   if [ $novars == 0 ]; then
-    while :
-    do
+    while :; do
       ((i++))
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -342,8 +324,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -352,8 +333,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       b=0
       varname=
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -361,7 +341,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varname+=$char
       done
-      echo >> Stage/$name.ss {broadcast}=$varname
+      echo >>Stage/$name.ss {broadcast}=$varname
       echo "Loaded broadcast $varname"
       echo
       ((i++))
@@ -376,13 +356,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   fi
   echo "Making blocks..."
   echo
-  addblock () {
+  addblock() {
     parent=0
     if [ $1 == event_broadcast ]; then
       ((i++))
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -390,8 +369,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -406,8 +384,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
+        while :; do
           ((i++))
           getchar -\"
           if [ $b == 1 ]; then
@@ -415,8 +392,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
           fi
         done
         b=0
-        while :
-        do
+        while :; do
           ((i++))
           getchar -\"
           if [ $b == 1 ]; then
@@ -425,8 +401,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -434,8 +409,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -447,25 +421,23 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >> Stage/$name.ss "\nscript"
+        echo >>Stage/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-         ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-         ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -473,8 +445,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -482,8 +453,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -491,8 +461,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -500,8 +469,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -509,8 +477,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -519,8 +486,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       b=0
       varvalue=
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -528,11 +494,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      echo >> Stage/$name.ss "broadcast ($varvalue)"
+      echo >>Stage/$name.ss "broadcast ($varvalue)"
       echo "Added block: \"broadcast ($varvalue)\""
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -540,8 +505,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -549,8 +513,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -558,8 +521,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -567,8 +529,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -576,8 +537,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -585,8 +545,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -594,8 +553,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -603,8 +561,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -626,8 +583,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       if ! [ h$done == h1 ]; then
         if [ $parent == 1 ]; then
           b=0
-          while :
-          do
+          while :; do
             ((i++))
             getchar -\"
             if [ $b == 1 ]; then
@@ -635,8 +591,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             fi
           done
           b=0
-          while :
-          do
+          while :; do
             ((i++))
             getchar -\"
             if [ $b == 1 ]; then
@@ -644,8 +599,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             fi
           done
           b=0
-          while :
-          do
+          while :; do
             ((i++))
             getchar -\"
             if [ $b == 1 ]; then
@@ -653,8 +607,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             fi
           done
           b=0
-          while :
-          do
+          while :; do
             ((i++))
             getchar -\"
             if [ $b == 1 ]; then
@@ -665,8 +618,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       fi
     elif [ $1 == motion_movesteps ]; then
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -674,8 +626,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -690,8 +641,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
+        while :; do
           ((i++))
           getchar -\"
           if [ $b == 1 ]; then
@@ -699,8 +649,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
           fi
         done
         b=0
-        while :
-        do
+        while :; do
           ((i++))
           getchar -\"
           if [ $b == 1 ]; then
@@ -709,8 +658,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -718,8 +666,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -731,25 +678,23 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >> Stage/$name.ss "\nscript"
+        echo >>Stage/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-         ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-         ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -757,8 +702,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -766,8 +710,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -775,8 +718,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -784,8 +726,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -793,8 +734,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -803,8 +743,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       b=0
       varvalue=
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -812,11 +751,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      echo >> Stage/$name.ss "move ($varvalue) steps"
+      echo >>Stage/$name.ss "move ($varvalue) steps"
       echo "Added block: \"move ($varvalue) steps\""
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -824,8 +762,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -833,8 +770,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -842,8 +778,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -851,8 +786,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -860,8 +794,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -869,8 +802,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -891,8 +823,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       if ! [ h$done == h1 ]; then
         if [ $parent == 1 ]; then
           b=0
-          while :
-          do
+          while :; do
             ((i++))
             getchar -\"
             if [ $b == 1 ]; then
@@ -900,8 +831,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             fi
           done
           b=0
-          while :
-          do
+          while :; do
             ((i++))
             getchar -\"
             if [ $b == 1 ]; then
@@ -909,8 +839,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             fi
           done
           b=0
-          while :
-          do
+          while :; do
             ((i++))
             getchar -\"
             if [ $b == 1 ]; then
@@ -918,8 +847,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             fi
           done
           b=0
-          while :
-          do
+          while :; do
             ((i++))
             getchar -\"
             if [ $b == 1 ]; then
@@ -930,8 +858,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       fi
     elif [ $1 == control_wait ]; then
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -939,8 +866,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -955,8 +881,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
+        while :; do
           ((i++))
           getchar -\"
           if [ $b == 1 ]; then
@@ -964,8 +889,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
           fi
         done
         b=0
-        while :
-        do
+        while :; do
           ((i++))
           getchar -\"
           if [ $b == 1 ]; then
@@ -974,8 +898,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -983,8 +906,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -996,25 +918,23 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >> Stage/$name.ss "\nscript"
+        echo >>Stage/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-         ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-         ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -1022,45 +942,40 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -1068,74 +983,66 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       b=0
       varvalue=
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varvalue+=$char
       done
-      echo >> Stage/$name.ss "wait ($varvalue) seconds"
+      echo >>Stage/$name.ss "wait ($varvalue) seconds"
       echo "Added block: \"wait ($varvalue) seconds\""
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -1156,8 +1063,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       if ! [ h$done == h1 ]; then
         if [ $parent == 1 ]; then
           b=0
-          while :
-          do
+          while :; do
             ((i++))
             getchar -\"
             if [ $b == 1 ]; then
@@ -1165,8 +1071,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             fi
           done
           b=0
-          while :
-          do
+          while :; do
             ((i++))
             getchar -\"
             if [ $b == 1 ]; then
@@ -1174,8 +1079,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             fi
           done
           b=0
-          while :
-          do
+          while :; do
             ((i++))
             getchar -\"
             if [ $b == 1 ]; then
@@ -1183,8 +1087,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             fi
           done
           b=0
-          while :
-          do
+          while :; do
             ((i++))
             getchar -\"
             if [ $b == 1 ]; then
@@ -1195,8 +1098,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       fi
     elif [ $1 == looks_switchbackdropto ]; then
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -1204,8 +1106,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -1220,8 +1121,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
+        while :; do
           ((i++))
           getchar -\"
           if [ $b == 1 ]; then
@@ -1229,8 +1129,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
           fi
         done
         b=0
-        while :
-        do
+        while :; do
           ((i++))
           getchar -\"
           if [ $b == 1 ]; then
@@ -1239,8 +1138,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -1248,8 +1146,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -1261,25 +1158,23 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >> Stage/$name.ss "\nscript"
+        echo >>Stage/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-         ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-         ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -1287,108 +1182,96 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -1396,36 +1279,32 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       if [ $parent == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -1433,72 +1312,64 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -1512,18 +1383,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -1531,18 +1400,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -1556,18 +1423,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -1575,63 +1440,56 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -1639,57 +1497,51 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       b=0
       varvalue=
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varvalue+=$char
       done
-      echo >> Stage/$name.ss "switch backdrop to ($varvalue)"
+      echo >>Stage/$name.ss "switch backdrop to ($varvalue)"
       echo "Added block: \"switch backdrop to ($varvalue)\""
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -1697,8 +1549,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
     elif [ $1 == looks_switchbackdroptoandwait ]; then
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -1706,8 +1557,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -1722,8 +1572,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
+        while :; do
           ((i++))
           getchar -\"
           if [ $b == 1 ]; then
@@ -1731,8 +1580,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
           fi
         done
         b=0
-        while :
-        do
+        while :; do
           ((i++))
           getchar -\"
           if [ $b == 1 ]; then
@@ -1741,8 +1589,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -1750,8 +1597,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -1763,25 +1609,23 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >> Stage/$name.ss "\nscript"
+        echo >>Stage/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-         ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-         ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -1789,108 +1633,96 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -1898,36 +1730,32 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       if [ $parent == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -1935,72 +1763,64 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2014,18 +1834,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -2033,18 +1851,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2058,18 +1874,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -2077,63 +1891,56 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-      ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2141,66 +1948,18 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       b=0
       varvalue=
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varvalue+=$char
       done
-      echo >> Stage/$name.ss "switch backdrop to ($varvalue) and wait"
+      echo >>Stage/$name.ss "switch backdrop to ($varvalue) and wait"
       echo "Added block: \"switch backdrop to ($varvalue) and wait\""
       b=0
-      while :
-      do
-       ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :
-      do
-       ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :
-      do
-       ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :
-      do
-       ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :
-      do
-       ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-    elif [ $1 == looks_nextbackdrop ]; then
-      b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -2208,8 +1967,48 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+    elif [ $1 == looks_nextbackdrop ]; then
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -2224,8 +2023,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
+        while :; do
           ((i++))
           getchar -\"
           if [ $b == 1 ]; then
@@ -2233,8 +2031,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
           fi
         done
         b=0
-        while :
-        do
+        while :; do
           ((i++))
           getchar -\"
           if [ $b == 1 ]; then
@@ -2243,8 +2040,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -2252,8 +2048,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -2265,100 +2060,90 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >> Stage/$name.ss "\nscript"
+        echo >>Stage/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
       ((i--))
       if [ $parent == 0 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
       fi
-      echo >> Stage/$name.ss "next backdrop"
+      echo >>Stage/$name.ss "next backdrop"
       echo "Added block: \"next backdrop\""
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2366,36 +2151,32 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       if [ $parent == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -2403,9 +2184,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2425,18 +2205,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
     elif [ $1 == looks_changeeffectby ]; then
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2450,18 +2228,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -2469,18 +2245,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2491,25 +2265,23 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-      echo >> Stage/$name.ss "\nscript"
-      parent=1
+        echo >>Stage/$name.ss "\nscript"
+        parent=1
       fi
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -2517,45 +2289,40 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2563,9 +2330,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       b=0
       varvalue=
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2573,45 +2339,40 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         varvalue+=$char
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2619,48 +2380,43 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       b=0
       varname=
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varname+=$char
       done
-      echo >> Stage/$name.ss "change ($varname) effect by ($varvalue)"
+      echo >>Stage/$name.ss "change ($varname) effect by ($varvalue)"
       echo "Added block: \"change ($varname) effect by ($varvalue)\""
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2668,36 +2424,32 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       if [ $parent == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -2705,9 +2457,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2727,18 +2478,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
     elif [ $1 == looks_seteffectto ]; then
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2752,18 +2501,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -2771,18 +2518,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2793,25 +2538,23 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >> Stage/$name.ss "\nscript"
+        echo >>Stage/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -2819,45 +2562,40 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2865,9 +2603,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       b=0
       varvalue=
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2875,45 +2612,40 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         varvalue+=$char
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2921,48 +2653,43 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       b=0
       varname=
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varname+=$char
       done
-      echo >> Stage/$name.ss "set ($varname) effect to ($varvalue)"
+      echo >>Stage/$name.ss "set ($varname) effect to ($varvalue)"
       echo "Added block: \"set ($varname) effect to ($varvalue)\""
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2970,36 +2697,32 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       if [ $parent == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -3007,9 +2730,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -3029,18 +2751,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
     elif [ $1 == looks_cleargraphiceffects ]; then
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -3054,18 +2774,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -3073,18 +2791,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -3095,100 +2811,90 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >> Stage/$name.ss "\nscript"
+        echo >>Stage/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
       fi
-      echo >> Stage/$name.ss "clear graphic effects"
+      echo >>Stage/$name.ss "clear graphic effects"
       echo "Added block: \"clear graphic effects\""
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -3196,36 +2902,32 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       if [ $parent == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -3233,9 +2935,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -3255,18 +2956,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
     elif [ $1 == looks_backdropnumbername ]; then
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -3280,18 +2979,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -3299,18 +2996,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -3321,25 +3016,23 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >> Stage/$name.ss "\nscript"
+        echo >>Stage/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -3347,63 +3040,56 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -3411,48 +3097,43 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       b=0
       varname=
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varname+=$char
       done
-      echo >> Stage/$name.ss "(backdrop ($varname))"
+      echo >>Stage/$name.ss "(backdrop ($varname))"
       echo "Added block: \"(backdrop ($varname))\""
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
       done
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -3460,36 +3141,32 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       if [ $parent == 1 ]; then
         b=0
-        while :
-        do
-        ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-          b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
         done
         b=0
-        while :
-        do
-        ((i++))
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
           getchar -\"
           if [ $b == 1 ]; then
             break
@@ -3497,9 +3174,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done
       fi
       b=0
-      while :
-      do
-       ((i++))
+      while :; do
+        ((i++))
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -3522,8 +3198,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   i=$(expr $i + 10)
   b=0
   novars=0
-  while :
-  do
+  while :; do
     ((i++))
     getchar -\"
     if [ $b == 1 ]; then
@@ -3536,11 +3211,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     fi
   done
   if [ $novars = 0 ]; then
-    while :
-    do
+    while :; do
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -3549,8 +3222,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       ((i++))
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -3559,8 +3231,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       ((i++))
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -3569,8 +3240,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       ((i++))
       b=0
-      while :
-      do
+      while :; do
         ((i++))
         getchar -\"
         if [ $b == 1 ]; then
@@ -3579,14 +3249,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       b=0
       varname=
-      while :
-      do
-      ((i++))
-      getchar -\"
-      if [ $b == 1 ]; then
-        break
-      fi
-      varname+=$char
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
       done
       addblock $varname
       if [ h$done == h1 ]; then

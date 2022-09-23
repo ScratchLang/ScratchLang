@@ -11,7 +11,7 @@ fi
 echo
 if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   if ! [ -f .var/zenity ]; then
-    echo >> .var/zenity
+    echo >>.var/zenity
   fi
   echo "Select the project directory."
   echo
@@ -19,10 +19,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   file=$(zenity -directory -file-selection)
   cd $file
   if [ -f .maindir ]; then
-    echo >> .dirs $(ls -1)
+    echo >>.dirs $(ls -1)
     json={\"targets\":[{\"isStage\":true,\"name\":\"Stage\",\"variables\": #Start of the json
-    for i in {1..$(sed -n '$=' .dirs)} #Starts compiling the json
-    do
+    for i in {1..$(#Starts compiling the json
+      sed -n '$=' .dirs
+    )}; do
       if [ $i == 1 ]; then
         cd Stage
         block=$(sed $i'.dirs')
@@ -36,7 +37,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       fi
     done
-    echo >> project.json $json #creates the project.json
+    echo >>project.json $json #creates the project.json
     #pack into sb3 here
   else
     echo "Error: Not a project directory."

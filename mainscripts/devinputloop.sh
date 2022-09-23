@@ -28,7 +28,7 @@ elif [ $1 == -6 ]; then
 else
   input=6
 fi
-  if [ h$input == h1 ]; then
+if [ h$input == h1 ]; then
   dir=$(pwd)
   echo
   echo "Name your project. Keep in mind that it cannot be empty or it will not be created properly."
@@ -40,12 +40,12 @@ fi
   echo "You named your project $name. If you want to rename it, use the File Explorer."
   cd $(dirname $(pwd))
   if ! [ -d projects ]; then
-  mkdir projects
+    mkdir projects
   fi
   cd projects
   mkdir $name
   cd $name
-  echo >> .maindir "Please don't remove this file."
+  echo >>.maindir "Please don't remove this file."
   mkdir Stage
   cd Stage
   mkdir assets
@@ -54,13 +54,13 @@ fi
   cd $(dirname $(pwd))
   cp resources/cd21514d0531fdffb22204e0ec5ed84a.svg projects/$name/Stage/assets
   cd projects/$name/Stage
-  echo >> $name.ss \#There should be no empty lines.
-  echo >> $name.ss ss
+  echo >>$name.ss \#There should be no empty lines.
+  echo >>$name.ss ss
   cd $(dirname $(pwd))
   mkdir Sprite1
   cd Sprite1
-  echo >> $name.ss \#There should be no empty lines.
-  echo >> $name.ss ss
+  echo >>$name.ss \#There should be no empty lines.
+  echo >>$name.ss ss
   mkdir assets
   cd $(dirname $(pwd))
   cd $(dirname $(pwd))
@@ -107,7 +107,7 @@ elif [ h$input == h5 ]; then
   read pgrd
   if ! [ h$pgrd == h ]; then
     if [ -d $pgrd ]; then
-      tar -cf $pgrd.ssa $pgrd #ScratchScript Archive 
+      tar -cf $pgrd.ssa $pgrd #ScratchScript Archive
       cd $(dirname $(pwd))
       cp projects/$pgrd.ssa exports
       rm projects/$pgrd.ssa
@@ -123,7 +123,7 @@ elif [ h$input == h6 ]; then
   else
     input3=y
   fi
-  if [ h$input3 == hY ] ||[ h$input3 == hy ]; then
+  if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     import=$(zenity -file-selection -file-filter 'ScratchScript\ Archive *.ssa')
     cd $(dirname $(pwd))
     if ! [ -d projects ]; then
@@ -172,8 +172,8 @@ elif [ h$input == h7 ]; then
 elif [ h$input == h8 ]; then
   dir=$(pwd)
   if ! [ -f .var/alias ]; then
-    echo >> /c/msys64/usr/bin/scratchlang "cd $dir && ./start.sh \$1 && cd"
-    echo >> .var/alias "This file tells the program that the command is already created. Please don't touch this."
+    echo >>/c/msys64/usr/bin/scratchlang "cd $dir && ./start.sh \$1 && cd"
+    echo >>.var/alias "This file tells the program that the command is already created. Please don't touch this."
   else
     echo "alias has already been created."
   fi
@@ -223,7 +223,7 @@ elif [ h$input == hC ] || [ h$input == hc ]; then
   fi
   rm -rf exports
   mkdir exports
-  echo >> exports/.temp
+  echo >>exports/.temp
   cd mainscripts
   if [ -f .var/alias ]; then
     echo "Get rid of the scratchlang command? [Y/N]"

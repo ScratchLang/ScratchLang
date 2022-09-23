@@ -67,7 +67,8 @@ This is what people will do.
 
 ### 0K9090
 Program the decompiler
-###
+### wendiner
+I don't know what they're doing
 
 # ScratchLang Language
 ## ScratchLang blocks
