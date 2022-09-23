@@ -233,8 +233,8 @@ insert () at () of () <br />
 replace item () of () with () <br />
 (item () of ()) <br />
 (item # of () in ()) <br />
-(length of ())
-<li () contains ()?> #list contains block
+(length of ()) <br />
+<list () contains ()?> #list contains block
 show list () <br />
 hide list () <br />
 
