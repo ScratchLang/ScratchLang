@@ -1,6 +1,6 @@
 #!/bin/bash
 echo
-if [ h$1 == h ] || [ h$1 == hd ]; then
+if [ h$1 == h ]; then
   echo "1. Create a project."
   echo "2. Remove a project."
   echo "3. Compile a project."

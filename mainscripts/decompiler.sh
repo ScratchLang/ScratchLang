@@ -4,6 +4,7 @@
 #
 #
 #
+DecompCurrentDir=Stage
 echo
 echo "Remember, both the compiler and decompiler don't work yet. The decompiler can extract the sb3, define variables, build lists, load broadcasts, and decompile some blocks, but it can't do anything else yet."
 echo
@@ -421,7 +422,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>Stage/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
@@ -494,8 +495,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      echo >>Stage/$name.ss "broadcast ($varvalue)"
-      echo "Added block: \"broadcast ($varvalue)\""
+      echo >>$DecompCurrentDir/$name.ss "broadcast [$varvalue]"
+      echo "Added block: \"broadcast [$varvalue]\""
       b=0
       while :; do
         ((i++))
@@ -678,7 +679,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>Stage/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
@@ -751,7 +752,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      echo >>Stage/$name.ss "move ($varvalue) steps"
+      echo >>$DecompCurrentDir/$name.ss "move ($varvalue) steps"
       echo "Added block: \"move ($varvalue) steps\""
       b=0
       while :; do
@@ -918,7 +919,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>Stage/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
@@ -991,7 +992,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      echo >>Stage/$name.ss "wait ($varvalue) seconds"
+      echo >>$DecompCurrentDir/$name.ss "wait ($varvalue) seconds"
       echo "Added block: \"wait ($varvalue) seconds\""
       b=0
       while :; do
@@ -1158,7 +1159,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>Stage/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
@@ -1505,7 +1506,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      echo >>Stage/$name.ss "switch backdrop to ($varvalue)"
+      echo >>$DecompCurrentDir/$name.ss "switch backdrop to ($varvalue)"
       echo "Added block: \"switch backdrop to ($varvalue)\""
       b=0
       while :; do
@@ -1609,7 +1610,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>Stage/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
@@ -1956,7 +1957,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      echo >>Stage/$name.ss "switch backdrop to ($varvalue) and wait"
+      echo >>$DecompCurrentDir/$name.ss "switch backdrop to ($varvalue) and wait"
       echo "Added block: \"switch backdrop to ($varvalue) and wait\""
       b=0
       while :; do
@@ -2060,7 +2061,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>Stage/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
@@ -2083,7 +2084,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
           fi
         done
       fi
-      echo >>Stage/$name.ss "next backdrop"
+      echo >>$DecompCurrentDir/$name.ss "next backdrop"
       echo "Added block: \"next backdrop\""
       b=0
       while :; do
@@ -2265,7 +2266,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>Stage/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
@@ -2388,8 +2389,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varname+=$char
       done
-      echo >>Stage/$name.ss "change ($varname) effect by ($varvalue)"
-      echo "Added block: \"change ($varname) effect by ($varvalue)\""
+      echo >>$DecompCurrentDir/$name.ss "change [$varname] effect by ($varvalue)"
+      echo "Added block: \"change [$varname] effect by ($varvalue)\""
       b=0
       while :; do
         ((i++))
@@ -2538,7 +2539,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>Stage/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
@@ -2661,8 +2662,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varname+=$char
       done
-      echo >>Stage/$name.ss "set ($varname) effect to ($varvalue)"
-      echo "Added block: \"set ($varname) effect to ($varvalue)\""
+      echo >>$DecompCurrentDir/$name.ss "set [$varname)]effect to ($varvalue)"
+      echo "Added block: \"set [$varname] effect to ($varvalue)\""
       b=0
       while :; do
         ((i++))
@@ -2811,7 +2812,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>Stage/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
@@ -2834,7 +2835,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
           fi
         done
       fi
-      echo >>Stage/$name.ss "clear graphic effects"
+      echo >>$DecompCurrentDir/$name.ss "clear graphic effects"
       echo "Added block: \"clear graphic effects\""
       b=0
       while :; do
@@ -3016,7 +3017,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>Stage/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
         parent=1
       fi
       ((i--))
@@ -3105,8 +3106,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varname+=$char
       done
-      echo >>Stage/$name.ss "(backdrop ($varname))"
-      echo "Added block: \"(backdrop ($varname))\""
+      echo >>$DecompCurrentDir/$name.ss "(backdrop [$varname])"
+      echo "Added block: \"(backdrop [$varname])\""
       b=0
       while :; do
         ((i++))
@@ -3193,6 +3194,4340 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i++))
       ((i++))
       ((i++))
+    elif [ $1 == sound_playuntildone ]; then
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      parent=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varname=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$DecompCurrentDir/$name.ss "play sound ($varname) until done"
+      echo "Added block: \"play sound ($varname) until done\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+    elif [ $1 == sound_play ]; then
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      parent=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varname=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$DecompCurrentDir/$name.ss "start sound ($varname)"
+      echo "Added block: \"start sound ($varname)\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+    elif [ $1 == sound_stopallsounds ]; then
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      echo >>$DecompCurrentDir/$name.ss "stop all sounds"
+      echo "Added block: \"stop all sounds\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+    elif [ $1 == sound_changeeffectby ]; then
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varvalue=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varname=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$DecompCurrentDir/$name.ss "change [$varname] effect by ($varvalue)"
+      echo "Added block: \"change [$varname] effect by ($varvalue)\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+    elif [ $1 == sound_seteffectto ]; then
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varvalue=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varname=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$DecompCurrentDir/$name.ss "set [$varname] effect to ($varvalue)"
+      echo "Added block: \"set [$varname] effect to ($varvalue)\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+    elif [ $1 == sound_cleareffects ]; then
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      echo >>$DecompCurrentDir/$name.ss "clear sound effects"
+      echo "Added block: \"clear sound effects\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+    elif [ $1 == sound_changevolumeby ]; then
+      ((i++))
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varvalue=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      echo >>$DecompCurrentDir/$name.ss "change volume by ($varvalue)"
+      echo "Added block: \"change volume by ($varvalue)\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      done=0
+      ((i--))
+      ((i--))
+      ((i--))
+      getchar -\}
+      ((i++))
+      ((i++))
+      ((i++))
+      if [ $b == 1 ]; then
+        done=1
+      fi
+    elif [ $1 == sound_setvolumeto ]; then
+      ((i++))
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varvalue=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      echo >>$DecompCurrentDir/$name.ss "set volume to ($varvalue) %"
+      echo "Added block: \"set volume to ($varvalue) %\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      done=0
+      ((i--))
+      ((i--))
+      ((i--))
+      getchar -\}
+      ((i++))
+      ((i++))
+      ((i++))
+      if [ $b == 1 ]; then
+        done=1
+      fi
+    elif [ $1 == sound_volume ]; then
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      echo >>$DecompCurrentDir/$name.ss "(volume)"
+      echo "Added block: \"(volume)\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+    elif [ $1 == event_whenflagclicked ]; then
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      echo >>$DecompCurrentDir/$name.ss "when flag clicked"
+      echo "Added block: \"when flag clicked\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+    elif [ $1 == event_whenkeypressed ]; then
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      varname=
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$DecompCurrentDir/$name.ss "when [$varname] key pressed"
+      echo "Added block: \"when [$varname] key pressed\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      b=0
+      done=0
+      getchar -\}
+      ((i++))
+      ((i++))
+      ((i++))
+      if [ $b == 1 ]; then
+        done=1
+      fi
+    elif [ $1 == event_whenstageclicked ]; then
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      echo >>$DecompCurrentDir/$name.ss "when stage clicked"
+      echo "Added block: \"when stage clicked\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+    elif [ $1 == event_whenbackdropswitchesto ]; then
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      varname=
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$DecompCurrentDir/$name.ss "when backdrop switches to [$varname]"
+      echo "Added block \"when backdrop switches to [$varname]\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      b=0
+      done=0
+      getchar -\}
+      ((i++))
+      ((i++))
+      ((i++))
+      if [ $b == 1 ]; then
+        done=1
+      fi
+    elif [ $1 == event_whengreaterthan ]; then
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varvalue=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varname=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$DecompCurrentDir/$name.ss "when [$varname] > ($varvalue)"
+      echo "Added block: \"when [$varname] > ($varvalue)\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+    elif [ $1 == event_whenbroadcastreceived ]; then
+      ((i++))
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varvalue=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      echo >>$DecompCurrentDir/$name.ss "when i receive [$varvalue]"
+      echo "Added block: \"when i receive [$varvalue]\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      if [ $parent == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      b=0
+      done=0
+      getchar -\}
+      ((i++))
+      ((i++))
+      ((i++))
+      if [ $b == 1 ]; then
+        done=1
+      fi
+    elif [ $1 == event_broadcastandwait ]; then
+      ((i++))
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      ((i++))
+      ((i++))
+      getchar -\"
+      if ! [ $b == 1 ]; then
+        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        parent=1
+      fi
+      ((i--))
+      ((i--))
+      if [ $b == 1 ]; then
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        b=0
+        while :; do
+          ((i++))
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+      fi
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      varvalue=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      echo >>$DecompCurrentDir/$name.ss "broadcast ($varvalue) and wait"
+      echo "Added block: \"broadcast ($varvalue) and wait\""
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      ((i--))
+      ((i--))
+      ((i--))
+      done=0
+      b=0
+      getchar -\}
+      if [ $b == 1 ]; then
+        done=1
+      fi
+      ((i++))
+      ((i++))
+      ((i++))
+      if ! [ h$done == h1 ]; then
+        if [ $parent == 1 ]; then
+          b=0
+          while :; do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          while :; do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          while :; do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          while :; do
+            ((i++))
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+        fi
+      fi
     fi
   }
   i=$(expr $i + 10)

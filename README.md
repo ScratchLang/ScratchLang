@@ -77,21 +77,41 @@ I don't know what they're doing
 
 ## Vanilla Scratch Blocks
 ### Added blocks
-Write every block in the order they are defined.
+25/90 Stage Blocks + Pen | 27.78% Done <br />
+25/141 Every Block + Pen | 17.73% Done <br />
+
+Write every block in the order they are defined. <br />
+
+Remember, quotes tell the compiler that it is not a variable. If you want to put in a variable, don't put quotation marks. <br />
 
 var=string - (Define [or set] a variable) <br />
 **list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma after the equal sign.)** <br />
 {broadcast}=broadcastexample - (Define a broadcast. The brackets tell the program that it is not defining a variable or a list.) <br />
-**broadcast (message) - (Use a broadcast.)** <br />
-move (num) steps (Move an amount of steps.) <br />
-**wait (num) seconds - (Wait for an amount of seconds.)** <br />
-switch backdrop to () - (Changes backdrop.) <br />
-**switch backdrop to () and wait -  (Changes backdrop and waits.)** <br />
+**broadcast [message] - (Use a broadcast.)** <br />
+move ("num") steps (Move an amount of steps.) <br />
+**wait ("num") seconds - (Wait for an amount of seconds.)** <br />
+switch backdrop to ("backdrop") - (Changes backdrop.) <br />
+**switch backdrop to ("backdrop") and wait -  (Changes backdrop and waits.)** <br />
 next backdrop - (Changes backdrop by 1.)
-**change (EFFECT #has to be in caps) effect by (num) - (Change an effect by an amount.)** <br />
-set (EFFECT) effect to (num) - (Sets an effect to an amount.) <br />
+**change [EFFECT #has to be in caps] effect by ("num") - (Change an effect by an amount.)** <br />
+set [EFFECT] effect to ("num") - (Sets an effect to an amount.) <br />
 **clear graphic effects - (Clears all effects applied to the stage or sprite.)** <br />
-(backdrop (number/name)) - (Reports the number or name of the backdrop.)
+(backdrop [number/name]) - (Reports the number or name of the backdrop.) <br />
+**play sound ("sound") until done - (Play a sound until done.)**
+start sound ("sound") - (Start a sound.) <br />
+**stop all sounds (Stop all sounds.)** <br />
+change [EFFECT] effect by ("num") (Change an effect by an amount.) <br />
+**set [EFFECT] effect to ("num") - (Sets an effect to an amount.)** <br />
+clear sound effects - (Clear sound effects.) <br />
+**change volume by ("num") - (Change the volume by an amount.)** <br />
+set volume to ("num") % - (Set the volume to an amount.) <br />
+**(volume) - (Reports the volume.)** <br />
+when flag clicked - (When green flag clicked.) <br />
+**when [key] key pressed - (Runs the script when a certain key is pressed.)** <br />
+when stage clicked - (Runs the script when the stage is clicked.) <br />
+**when backdrop switches to [backdrop] - (Runs the script when the stage changes to a certain backdrop.)** <br />
+when [THING] > ("num") <br />
+**when i receive [broadcast] - (Runs the script when a certain message is broadcasted.)** <br />
 
 ### Blocks to Add
 
@@ -108,7 +128,7 @@ set x to () <br />
 change y by () <br />
 set y to () <br />
 if on edge, bounce <br />
-set rotation style () <br />
+set rotation style [] <br />
 (x position) <br />
 (y position) <br />
 (direction) <br />
@@ -123,28 +143,10 @@ change size by () <br />
 set size to () <br />
 show <br />
 hide <br />
-go to () layer <br />
-go () () layers <br />
-(costume ()) <br />
+go to [] layer <br />
+go [] () layers <br />
+(costume []) <br />
 (size) <br />
-
-play sound () until done <br />
-start sound () <br />
-stop all sounds <br />
-change () effect by () <br />
-set () effect to () <br />
-clear sound effects <br />
-change volume by () <br />
-set volume to () <br />
-(volume) <br />
-
-when flag clicked <br />
-when () key pressed <br />
-when this sprite clicked <br />
-when backdrop switches to () <br />
-when () > () <br />
-when i receive () <br />
-broadcast () and wait <br />
 
 repeat () { <br />
 
@@ -174,11 +176,11 @@ while <> { <br />
 
 } <br />
 
-for each () in () { <br />
+for each [] in () { <br />
 
 } <br />
 
-stop () <br />
+stop [] <br />
 when i start as a clone <br />
 create clone of () <br />
 delete this clone <br />
@@ -193,12 +195,12 @@ ask () and wait <br />
 <mouse down?> <br />
 (mouse x) <br />
 (mouse y) <br />
-set drag mode () <br />
+set drag mode [] <br />
 (loudness) <br />
 (timer) <br />
 reset timer <br />
-(() of ()) <br />
-(current ()) <br />
+([] of ()) <br />
+(current []) <br />
 (days since 2000) <br />
 (username) <br />
 
@@ -219,24 +221,24 @@ reset timer <br />
 <() contains ()?> <br />
 (() mod ()) <br />
 (round ()) <br />
-(op () of ()) #abs of block <br />
+([] of ()) #abs of block <br />
 
 (my variable) <br />
-change () by () <br />
-show variable () <br />
-hide variable () <br />
+change [] by () <br />
+show variable [] <br />
+hide variable [] <br />
 (my list) <br />
-add () to () <br />
-delete () of () <br />
-delete all of () <br />
-insert () at () of () <br />
-replace item () of () with () <br />
-(item () of ()) <br />
-(item # of () in ()) <br />
-(length of ()) <br />
-<list () contains ()?> #list contains block
-show list () <br />
-hide list () <br />
+add () to [] <br />
+delete () of [] <br />
+delete all of [] <br />
+insert () at () of [] <br />
+replace item () of [] with () <br />
+(item () of []) <br />
+(item # of () in []) <br />
+(length of []) <br />
+<[] contains ()?> #list contains block
+show list [] <br />
+hide list [] <br />
 
 def example { <br />
 
