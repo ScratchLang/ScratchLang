@@ -27,6 +27,8 @@ If you want to help with the decompiler but you don't understand any of the code
 ## Notice
 Im wondering if there's a more efficient way to decompile the .json. Just 12 blocks added 2827 lines, and if I did the math correctly ((3466-379)/10*141), adding every block will add about 44,000 lines of code (including the eight already added) :(
 
+EDIT: By replacing common scripts that were used very often with functions, I reduced the line count by a lot!
+
 # How to use
 Clone the repo with
 ```
@@ -73,7 +75,7 @@ I don't know what they're doing
 # ScratchLang Language
 ## ScratchLang blocks
 \nscript - (Tells the compiler that it's a new script. Or maybe we could get rid of this and just detect for hat blocks.) <br />
-**\prep - (Everything below this [until \nscript] is used for compiling the .json)** <br />
+**\prep - (Everything below this [until the next instance of \nscript] is used for compiling the .json)** <br />
 
 ## Vanilla Scratch Blocks
 ### Added blocks
@@ -83,7 +85,20 @@ I don't know what they're doing
 Write every block in the order they are defined. <br />
 
 Remember, quotes tell the compiler that it is not a variable. If you want to put in a variable, don't put quotation marks. <br />
+Also, the compiler can't tell the difference between a string and a boolean/variable yet. So most number inputs have no quotation marks. <br />
 
+Brackets means that there cannot be a variable in there. It's either a defined object or an object from a set list. <br />
+
+### Very buggy blocks that are in development
+repeat ("num") { <br />
+
+} - (Repeat everything in the braces for (num) times.) <br />
+
+**forever { <br />
+
+**} - (Repeat everything in the braces forever.)** <br />
+
+### Stable blocks
 var=string - (Define [or set] a variable) <br />
 **list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma after the equal sign.)** <br />
 {broadcast}=broadcastexample - (Define a broadcast. The brackets tell the program that it is not defining a variable or a list.) <br />
@@ -147,14 +162,6 @@ go to [] layer <br />
 go [] () layers <br />
 (costume []) <br />
 (size) <br />
-
-repeat () { <br />
-
-} <br />
-
-forever { <br />
-
-} <br />
 
 if <> then { <br />
 
