@@ -171,7 +171,7 @@ elif [ h$input == h8 ]; then
   dir=$(pwd)
   if ! [ -f .var/alias ]; then
 
-    echo >>/usr/bin/scratchlang "cd $dir && ./start.sh \$1 && cd"
+    echo >>/usr/bin/scratchlang "cd $dir && ./start.sh \$1 \$2 \$3"
     echo >>.var/alias "This file tells the program that the command is already created. Please don't touch this."
   else
     echo "alias has already been created."

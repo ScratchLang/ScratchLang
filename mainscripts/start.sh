@@ -1,4 +1,6 @@
 #!/bin/bash
+basedir=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')")
+cd $basedir
 if [ h$1 == h-help ]; then
   echo "scratchlang (or ./start.sh if you haven't created the scratchlang command)"
   echo
@@ -25,30 +27,22 @@ else
   echo
 
   if [ h$1 == h ]; then
-    if [ -d .var ]; then
-      echo "Welcome to ScratchLang. (Name suggested by @MagicCrayon9342 on Scratch)"
-      echo "Please select an option."
-      if ! [ -f .var/devmode ]; then
-        chmod 755 inputloop.sh
-        ./inputloop.sh
-      else
-        chmod 755 devinputloop.sh
-        ./devinputloop.sh
-      fi
+    echo "Welcome to ScratchLang. (Name suggested by @MagicCrayon9342 on Scratch)"
+    echo "Please select an option."
+    if ! [ -f .var/devmode ]; then
+      chmod 755 inputloop.sh
+      ./inputloop.sh
     else
-      echo "You have to be in the \"mainscripts\" directory for this to work."
+      chmod 755 devinputloop.sh
+      ./devinputloop.sh
     fi
   else
-    if [ -d .var ]; then
-      if ! [ -f .var/devmode ]; then
-        chmod 755 inputloop.sh
-        ./inputloop.sh $1
-      else
-        chmod 755 devinputloop.sh
-        ./devinputloop.sh $1
-      fi
+    if ! [ -f .var/devmode ]; then
+      chmod 755 inputloop.sh
+      ./inputloop.sh $1
     else
-      echo "You have to be in the \"mainscripts\" directory for this to work."
+      chmod 755 devinputloop.sh
+      ./devinputloop.sh $1
     fi
   fi
 fi

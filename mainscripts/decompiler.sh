@@ -76,27 +76,23 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       fi
     fi
   }
+  nextquote() { #main while loop
+    b=0
+    while :; do
+      ((i++))
+      getchar -\"
+      if [ $b == 1 ]; then
+        break
+      fi
+    done
+  }
   #Decompile variables
   echo "Defining variables..."
   echo
   while :; do
-    b=0
-    while :; do
-      ((i++))
-      getchar -\"
-      if [ $b == 1 ]; then
-        break
-      fi
-    done
+    nextquote
     ((i++))
-    b=0
-    while :; do
-      ((i++))
-      getchar -\"
-      if [ $b == 1 ]; then
-        break
-      fi
-    done
+    nextquote
     b=0
     novars=0
     while :; do #repeat until char = [
@@ -166,23 +162,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   echo
   i=$(expr $i + 9)
   while :; do
-    b=0
-    while :; do
-      ((i++))
-      getchar -\"
-      if [ $b == 1 ]; then
-        break
-      fi
-    done
+    nextquote
     ((i++))
-    b=0
-    while :; do
-      ((i++))
-      getchar -\"
-      if [ $b == 1 ]; then
-        break
-      fi
-    done
+    nextquote
     b=0
     novars=0
     while :; do
@@ -316,22 +298,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   if [ $novars == 0 ]; then
     while :; do
       ((i++))
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       varname=
       while :; do
@@ -357,134 +325,89 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   fi
   echo "Making blocks..."
   echo
+  start() {
+    ((i++))
+    nextquote
+    nextquote
+    b=0
+    ((i++))
+    ((i++))
+    getchar -\"
+    ((i--))
+    ((i--))
+    if [ $b == 1 ]; then
+      nextquote
+      nextquote
+    fi
+    nextquote
+    nextquote
+    b=0
+    ((i++))
+    ((i++))
+    getchar -\"
+    if ! [ $b == 1 ]; then
+      echo >>$DecompCurrentDir/$name.ss "\nscript"
+      parent=1
+    fi
+    ((i--))
+    ((i--))
+    if [ $b == 1 ]; then
+      nextquote
+      nextquote
+    fi
+  }
+  substack() {
+    while :; do
+      nextquote
+      ((i++))
+      nextquote
+      ((i++))
+      nextquote
+      ((i++))
+      nextquote
+      b=0
+      varname=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      addblock $varname ndzs
+      if [ h$done == h1 ]; then
+        break
+      fi
+    done
+  }
+  end() {
+    ((i--))
+    ((i--))
+    if [ h$1 == h ]; then
+      ((i--))
+    fi
+    done=0
+    b=0
+    getchar -\}
+    if [ $b == 1 ]; then
+      done=1
+    fi
+    ((i++))
+    ((i++))
+    if [ h$1 == h ]; then
+      ((i++))
+    fi
+  }
   addblock() {
     parent=0
     if [ $1 == event_broadcast ]; then
-      ((i++))
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      ((i++))
-      ((i++))
-      getchar -\"
-      ((i--))
-      ((i--))
-      if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-      fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      ((i++))
-      ((i++))
-      getchar -\"
-      if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
-        parent=1
-      fi
-      ((i--))
-      ((i--))
-      if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-      fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varvalue=
       while :; do
@@ -497,81 +420,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "broadcast [$varvalue]"
       echo "Added block: \"broadcast [$varvalue]\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       ((i--))
       ((i--))
-      ((i--))
+      if [ h$2 == h ]; then
+        ((i--))
+      fi
       done=0
       b=0
       getchar -\}
@@ -580,60 +442,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       fi
       ((i++))
       ((i++))
-      ((i++))
+      if [ h$2 == h ]; then
+        ((i++))
+      fi
       if ! [ h$done == h1 ]; then
         if [ $parent == 1 ]; then
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
+          nextquote
+          nextquote
+          nextquote
+          nextquote
         fi
       fi
     elif [ $1 == motion_movesteps ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -641,39 +463,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -685,63 +479,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varvalue=
       while :; do
@@ -754,65 +499,18 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "move ($varvalue) steps"
       echo "Added block: \"move ($varvalue) steps\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       ((i--))
       ((i--))
-      ((i--))
+      if [ h$2 == h ]; then
+        ((i--))
+      fi
       b=0
       getchar -\}
       if [ $b == 1 ]; then
@@ -820,60 +518,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       fi
       ((i++))
       ((i++))
-      ((i++))
+      if [ h$2 == h ]; then
+        ((i++))
+      fi
       if ! [ h$done == h1 ]; then
         if [ $parent == 1 ]; then
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
+          nextquote
+          nextquote
+          nextquote
+          nextquote
         fi
       fi
     elif [ $1 == control_wait ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -881,39 +539,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -925,63 +555,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varvalue=
       while :; do
@@ -994,65 +575,18 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "wait ($varvalue) seconds"
       echo "Added block: \"wait ($varvalue) seconds\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       ((i--))
       ((i--))
-      ((i--))
+      if [ h$2 == h ]; then
+        ((i--))
+      fi
       b=0
       getchar -\}
       if [ $b == 1 ]; then
@@ -1060,60 +594,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       fi
       ((i++))
       ((i++))
-      ((i++))
+      if [ h$2 == h ]; then
+        ((i++))
+      fi
       if ! [ h$done == h1 ]; then
         if [ $parent == 1 ]; then
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
+          nextquote
+          nextquote
+          nextquote
+          nextquote
         fi
       fi
     elif [ $1 == looks_switchbackdropto ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -1121,39 +615,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -1165,217 +631,35 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -1383,39 +667,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -1423,79 +679,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varvalue=
       while :; do
@@ -1508,63 +701,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "switch backdrop to ($varvalue)"
       echo "Added block: \"switch backdrop to ($varvalue)\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
     elif [ $1 == looks_switchbackdroptoandwait ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -1572,39 +716,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -1616,217 +732,35 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -1834,39 +768,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -1874,79 +780,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varvalue=
       while :; do
@@ -1959,63 +802,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "switch backdrop to ($varvalue) and wait"
       echo "Added block: \"switch backdrop to ($varvalue) and wait\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
     elif [ $1 == looks_nextbackdrop ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -2023,39 +817,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -2067,160 +833,30 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $parent == 0 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
       echo >>$DecompCurrentDir/$name.ss "next backdrop"
       echo "Added block: \"next backdrop\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == looks_changeeffectby ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -2228,39 +864,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -2272,63 +880,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varvalue=
       while :; do
@@ -2339,46 +898,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varname=
       while :; do
@@ -2391,109 +915,21 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "change [$varname] effect by ($varvalue)"
       echo "Added block: \"change [$varname] effect by ($varvalue)\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == looks_seteffectto ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -2501,39 +937,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -2545,63 +953,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varvalue=
       while :; do
@@ -2612,46 +971,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varname=
       while :; do
@@ -2664,109 +988,21 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "set [$varname)]effect to ($varvalue)"
       echo "Added block: \"set [$varname] effect to ($varvalue)\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == looks_cleargraphiceffects ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -2774,39 +1010,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -2818,160 +1026,30 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
       echo >>$DecompCurrentDir/$name.ss "clear graphic effects"
       echo "Added block: \"clear graphic effects\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == looks_backdropnumbername ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -2979,39 +1057,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -3023,79 +1073,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varname=
       while :; do
@@ -3108,109 +1095,21 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "(backdrop [$varname])"
       echo "Added block: \"(backdrop [$varname])\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == sound_playuntildone ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -3218,39 +1117,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -3262,217 +1133,35 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -3480,39 +1169,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       parent=0
       ((i++))
@@ -3524,79 +1185,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varname=
       while :; do
@@ -3609,117 +1207,22 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "play sound ($varname) until done"
       echo "Added block: \"play sound ($varname) until done\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == sound_play ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -3727,39 +1230,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -3771,217 +1246,35 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -3989,39 +1282,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       parent=0
       ((i++))
@@ -4033,79 +1298,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varname=
       while :; do
@@ -4118,117 +1320,22 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "start sound ($varname)"
       echo "Added block: \"start sound ($varname)\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == sound_stopallsounds ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -4236,39 +1343,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -4280,160 +1359,30 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
       echo >>$DecompCurrentDir/$name.ss "stop all sounds"
       echo "Added block: \"stop all sounds\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == sound_changeeffectby ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -4441,39 +1390,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -4485,63 +1406,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varvalue=
       while :; do
@@ -4552,46 +1424,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varname=
       while :; do
@@ -4604,109 +1441,21 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "change [$varname] effect by ($varvalue)"
       echo "Added block: \"change [$varname] effect by ($varvalue)\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == sound_seteffectto ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -4714,39 +1463,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -4758,63 +1479,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varvalue=
       while :; do
@@ -4825,46 +1497,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varname=
       while :; do
@@ -4877,109 +1514,21 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "set [$varname] effect to ($varvalue)"
       echo "Added block: \"set [$varname] effect to ($varvalue)\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == sound_cleareffects ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -4987,39 +1536,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -5031,269 +1552,34 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
       echo >>$DecompCurrentDir/$name.ss "clear sound effects"
       echo "Added block: \"clear sound effects\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == sound_changevolumeby ]; then
-      ((i++))
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      ((i++))
-      ((i++))
-      getchar -\"
-      ((i--))
-      ((i--))
-      if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-      fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      ((i++))
-      ((i++))
-      getchar -\"
-      if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
-        parent=1
-      fi
-      ((i--))
-      ((i--))
-      if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-      fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varvalue=
       while :; do
@@ -5306,96 +1592,19 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "change volume by ($varvalue)"
       echo "Added block: \"change volume by ($varvalue)\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
       b=0
       done=0
       ((i--))
@@ -5409,131 +1618,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done=1
       fi
     elif [ $1 == sound_setvolumeto ]; then
-      ((i++))
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      ((i++))
-      ((i++))
-      getchar -\"
-      ((i--))
-      ((i--))
-      if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-      fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      ((i++))
-      ((i++))
-      getchar -\"
-      if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
-        parent=1
-      fi
-      ((i--))
-      ((i--))
-      if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-      fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varvalue=
       while :; do
@@ -5546,96 +1636,19 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "set volume to ($varvalue) %"
       echo "Added block: \"set volume to ($varvalue) %\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
       b=0
       done=0
       ((i--))
@@ -5649,22 +1662,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done=1
       fi
     elif [ $1 == sound_volume ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -5672,39 +1671,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -5716,160 +1687,30 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
       echo >>$DecompCurrentDir/$name.ss "(volume)"
       echo "Added block: \"(volume)\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == event_whenflagclicked ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -5877,39 +1718,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -5921,160 +1734,30 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
       echo >>$DecompCurrentDir/$name.ss "when flag clicked"
       echo "Added block: \"when flag clicked\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == event_whenkeypressed ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -6082,39 +1765,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -6126,79 +1781,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       varname=
       b=0
       while :; do
@@ -6211,80 +1803,17 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "when [$varname] key pressed"
       echo "Added block: \"when [$varname] key pressed\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
       ((i--))
       ((i--))
       ((i--))
@@ -6298,22 +1827,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done=1
       fi
     elif [ $1 == event_whenstageclicked ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -6321,39 +1836,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -6365,160 +1852,30 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
       echo >>$DecompCurrentDir/$name.ss "when stage clicked"
       echo "Added block: \"when stage clicked\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == event_whenbackdropswitchesto ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -6526,39 +1883,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -6570,79 +1899,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       varname=
       b=0
       while :; do
@@ -6655,80 +1921,17 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "when backdrop switches to [$varname]"
       echo "Added block \"when backdrop switches to [$varname]\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
       ((i--))
       ((i--))
       ((i--))
@@ -6742,22 +1945,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done=1
       fi
     elif [ $1 == event_whengreaterthan ]; then
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -6765,39 +1954,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
       b=0
       ((i++))
       ((i++))
@@ -6809,63 +1970,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       ((i--))
       ((i--))
       if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varvalue=
       while :; do
@@ -6876,46 +1988,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
         varvalue+=$char
       done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varname=
       while :; do
@@ -6928,234 +2005,27 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "when [$varname] > ($varvalue)"
       echo "Added block: \"when [$varname] > ($varvalue)\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      end $2
     elif [ $1 == event_whenbroadcastreceived ]; then
-      ((i++))
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      ((i++))
-      ((i++))
-      getchar -\"
-      ((i--))
-      ((i--))
-      if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-      fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      ((i++))
-      ((i++))
-      getchar -\"
-      if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
-        parent=1
-      fi
-      ((i--))
-      ((i--))
-      if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-      fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varvalue=
       while :; do
@@ -7168,96 +2038,19 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "when i receive [$varvalue]"
       echo "Added block: \"when i receive [$varvalue]\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       if [ $parent == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
+        nextquote
+        nextquote
+        nextquote
+        nextquote
       fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
       ((i--))
       ((i--))
       ((i--))
@@ -7271,131 +2064,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         done=1
       fi
     elif [ $1 == event_broadcastandwait ]; then
-      ((i++))
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      ((i++))
-      ((i++))
-      getchar -\"
-      ((i--))
-      ((i--))
-      if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-      fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      ((i++))
-      ((i++))
-      getchar -\"
-      if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
-        parent=1
-      fi
-      ((i--))
-      ((i--))
-      if [ $b == 1 ]; then
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        b=0
-        while :; do
-          ((i++))
-          getchar -\"
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-      fi
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
       b=0
       varvalue=
       while :; do
@@ -7408,125 +2082,147 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$DecompCurrentDir/$name.ss "broadcast ($varvalue) and wait"
       echo "Added block: \"broadcast ($varvalue) and wait\""
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
-      ((i--))
-      ((i--))
-      ((i--))
-      done=0
-      b=0
-      getchar -\}
-      if [ $b == 1 ]; then
-        done=1
-      fi
-      ((i++))
-      ((i++))
-      ((i++))
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      end $2
       if ! [ h$done == h1 ]; then
         if [ $parent == 1 ]; then
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
-          b=0
-          while :; do
-            ((i++))
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-          done
+          nextquote
+          nextquote
+          nextquote
+          nextquote
         fi
+      fi
+    elif [ $1 == control_repeat ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      repx=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        repx+=$char
+      done
+      nextquote
+      b=0
+      get=
+      while :; do
+        ((i++))
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        get+=$char
+      done
+      if ! [ $get == SUBSTACK ]; then
+        echo "    Warning: C-Block decompilation is very buggy,"
+        echo
+        echo "    Also, only one block (or sometimes no blocks, which causes blocks on the outside of the loop to be on the inside) is displayed in the substack. The rest of the blocks are at the bottom of the $DecompCurrentDir blocks section."
+        echo
+        echo >>Stage/$name.ss "repeat (\"$repx\") {"
+        echo >>Stage/$name.ss ""
+        echo >>Stage/$name.ss "}"
+        echo "repeat (\"$repx\") {"
+        echo
+        echo "}"
+        echo
+      else #Continue building repeat
+        nextquote
+        nextquote
+        nextquote
+        nextquote
+        nextquote
+        nextquote
+        nextquote
+        nextquote
+        if [ $parent == 1 ]; then
+          nextquote
+          nextquote
+          nextquote
+          nextquote
+        fi
+        nextquote
+        echo
+        echo "Starting repeat block."
+        echo
+        echo "    Warning: C-Block decompilation is very buggy,"
+        echo
+        echo "    Also, only one block (or sometimes no blocks, which causes blocks on the outside of the loop to be on the inside) is displayed in the substack. The rest of the blocks are at the bottom of the $DecompCurrentDir blocks section."
+        echo
+        echo >>Stage/$name.ss "repeat (\"$repx\") {"
+        echo "repeat (\"$repx\") {"
+        substack
+        done=0
+        echo >>Stage/$name.ss "}"
+        echo "}"
+        echo
+      fi
+      end $2
+    elif [ $1 == control_forever ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      while :; do
+        ((i++))
+        getchar -,
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      b=0
+      gg=
+      while :; do
+        ((i++))
+        getchar -\]
+        if [ $b == 1 ]; then
+          break
+        fi
+        gg+=$char
+      done
+      if [ $gg == "null" ]; then
+        echo >>Stage/$name.ss "forever {"
+        echo >>Stage/$name.ss ""
+        echo >>Stage/$name.ss "}"
+        echo "forever {"
+        echo
+        echo "}"
+        echo
+      else
+        if [ $parent == 1 ]; then
+          nextquote
+          nextquote
+          nextquote
+          nextquote
+        fi
+        nextquote
+        echo
+        echo "Starting forever block. (Forever blocks don't quite work yet."
+        echo
+        echo >>Stage/$name.ss "forever {"
+        echo "forever {"
+        substack
+        done=0
+        echo >>Stage/$name.ss "}"
+        echo "}"
+        echo
+        end $2
       fi
     fi
   }
@@ -7547,41 +2243,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   done
   if [ $novars = 0 ]; then
     while :; do
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
       ((i++))
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
       ((i++))
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
       ((i++))
-      b=0
-      while :; do
-        ((i++))
-        getchar -\"
-        if [ $b == 1 ]; then
-          break
-        fi
-      done
+      nextquote
       b=0
       varname=
       while :; do
