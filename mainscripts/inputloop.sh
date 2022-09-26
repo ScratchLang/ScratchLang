@@ -89,8 +89,8 @@ elif [ h$input == h3 ]; then
   chmod 755 compiler.sh
   ./compiler.sh
 elif [ h$input == h4 ]; then
-  chmod 755 decompiler.sh
-  ./decompiler.sh
+  chmod 755 decompiler.ss1.sh
+  ./decompiler.ss1.sh
 elif [ h$input == h5 ]; then
   cd $(dirname $(pwd))
   if ! [ -d projects ]; then

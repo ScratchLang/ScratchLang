@@ -6,16 +6,19 @@
 This is for people who want to use Scratch like other programming languages.
 
 # Latest big updates
-Added all backdrop "looks" blocks!
+Added experimental repeat and forever blocks
+
+# Open-Source
+This is an open-source project. Anyone can contribute.
 
 # The Plan
 This is mainly made in Shell Script, but if you know languages like C and Python, then you can make some stuff in that so people have many options to choose from.
 
-We need to get the compiler working first, then we can add all the blocks. A ScratchLang file (.ss) is locaded in the resources folder. Just create a project, go into the sprite folder, then replace the text from the .ss in the sprite folder with the text from the .ss in the resources folder.
+A some .sb3 files are included in the resources folder so you can test you comp/decomp scripts.
 
-The compiler should read the testcode.ss, write the project.json, and pack it and every asset into a .sb3, that can be played and edited in Scratch
+The compiler should read the testcode.ss1, write the project.json, and pack it and every asset into a .sb3, that can be played and edited in Scratch
 
-Each sprite (including Stage) has a asset folder. The costumes and sound will go there. It also has a .ss file, which is where the code is.
+Each sprite (including Stage) has a asset folder. The costumes and sound will go there. It also has a .ss1 file, which is where the code is.
 
 A project.json is also included in the resources folder to help understand and reverse engineer how it's made.
 
@@ -25,9 +28,12 @@ I'm programming the decompiler. First I'm gonna program it to decompile all the 
 If you want to help with the decompiler but you don't understand any of the code, just ask and I'll link a discussion explaining it. If there is no discussion, I'll create one.
 
 ## Notice
-Im wondering if there's a more efficient way to decompile the .json. Just 12 blocks added 2827 lines, and if I did the math correctly ((3466-379)/10*141), adding every block will add about 44,000 lines of code (including the eight already added) :(
+By replacing common scripts that were used very often with functions, I reduced the line count by a lot!
 
-EDIT: By replacing common scripts that were used very often with functions, I reduced the line count by a lot!
+Also, I renamed the file extension to .ss1 because I am planning on having multiple formats.
+1 Will be it's own language
+2 Will be similar to c
+3 Python or javascript?
 
 # How to use
 Clone the repo with

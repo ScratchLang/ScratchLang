@@ -79,24 +79,30 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   nextquote() { #main while loop
     b=0
     while :; do
-      ((i++))
+      i
       getchar -\"
       if [ $b == 1 ]; then
         break
       fi
     done
   }
+  i() { #change i by 1
+    ((i++))
+  }
+  i-() {
+    ((i--))
+  }
   #Decompile variables
   echo "Defining variables..."
   echo
   while :; do
     nextquote
-    ((i++))
+    i
     nextquote
     b=0
     novars=0
     while :; do #repeat until char = [
-      ((i++))
+      i
       getchar -\[
       if [ $b == 1 ]; then
         break
@@ -108,42 +114,42 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       fi
     done
     if [ $novars == 0 ]; then
-      ((i++))
+      i
       b=0
       varname=
       while :; do
-        ((i++))
+        i
         getchar -\" ++
         varname+=$char
         if [ $b == 1 ]; then
           break
         fi
       done
-      ((i++))
-      ((i++))
+      i
+      i
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\] ++
         varvalue+=$char
         if [ $b == 1 ]; then
           break
         fi
       done
-      if ! [ -f Stage/$name.ss ]; then
-        echo >>Stage/$name.ss "#There should be no empty lines."
-        echo >>Stage/$name.ss ss
-        echo >>Stage/$name.ss "\prep"
+      if ! [ -f Stage/$name.ss1 ]; then
+        echo >>Stage/$name.ss1 "#There should be no empty lines."
+        echo >>Stage/$name.ss1 ss1
+        echo >>Stage/$name.ss1 "\prep"
       fi
-      echo >>Stage/$name.ss $varname=$varvalue #Use echo >> if 2nd arg contains variables
+      echo >>Stage/$name.ss1 $varname=$varvalue #Use echo >> if 2nd arg contains variables
       echo "Added variable \"$varname\". Value:"
       echo $varvalue
       echo
       b=0
       varname=
-      ((i++))
-      ((i++))
+      i
+      i
       isub=2
       getchar -\}
       if [ $b == 1 ]; then
@@ -152,9 +158,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       i=$(expr $i - $isub)
     fi
     if [ $novars == 1 ]; then
-      echo >>Stage/$name.ss "#There should be no empty lines."
-      echo >>Stage/$name ss
-      echo >>Stage/$name.ss "\prep"
+      echo >>Stage/$name.ss1 "#There should be no empty lines."
+      echo >>Stage/$name ss1
+      echo >>Stage/$name.ss1 "\prep"
       break
     fi
   done #Finish compiling variables, lists next
@@ -163,12 +169,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   i=$(expr $i + 9)
   while :; do
     nextquote
-    ((i++))
+    i
     nextquote
     b=0
     novars=0
     while :; do
-      ((i++))
+      i
       getchar -\[
       if [ $b == 1 ]; then
         break
@@ -180,21 +186,21 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       fi
     done
     if [ $novars == 0 ]; then
-      ((i++))
+      i
       b=0
       listname=
       while :; do
-        ((i++))
+        i
         getchar -\" ++
         listname+=$char
         if [ $b == 1 ]; then
           break
         fi
       done
-      ((i++))
-      ((i++))
-      ((i++))
-      ((i++))
+      i
+      i
+      i
+      i
       b=0
       getchar -\]
       if ! [ $b == 1 ]; then
@@ -206,19 +212,19 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             b=0
             varname=
             while :; do
-              ((i++))
+              i
               getchar -\"
               if [ $b == 1 ]; then
                 break
               fi
               varname+=$char
             done
-            ((i++))
+            i
             b=0
             getchar -\]
             if ! [ $b == 1 ]; then
               echo >>lists $varname,
-              ((i++))
+              i
             else
               echo >>lists $varname
               break
@@ -226,12 +232,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
           done
         else
           b=0
-          ((i--))
+          i-
           while :; do
             b=0
             varname=
             while :; do
-              ((i++))
+              i
               getchar -,
               if [ $b == 1 ]; then
                 break
@@ -252,13 +258,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
             fi
           done
         fi
-        echo >>Stage/$name.ss $listname=$(echo $(cat lists) | sed 's/ //g')
+        echo >>Stage/$name.ss1 $listname=$(echo $(cat lists) | sed 's/ //g')
         echo "Added list \"$listname\". Contents:"
         echo $(cat lists) | sed 's/ //g'
         echo
         rm lists
       else
-        echo >>Stage/$name.ss $listname=,
+        echo >>Stage/$name.ss1 $listname=,
         echo "Added list \"$listname\". Contents:"
         echo "Nothing."
         echo
@@ -270,8 +276,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     if [ $novars == 1 ]; then
       break
     fi
-    ((i++))
-    ((i++))
+    i
+    i
     b=0
     getchar -\}
     if [ $b == 1 ]; then
@@ -284,7 +290,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   b=0
   novars=0
   while :; do #repeat until char = [
-    ((i++))
+    i
     getchar -\"
     if [ $b == 1 ]; then
       break
@@ -297,44 +303,44 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   done
   if [ $novars == 0 ]; then
     while :; do
-      ((i++))
+      i
       nextquote
       nextquote
       b=0
       varname=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varname+=$char
       done
-      echo >>Stage/$name.ss {broadcast}=$varname
+      echo >>Stage/$name.ss1 {broadcast}=$varname
       echo "Loaded broadcast $varname"
       echo
-      ((i++))
+      i
       b=0
       getchar -\}
       if [ $b == 1 ]; then
         break
       fi
-      ((i++))
-      ((i++))
+      i
+      i
     done
   fi
   echo "Making blocks..."
   echo
   start() {
-    ((i++))
+    i
     nextquote
     nextquote
     b=0
-    ((i++))
-    ((i++))
+    i
+    i
     getchar -\"
-    ((i--))
-    ((i--))
+    i-
+    i-
     if [ $b == 1 ]; then
       nextquote
       nextquote
@@ -342,15 +348,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     nextquote
     nextquote
     b=0
-    ((i++))
-    ((i++))
+    i
+    i
     getchar -\"
     if ! [ $b == 1 ]; then
-      echo >>$DecompCurrentDir/$name.ss "\nscript"
+      echo >>$DecompCurrentDir/$name.ss1 "\nscript"
       parent=1
     fi
-    ((i--))
-    ((i--))
+    i-
+    i-
     if [ $b == 1 ]; then
       nextquote
       nextquote
@@ -359,16 +365,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   substack() {
     while :; do
       nextquote
-      ((i++))
+      i
       nextquote
-      ((i++))
+      i
       nextquote
-      ((i++))
+      i
       nextquote
       b=0
       varname=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -382,10 +388,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     done
   }
   end() {
-    ((i--))
-    ((i--))
+    i-
+    i-
     if [ h$1 == h ]; then
-      ((i--))
+      i-
     fi
     done=0
     b=0
@@ -393,10 +399,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     if [ $b == 1 ]; then
       done=1
     fi
-    ((i++))
-    ((i++))
+    i
+    i
     if [ h$1 == h ]; then
-      ((i++))
+      i
     fi
   }
   addblock() {
@@ -411,14 +417,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varvalue+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "broadcast [$varvalue]"
+      echo >>$DecompCurrentDir/$name.ss1 "broadcast [$varvalue]"
       echo "Added block: \"broadcast [$varvalue]\""
       nextquote
       nextquote
@@ -429,10 +435,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       nextquote
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ h$2 == h ]; then
-        ((i--))
+        i-
       fi
       done=0
       b=0
@@ -440,10 +446,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       if [ $b == 1 ]; then
         done=1
       fi
-      ((i++))
-      ((i++))
+      i
+      i
       if [ h$2 == h ]; then
-        ((i++))
+        i
       fi
       if ! [ h$done == h1 ]; then
         if [ $parent == 1 ]; then
@@ -457,11 +463,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -469,15 +475,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -490,14 +496,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varvalue+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "move ($varvalue) steps"
+      echo >>$DecompCurrentDir/$name.ss1 "move ($varvalue) steps"
       echo "Added block: \"move ($varvalue) steps\""
       nextquote
       nextquote
@@ -506,20 +512,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       nextquote
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ h$2 == h ]; then
-        ((i--))
+        i-
       fi
       b=0
       getchar -\}
       if [ $b == 1 ]; then
         done=1
       fi
-      ((i++))
-      ((i++))
+      i
+      i
       if [ h$2 == h ]; then
-        ((i++))
+        i
       fi
       if ! [ h$done == h1 ]; then
         if [ $parent == 1 ]; then
@@ -533,11 +539,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -545,15 +551,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -566,14 +572,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varvalue+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "wait ($varvalue) seconds"
+      echo >>$DecompCurrentDir/$name.ss1 "wait ($varvalue) seconds"
       echo "Added block: \"wait ($varvalue) seconds\""
       nextquote
       nextquote
@@ -582,20 +588,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       nextquote
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ h$2 == h ]; then
-        ((i--))
+        i-
       fi
       b=0
       getchar -\}
       if [ $b == 1 ]; then
         done=1
       fi
-      ((i++))
-      ((i++))
+      i
+      i
       if [ h$2 == h ]; then
-        ((i++))
+        i
       fi
       if ! [ h$done == h1 ]; then
         if [ $parent == 1 ]; then
@@ -609,11 +615,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -621,15 +627,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -661,11 +667,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -673,11 +679,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -692,14 +698,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varvalue+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "switch backdrop to ($varvalue)"
+      echo >>$DecompCurrentDir/$name.ss1 "switch backdrop to ($varvalue)"
       echo "Added block: \"switch backdrop to ($varvalue)\""
       nextquote
       nextquote
@@ -710,11 +716,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -722,15 +728,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -762,11 +768,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -774,11 +780,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -793,14 +799,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varvalue+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "switch backdrop to ($varvalue) and wait"
+      echo >>$DecompCurrentDir/$name.ss1 "switch backdrop to ($varvalue) and wait"
       echo "Added block: \"switch backdrop to ($varvalue) and wait\""
       nextquote
       nextquote
@@ -811,11 +817,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -823,20 +829,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $parent == 0 ]; then
         nextquote
         nextquote
       fi
-      echo >>$DecompCurrentDir/$name.ss "next backdrop"
+      echo >>$DecompCurrentDir/$name.ss1 "next backdrop"
       echo "Added block: \"next backdrop\""
       nextquote
       nextquote
@@ -858,11 +864,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -870,15 +876,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -891,7 +897,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -906,14 +912,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varname=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varname+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "change [$varname] effect by ($varvalue)"
+      echo >>$DecompCurrentDir/$name.ss1 "change [$varname] effect by ($varvalue)"
       echo "Added block: \"change [$varname] effect by ($varvalue)\""
       nextquote
       nextquote
@@ -931,11 +937,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -943,15 +949,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -964,7 +970,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -979,14 +985,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varname=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varname+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "set [$varname)]effect to ($varvalue)"
+      echo >>$DecompCurrentDir/$name.ss1 "set [$varname)]effect to ($varvalue)"
       echo "Added block: \"set [$varname] effect to ($varvalue)\""
       nextquote
       nextquote
@@ -1004,11 +1010,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1016,20 +1022,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
       fi
-      echo >>$DecompCurrentDir/$name.ss "clear graphic effects"
+      echo >>$DecompCurrentDir/$name.ss1 "clear graphic effects"
       echo "Added block: \"clear graphic effects\""
       nextquote
       nextquote
@@ -1051,11 +1057,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1063,15 +1069,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1086,14 +1092,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varname=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varname+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "(backdrop [$varname])"
+      echo >>$DecompCurrentDir/$name.ss1 "(backdrop [$varname])"
       echo "Added block: \"(backdrop [$varname])\""
       nextquote
       nextquote
@@ -1111,11 +1117,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1123,15 +1129,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1163,11 +1169,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1176,14 +1182,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       b=0
       parent=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1198,14 +1204,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varname=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varname+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "play sound ($varname) until done"
+      echo >>$DecompCurrentDir/$name.ss1 "play sound ($varname) until done"
       echo "Added block: \"play sound ($varname) until done\""
       nextquote
       nextquote
@@ -1224,11 +1230,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1236,15 +1242,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1276,11 +1282,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1289,14 +1295,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       b=0
       parent=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1311,14 +1317,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varname=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varname+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "start sound ($varname)"
+      echo >>$DecompCurrentDir/$name.ss1 "start sound ($varname)"
       echo "Added block: \"start sound ($varname)\""
       nextquote
       nextquote
@@ -1337,11 +1343,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1349,20 +1355,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
       fi
-      echo >>$DecompCurrentDir/$name.ss "stop all sounds"
+      echo >>$DecompCurrentDir/$name.ss1 "stop all sounds"
       echo "Added block: \"stop all sounds\""
       nextquote
       nextquote
@@ -1384,11 +1390,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1396,15 +1402,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1417,7 +1423,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -1432,14 +1438,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varname=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varname+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "change [$varname] effect by ($varvalue)"
+      echo >>$DecompCurrentDir/$name.ss1 "change [$varname] effect by ($varvalue)"
       echo "Added block: \"change [$varname] effect by ($varvalue)\""
       nextquote
       nextquote
@@ -1457,11 +1463,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1469,15 +1475,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1490,7 +1496,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -1505,14 +1511,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varname=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varname+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "set [$varname] effect to ($varvalue)"
+      echo >>$DecompCurrentDir/$name.ss1 "set [$varname] effect to ($varvalue)"
       echo "Added block: \"set [$varname] effect to ($varvalue)\""
       nextquote
       nextquote
@@ -1530,11 +1536,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1542,20 +1548,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
       fi
-      echo >>$DecompCurrentDir/$name.ss "clear sound effects"
+      echo >>$DecompCurrentDir/$name.ss1 "clear sound effects"
       echo "Added block: \"clear sound effects\""
       nextquote
       nextquote
@@ -1583,14 +1589,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varvalue+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "change volume by ($varvalue)"
+      echo >>$DecompCurrentDir/$name.ss1 "change volume by ($varvalue)"
       echo "Added block: \"change volume by ($varvalue)\""
       nextquote
       nextquote
@@ -1607,13 +1613,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       b=0
       done=0
-      ((i--))
-      ((i--))
-      ((i--))
+      i-
+      i-
+      i-
       getchar -\}
-      ((i++))
-      ((i++))
-      ((i++))
+      i
+      i
+      i
       if [ $b == 1 ]; then
         done=1
       fi
@@ -1627,14 +1633,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varvalue+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "set volume to ($varvalue) %"
+      echo >>$DecompCurrentDir/$name.ss1 "set volume to ($varvalue) %"
       echo "Added block: \"set volume to ($varvalue) %\""
       nextquote
       nextquote
@@ -1651,13 +1657,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       b=0
       done=0
-      ((i--))
-      ((i--))
-      ((i--))
+      i-
+      i-
+      i-
       getchar -\}
-      ((i++))
-      ((i++))
-      ((i++))
+      i
+      i
+      i
       if [ $b == 1 ]; then
         done=1
       fi
@@ -1665,11 +1671,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1677,20 +1683,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
       fi
-      echo >>$DecompCurrentDir/$name.ss "(volume)"
+      echo >>$DecompCurrentDir/$name.ss1 "(volume)"
       echo "Added block: \"(volume)\""
       nextquote
       nextquote
@@ -1712,11 +1718,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1724,20 +1730,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
       fi
-      echo >>$DecompCurrentDir/$name.ss "when flag clicked"
+      echo >>$DecompCurrentDir/$name.ss1 "when flag clicked"
       echo "Added block: \"when flag clicked\""
       nextquote
       nextquote
@@ -1759,11 +1765,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1771,15 +1777,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1794,14 +1800,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       varname=
       b=0
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varname+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "when [$varname] key pressed"
+      echo >>$DecompCurrentDir/$name.ss1 "when [$varname] key pressed"
       echo "Added block: \"when [$varname] key pressed\""
       nextquote
       nextquote
@@ -1814,15 +1820,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         nextquote
       fi
       nextquote
-      ((i--))
-      ((i--))
-      ((i--))
+      i-
+      i-
+      i-
       b=0
       done=0
       getchar -\}
-      ((i++))
-      ((i++))
-      ((i++))
+      i
+      i
+      i
       if [ $b == 1 ]; then
         done=1
       fi
@@ -1830,11 +1836,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1842,20 +1848,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
       fi
-      echo >>$DecompCurrentDir/$name.ss "when stage clicked"
+      echo >>$DecompCurrentDir/$name.ss1 "when stage clicked"
       echo "Added block: \"when stage clicked\""
       nextquote
       nextquote
@@ -1877,11 +1883,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1889,15 +1895,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1912,14 +1918,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       varname=
       b=0
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varname+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "when backdrop switches to [$varname]"
+      echo >>$DecompCurrentDir/$name.ss1 "when backdrop switches to [$varname]"
       echo "Added block \"when backdrop switches to [$varname]\""
       nextquote
       nextquote
@@ -1932,15 +1938,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         nextquote
       fi
       nextquote
-      ((i--))
-      ((i--))
-      ((i--))
+      i-
+      i-
+      i-
       b=0
       done=0
       getchar -\}
-      ((i++))
-      ((i++))
-      ((i++))
+      i
+      i
+      i
       if [ $b == 1 ]; then
         done=1
       fi
@@ -1948,11 +1954,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1960,15 +1966,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       nextquote
       b=0
-      ((i++))
-      ((i++))
+      i
+      i
       getchar -\"
       if ! [ $b == 1 ]; then
-        echo >>$DecompCurrentDir/$name.ss "\nscript"
+        echo >>$DecompCurrentDir/$name.ss1 "\nscript"
         parent=1
       fi
-      ((i--))
-      ((i--))
+      i-
+      i-
       if [ $b == 1 ]; then
         nextquote
         nextquote
@@ -1981,7 +1987,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -1996,14 +2002,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varname=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varname+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "when [$varname] > ($varvalue)"
+      echo >>$DecompCurrentDir/$name.ss1 "when [$varname] > ($varvalue)"
       echo "Added block: \"when [$varname] > ($varvalue)\""
       nextquote
       nextquote
@@ -2029,14 +2035,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varvalue+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "when i receive [$varvalue]"
+      echo >>$DecompCurrentDir/$name.ss1 "when i receive [$varvalue]"
       echo "Added block: \"when i receive [$varvalue]\""
       nextquote
       nextquote
@@ -2051,15 +2057,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         nextquote
       fi
       nextquote
-      ((i--))
-      ((i--))
-      ((i--))
+      i-
+      i-
+      i-
       b=0
       done=0
       getchar -\}
-      ((i++))
-      ((i++))
-      ((i++))
+      i
+      i
+      i
       if [ $b == 1 ]; then
         done=1
       fi
@@ -2073,14 +2079,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       varvalue=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
         varvalue+=$char
       done
-      echo >>$DecompCurrentDir/$name.ss "broadcast ($varvalue) and wait"
+      echo >>$DecompCurrentDir/$name.ss1 "broadcast ($varvalue) and wait"
       echo "Added block: \"broadcast ($varvalue) and wait\""
       nextquote
       nextquote
@@ -2110,7 +2116,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       repx=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2121,7 +2127,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       get=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
@@ -2133,9 +2139,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         echo
         echo "    Also, only one block (or sometimes no blocks, which causes blocks on the outside of the loop to be on the inside) is displayed in the substack. The rest of the blocks are at the bottom of the $DecompCurrentDir blocks section."
         echo
-        echo >>Stage/$name.ss "repeat (\"$repx\") {"
-        echo >>Stage/$name.ss ""
-        echo >>Stage/$name.ss "}"
+        echo >>Stage/$name.ss1 "repeat (\"$repx\") {"
+        echo >>Stage/$name.ss1 ""
+        echo >>Stage/$name.ss1 "}"
         echo "repeat (\"$repx\") {"
         echo
         echo "}"
@@ -2163,11 +2169,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         echo
         echo "    Also, only one block (or sometimes no blocks, which causes blocks on the outside of the loop to be on the inside) is displayed in the substack. The rest of the blocks are at the bottom of the $DecompCurrentDir blocks section."
         echo
-        echo >>Stage/$name.ss "repeat (\"$repx\") {"
+        echo >>Stage/$name.ss1 "repeat (\"$repx\") {"
         echo "repeat (\"$repx\") {"
         substack
         done=0
-        echo >>Stage/$name.ss "}"
+        echo >>Stage/$name.ss1 "}"
         echo "}"
         echo
       fi
@@ -2180,7 +2186,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       nextquote
       b=0
       while :; do
-        ((i++))
+        i
         getchar -,
         if [ $b == 1 ]; then
           break
@@ -2189,7 +2195,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       b=0
       gg=
       while :; do
-        ((i++))
+        i
         getchar -\]
         if [ $b == 1 ]; then
           break
@@ -2197,9 +2203,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         gg+=$char
       done
       if [ $gg == "null" ]; then
-        echo >>Stage/$name.ss "forever {"
-        echo >>Stage/$name.ss ""
-        echo >>Stage/$name.ss "}"
+        echo >>Stage/$name.ss1 "forever {"
+        echo >>Stage/$name.ss1 ""
+        echo >>Stage/$name.ss1 "}"
         echo "forever {"
         echo
         echo "}"
@@ -2215,11 +2221,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         echo
         echo "Starting forever block. (Forever blocks don't quite work yet."
         echo
-        echo >>Stage/$name.ss "forever {"
+        echo >>Stage/$name.ss1 "forever {"
         echo "forever {"
         substack
         done=0
-        echo >>Stage/$name.ss "}"
+        echo >>Stage/$name.ss1 "}"
         echo "}"
         echo
         end $2
@@ -2230,7 +2236,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   b=0
   novars=0
   while :; do
-    ((i++))
+    i
     getchar -\"
     if [ $b == 1 ]; then
       break
@@ -2244,16 +2250,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   if [ $novars = 0 ]; then
     while :; do
       nextquote
-      ((i++))
+      i
       nextquote
-      ((i++))
+      i
       nextquote
-      ((i++))
+      i
       nextquote
       b=0
       varname=
       while :; do
-        ((i++))
+        i
         getchar -\"
         if [ $b == 1 ]; then
           break
