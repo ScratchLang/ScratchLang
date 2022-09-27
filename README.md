@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.5.6a**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.5.2a**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -36,6 +36,7 @@ ss2 Will be similar to c
 ss3 Python or javascript?
 
 # How to use
+Download [MSYS2](https://www.msys2.org) if you're on Windows. <br />
 Clone the repo with
 ```
 git clone https://github.com/0K9090/ScratchLang.git
