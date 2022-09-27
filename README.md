@@ -488,3 +488,6 @@ Loads broadcasts even if there are none. (Try decompiling decompilerteset.sb3 wh
 Since I copied the broadcast loading script to V2, it's safe to assume that the 1st bug for V1 can still happen in V2.
 
 ![de20ca3a12e96a8b00a2063151b1ad84](https://user-images.githubusercontent.com/78574005/192591165-e642bc95-7625-487d-aeba-c74d8d85eb9d.png)
+
+
+tseting dsighoasdhf;ahs;fhuados
