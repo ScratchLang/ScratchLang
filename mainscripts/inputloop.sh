@@ -147,7 +147,7 @@ elif [ h$input == h6 ]; then
     echo "${RED}Error: $input3 not an input.${NC}"
   fi
 elif [ h$input == h7 ]; then
-  echo "This only works for MSYS2. Continue? [Y/N]"
+  echo "This only works for MSYS2/MINGW. Continue? [Y/N]"
   read -sn 1 con
   if [ h$con == hY ] || [ h$con == hy ]; then
     echo
@@ -186,7 +186,7 @@ elif [ h$input == h8 ]; then
   fi
 elif [ h$input == h9 ]; then
   chmod 755 rmaliasiloop.sh
-  ./rmaliasiloop9.sh
+  ./rmaliasiloop.sh
 elif [ h$input == hA ] || [ h$input == ha ]; then
   echo >>.var/devmode "This is a devmode file. You can manually remove it to disable dev mode if you don't want to use the program to disable it for some reason."
   ./start.sh
