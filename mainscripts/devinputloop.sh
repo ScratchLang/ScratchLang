@@ -1,4 +1,6 @@
 #!/bin/bash
+RED='\033[0;31m'
+NC='\033[0m'
 echo
 if [ h$1 == h ]; then
   echo "1. Create a project."
@@ -13,7 +15,8 @@ if [ h$1 == h ]; then
   echo "A. Disable Developer Mode."
   echo "B. Delete all variables."
   echo "C. Prepare for commit and push."
-  echo "D. Exit."
+  echo "D. Change decompiler script."
+  echo "E. Exit."
   read -sn 1 input
 elif [ $1 == -1 ]; then
   input=1
@@ -34,11 +37,11 @@ if [ h$input == h1 ]; then
   echo "Name your project. Keep in mind that it cannot be empty or it will not be created properly."
   read name
   if [ h$name == h ]; then
-    echo "Error: Project name empty."
+    echo -e "${RED}Error: Project name empty.${NC}"
     exit
   fi
   echo "You named your project $name. If you want to rename it, use the File Explorer."
-  cd $(dirname $(pwd))
+  cd ../
   if ! [ -d projects ]; then
     mkdir projects
   fi
@@ -49,29 +52,29 @@ if [ h$input == h1 ]; then
   mkdir Stage
   cd Stage
   mkdir assets
-  cd $(dirname $(pwd))
-  cd $(dirname $(pwd))
-  cd $(dirname $(pwd))
+  cd ../
+  cd ../
+  cd ../
   cp resources/cd21514d0531fdffb22204e0ec5ed84a.svg projects/$name/Stage/assets
   cd projects/$name/Stage
   echo >>$name.ss \#There should be no empty lines.
   echo >>$name.ss ss
-  cd $(dirname $(pwd))
+  cd ../
   mkdir Sprite1
   cd Sprite1
   echo >>$name.ss \#There should be no empty lines.
   echo >>$name.ss ss
   mkdir assets
-  cd $(dirname $(pwd))
-  cd $(dirname $(pwd))
-  cd $(dirname $(pwd))
+  cd ../
+  cd ../
+  cd ../
   cp resources/341ff8639e74404142c11ad52929b021.svg projects/$name/Sprite1/assets
   cp resources/c9466893cdbdda41de3ec986256e5a47.svg projects/$name/Sprite1/assets
   cd mainscripts
 elif [ h$input == h2 ]; then
-  cd $(dirname $(pwd))
+  cd ../
   if ! [ -d projects ]; then
-    echo "Error: there are no projects to delete."
+    echo -e "${RED}Error: there are no projects to delete.${NC}"
     exit
   fi
   cd projects
@@ -84,19 +87,24 @@ elif [ h$input == h2 ]; then
     if [ -d $pgrd ]; then
       rm -rf $pgrd
     else
-      echo "Error: directory $pgrd does not exist."
+      echo -e "${RED}Error: directory $pgrd does not exist.${NC}"
     fi
   fi
 elif [ h$input == h3 ]; then
   chmod 755 compiler.sh
   ./compiler.sh
 elif [ h$input == h4 ]; then
-  chmod 755 decompiler.ss1.sh
-  ./decompiler.ss1.sh
+  if [ -f .var/ds ]; then
+    chmod 755 $(sed '1!d' .var/ds)
+    ./$(sed '1!d' .var/ds)
+  else
+    chmod 755 decompiler.v2.ss1.sh
+    ./decompiler.v2.ss1.sh
+  fi
 elif [ h$input == h5 ]; then
-  cd $(dirname $(pwd))
+  cd ../
   if ! [ -d projects ]; then
-    echo "Error: there are no projects to export."
+    echo -e "${RED}Error: there are no projects to export.${NC}"
     exit
   fi
   cd projects
@@ -108,12 +116,12 @@ elif [ h$input == h5 ]; then
   if ! [ h$pgrd == h ]; then
     if [ -d $pgrd ]; then
       tar -cf $pgrd.ssa $pgrd #ScratchScript Archive
-      cd $(dirname $(pwd))
+      cd ../
       cp projects/$pgrd.ssa exports
       rm projects/$pgrd.ssa
       echo "Your project $pgrd.ssa can be found in the exports folder."
     else
-      echo "Error: directory $pgrd does not exist."
+      echo -e "${RED}Error: directory $pgrd does not exist.${NC}"
     fi
   fi
 elif [ h$input == h6 ]; then
@@ -125,7 +133,7 @@ elif [ h$input == h6 ]; then
   fi
   if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     import=$(zenity -file-selection -file-filter 'ScratchScript\ Archive *.ssa')
-    cd $(dirname $(pwd))
+    cd ../
     if ! [ -d projects ]; then
       mkdir projects
     fi
@@ -160,14 +168,15 @@ elif [ h$input == h7 ]; then
     fi
     unzip -n $version.zip
     cp zenity.exe /c/msys64/usr/bin
-    cd $(dirname $(pwd))
+    cd ../
     rm -rf zenity
     cd $dir
+    pacman -S mingw-w64-x86_64-jq
     ./start.sh
   elif [ h$con == hN ] || [ h$con == hn ]; then
     echo
   else
-    echo "Error: $con not an input."
+    echo -e "${RED}Error: $con not an input.${NC}"
   fi
 elif [ h$input == h8 ]; then
   dir=$(pwd)
@@ -190,6 +199,9 @@ elif [ h$input == hB ] || [ h$input == hb ]; then
   if [ -f .var/zenity ]; then
     rm .var/zenity
   fi
+  if [ -f .var/ds ]; then
+    rm .var/ds
+  fi
   if [ -f .var/alias ]; then
     echo "Get rid of the scratchlang command? [Y/N]"
     read -sn 1 yn
@@ -201,7 +213,8 @@ elif [ h$input == hB ] || [ h$input == hb ]; then
         rm .var/alias
       fi
     else
-      echo "Error: $yn is not an input."
+      echo -e "${RED}Error: $yn is not an input.${NC}"
+      echo "If you want to remove the alias now, get rid of the command in your /usr/bin directory."
     fi
   fi
 elif [ h$input == hC ] || [ h$input == hc ]; then
@@ -211,13 +224,10 @@ elif [ h$input == hC ] || [ h$input == hc ]; then
   if [ -f .var/zenity ]; then
     rm .var/zenity
   fi
-  if [ -f compile.exe ]; then
-    rm compile.exe
+  if [ -f .var/ds ]; then
+    rm .var/ds
   fi
-  if [ -f decompile.exe ]; then
-    rm decompile.exe
-  fi
-  cd $(dirname $(pwd))
+  cd ../
   if [ -d projects ]; then
     rm -rf projects
   fi
@@ -236,14 +246,17 @@ elif [ h$input == hC ] || [ h$input == hc ]; then
         rm .var/alias
       fi
     else
-      echo "Error: $yn is not an input."
-      echo "If you want to remove the alias now, get rid of the command in the .bashrc file."
+      echo -e "${RED}Error: $yn is not an input.${NC}"
+      echo "If you want to remove the alias now, get rid of the command in your /usr/bin directory."
     fi
   fi
 elif [ h$input == hD ] || [ h$input == hd ]; then
+  chmod 755 pick.sh
+  ./pick.sh
+elif [ h$input == hE ] || [ h$input == he ]; then
   clear
 else
-  echo "$input is not an input!"
+  echo -e "${RED}Error: $input is not an input.${NC}"
   if [ -f .var/devmode ]; then
     ./devinputloop.sh
   else

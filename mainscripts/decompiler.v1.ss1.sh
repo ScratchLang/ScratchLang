@@ -4,9 +4,13 @@
 #
 #
 #
+echo
+RED='\033[0;31m'
+NC='\033[0m'
+echo -e "${RED}Decompiler 1.F${NC}"
 DecompCurrentDir=Stage
 echo
-echo "Remember, both the compiler and decompiler don't work yet. The decompiler can extract the sb3, define variables, build lists, load broadcasts, and decompile some blocks, but it can't do anything else yet."
+echo -e "${RED}This version of the decompiler is not being programmed anymore. 4 block categories were added, and that's it. C-Blocks became a barrier that is almost impossible to pass for this decompiler, so I had to make a new one. Please use V2 when it is available.${NC}"
 echo
 if ! [ -f .var/zenity ]; then
   echo "Do you have the command zenity? [Y/N]"
@@ -19,14 +23,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   if ! [ -f .var/zenity ]; then
     echo >>.var/zenity
   fi
-  echo "Select the .sb3 you want to decompile. WARNING! THE NAME OF THE FILE CANNOT HAVE ANY SPACES OR IT WILL NOT UNZIP CORRECTLY!!!"
+  echo -e "Select the .sb3 you want to decompile. ${RED}WARNING! THE NAME OF THE FILE CANNOT HAVE ANY SPACES OR IT WILL NOT UNZIP CORRECTLY!!!${NC}"
   sleep 2
   file=$(zenity -file-selection -file-filter 'Scratch SB3 *.sb3')
   echo
-  echo "Name of project? Keep in mind that it cannot be empty or it will not be created properly."
+  echo -e "Name of project? ${RED}Keep in mind that it cannot be empty or it will not be created properly.${NC}"
   read name
   echo
-  cd $(dirname $(pwd))
+  cd ../
   if ! [ -d projects ]; then
     mkdir projects
   fi
@@ -46,6 +50,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   sleep 1
   mkdir $name
   cd $name
+  echo >>.maindir "Please don't remove this file."
   echo "Extracting .sb3..."
   echo
   unzip $file
@@ -55,7 +60,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   cd Stage
   mkdir assets
   #Starting decomp scripts for stage
-  cd $(dirname $(pwd))
+  cd ../
   jsonfile=$(cat project.json)
   i=55
   getchar() { #stops loop when it detects char $1
@@ -363,27 +368,77 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     fi
   }
   substack() {
+    j=$i
+    i=-1
     while :; do
-      nextquote
-      i
-      nextquote
-      i
-      nextquote
-      i
-      nextquote
       b=0
-      varname=
+      word=
       while :; do
         i
         getchar -\"
         if [ $b == 1 ]; then
           break
         fi
-        varname+=$char
+        word+=$char
       done
-      addblock $varname ndzs
-      if [ h$done == h1 ]; then
-        break
+      if ! [ $i == $2 ]; then
+        if [ "$word" == topLevel ]; then
+          b=0
+          while :; do
+            i
+            getchar -\}
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          nextquote
+          b=0
+          word=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            word+=$char
+          done
+          if [ "$word" == "$1" ]; then
+            echo "$word, $1"
+            nextquote
+            nextquote
+            nextquote
+            b=0
+            varname=
+            while :; do
+              i
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+              varname+=$char
+            done
+            echo $varname
+            echo "gothere"
+            addblock $varname
+            while :; do
+              b=0
+              word=
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                word+=$char
+              done
+              if [ "$word" == txen ]; then
+                nextquote
+                nextquote
+              fi
+            done
+            break
+          fi
+        fi
       fi
     done
   }
@@ -1926,7 +1981,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         varname+=$char
       done
       echo >>$DecompCurrentDir/$name.ss1 "when backdrop switches to [$varname]"
-      echo "Added block \"when backdrop switches to [$varname]\""
+      echo "Added block: \"when backdrop switches to [$varname]\""
       nextquote
       nextquote
       nextquote
@@ -2135,7 +2190,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         get+=$char
       done
       if ! [ $get == SUBSTACK ]; then
-        echo "    Warning: C-Block decompilation is very buggy,"
+        echo "    Warning: C-Block decompilation is very buggy. As a matter of fact, it seems to not be working right now. Or it's just very slow."
         echo
         echo "    Also, only one block (or sometimes no blocks, which causes blocks on the outside of the loop to be on the inside) is displayed in the substack. The rest of the blocks are at the bottom of the $DecompCurrentDir blocks section."
         echo
@@ -2148,31 +2203,32 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         echo
       else #Continue building repeat
         nextquote
-        nextquote
-        nextquote
-        nextquote
-        nextquote
-        nextquote
-        nextquote
-        nextquote
-        if [ $parent == 1 ]; then
-          nextquote
-          nextquote
-          nextquote
-          nextquote
-        fi
-        nextquote
         echo
         echo "Starting repeat block."
         echo
-        echo "    Warning: C-Block decompilation is very buggy,"
+        echo "    Warning: C-Block decompilation is very buggy. As a matter of fact, it seems to not be working right now. Or it's just very slow."
         echo
         echo "    Also, only one block (or sometimes no blocks, which causes blocks on the outside of the loop to be on the inside) is displayed in the substack. The rest of the blocks are at the bottom of the $DecompCurrentDir blocks section."
         echo
         echo >>Stage/$name.ss1 "repeat (\"$repx\") {"
         echo "repeat (\"$repx\") {"
-        substack
-        done=0
+        while :; do
+          next=
+          b=0
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            next+=$char
+          done
+          substack $next $i
+          if [ $done == 1 ]; then
+            break
+          fi
+        done
+        i=$j
         echo >>Stage/$name.ss1 "}"
         echo "}"
         echo
@@ -2273,13 +2329,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     done
   fi
   if [ 1 == 1 ]; then
-    cd $(dirname $(pwd))
-    cd $(dirname $(pwd))
+    cd ../
+    cd ../
     cd mainscripts
   fi
 elif [ h$input3 == hn ] || [ h$input3 == hN ]; then
   echo "Install zenity for MSYS2, or this won't work."
 else
-  echo "$input3 is not an input."
+  echo -e "${RED}Error: $input3 is not an input.${NC}"
   ./compiler.sh
 fi

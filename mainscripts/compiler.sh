@@ -1,4 +1,6 @@
 #!/bin/bash
+RED='\033[0;31m'
+NC='\033[0m'
 echo
 echo "Remember, both the compiler and decompiler don't work yet."
 echo
@@ -40,11 +42,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     echo >>project.json $json #creates the project.json
     #pack into sb3 here
   else
-    echo "Error: Not a project directory."
+    echo -e "${RED}Error: Not a project directory.${NC}"
   fi
 elif [ h$input3 == hn ] || [ h$input3 == hN ]; then
   echo "Install zenity for MSYS2, or this won't work."
 else
-  echo "$input3 is not an input."
+  echo -e "${RED}Error: $input3 is not an input.${NC}"
   ./compiler.sh
 fi
