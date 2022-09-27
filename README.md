@@ -63,12 +63,20 @@ You don't need ScratchLang to program ScratchScript (.ss) files, you can use a t
 ## Windows
 You need `zenity`.
 https://github.com/ncruces/zenity/wiki/Zenity-for-WSL%2C-Cygwin%2C-MSYS2 Download here, or you can run ./start.sh and input 5 to install zenity.
+
+You also need `git`
+```
+pacman -S git
+```
 ## Linux
 You need the command `zenity` to run the .sh.
 ```
 sudo apt-get install -y zenity
 ```
-
+You also need `git`
+```
+sudo apt-get install -y git
+```
 Please write down any dependencies I missed.
 
 # Jobs
