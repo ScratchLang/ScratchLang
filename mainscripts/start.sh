@@ -23,11 +23,18 @@ if [ -f .var/vc ]; then
       utd=0
     fi
     if [ $utd == 0 ]; then
-      echo "Please update your ScratchLang version by cloning the repo again. To transfer your projects, copy and paste the projects folder into the new ScratchLang repo directory, or you can export all of them and import them in the new ScratchLang."
-      echo
-      echo "This process may be made automatic soon."
-      rm .version
-      exit
+      echo "Your version of ScratchLang ($ver) is outdated. The current version is $(sed '1!d' .version). Would you like to update? [Y/N]"
+      read -sn 1 hh
+      if [ h$hh == hy ] || [ h$hh == hY ]; then
+        cd ../
+        cd ../
+        mv ScratchLang slold
+        cp -r slold/projects
+        rm -rf slold
+        git clone https://github.com/0K9090/ScratchLang.git
+        cp projects ScratchLang
+        exit
+      fi
     fi
     rm .version
   fi
