@@ -487,4 +487,4 @@ Loads broadcasts even if there are none. (Try decompiling decompilerteset.sb3 wh
 ## V2 Decomp Bugs
 Since I copied the broadcast loading script to V2, it's safe to assume that the 1st bug for V1 can still happen in V2.
 
-![image_2022-09-20_190744081](https://user-images.githubusercontent.com/78574005/191398176-fe011d14-62e9-45ed-ad43-80db3ef49152.png)
+![de20ca3a12e96a8b00a2063151b1ad84](https://user-images.githubusercontent.com/78574005/192591165-e642bc95-7625-487d-aeba-c74d8d85eb9d.png)
