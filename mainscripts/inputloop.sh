@@ -25,8 +25,13 @@ elif [ $1 == -4 ]; then
   input=4
 elif [ $1 == -5 ]; then
   input=5
-else
+elif [ $1 == -6 ]; then
   input=6
+else
+  echo -e "${RED}Error: $1 is not an argument.${NC}"
+  sleep 2
+  ./start.sh
+  exit
 fi
 if [ h$input == h1 ]; then
   dir=$(pwd)

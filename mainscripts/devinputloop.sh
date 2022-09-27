@@ -26,10 +26,15 @@ elif [ $1 == -3 ]; then
   input=3
 elif [ $1 == -4 ]; then
   input=4
+elif [ $1 == -5 ]; then
+  input=5
 elif [ $1 == -6 ]; then
   input=6
 else
-  input=6
+  echo -e "${RED}Error: $1 is not an argument.${NC}"
+  sleep 2
+  ./start.sh
+  exit
 fi
 if [ h$input == h1 ]; then
   dir=$(pwd)
@@ -202,6 +207,12 @@ elif [ h$input == hB ] || [ h$input == hb ]; then
   if [ -f .var/ds ]; then
     rm .var/ds
   fi
+  if [ -f .var/asked ]; then
+    rm .var/asked
+  fi
+  if [ -f .var/vc ]; then
+    rm .var/vc
+  fi
   if [ -f .var/alias ]; then
     echo "Get rid of the scratchlang command? [Y/N]"
     read -sn 1 yn
@@ -226,6 +237,12 @@ elif [ h$input == hC ] || [ h$input == hc ]; then
   fi
   if [ -f .var/ds ]; then
     rm .var/ds
+  fi
+  if [ -f .var/asked ]; then
+    rm .var/asked
+  fi
+  if [ -f .var/vc ]; then
+    rm .var/vc
   fi
   cd ../
   if [ -d projects ]; then
