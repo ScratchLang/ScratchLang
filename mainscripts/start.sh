@@ -14,21 +14,23 @@ if ! [ -f .var/asked ]; then
   fi
 fi
 if [ -f .var/vc ]; then
-  echo "Checking version..."
-  ver=$(sed '1!d' $(dirname $(pwd))/.version)
-  wget -q https://raw.githubusercontent.com/0K9090/ScratchLang/main/.version
-  utd=1
-  if ! [ "$ver" == "$(sed '1!d' .version)" ]; then
-    utd=0
-  fi
-  if [ $utd == 0 ]; then
-    echo "Please update your ScratchLang version by cloning the repo again. To transfer your projects, copy and paste the projects folder into the new ScratchLang repo directory, or you can export all of them and import them in the new ScratchLang."
-    echo
-    echo "This process may be made automatic soon."
+  ver=$(sed '1!d' $(dirname $(pwd))/.version) #get version
+  if ! [ h$1 == hnope ]; then
+    echo "Checking version..."
+    wget -q https://raw.githubusercontent.com/0K9090/ScratchLang/main/.version
+    utd=1
+    if ! [ "$ver" == "$(sed '1!d' .version)" ]; then
+      utd=0
+    fi
+    if [ $utd == 0 ]; then
+      echo "Please update your ScratchLang version by cloning the repo again. To transfer your projects, copy and paste the projects folder into the new ScratchLang repo directory, or you can export all of them and import them in the new ScratchLang."
+      echo
+      echo "This process may be made automatic soon."
+      rm .version
+      exit
+    fi
     rm .version
-    exit
   fi
-  rm .version
 fi
 if [ h$1 == h-help ]; then
   echo "scratchlang (or ./start.sh if you haven't created the scratchlang command)"
@@ -54,7 +56,7 @@ else
   clear
   echo -e "${P}$logo${NC}"
   echo
-  if [ h$1 == h ]; then
+  if [ h$1 == h ] || [ h$1 == hnope ]; then
     echo "Welcome to ScratchLang $ver. (Name suggested by @MagicCrayon9342 on Scratch)"
     echo "Please select an option."
     if ! [ -f .var/devmode ]; then

@@ -30,7 +30,7 @@ elif [ $1 == -6 ]; then
 else
   echo -e "${RED}Error: $1 is not an argument.${NC}"
   sleep 2
-  ./start.sh
+  ./start.sh nope
   exit
 fi
 if [ h$input == h1 ]; then
@@ -174,7 +174,7 @@ elif [ h$input == h7 ]; then
     rm -rf zenity
     cd $dir
     pacman -S mingw-w64-x86_64-jq
-    ./start.sh
+    ./start.sh nope
   elif [ h$con == hN ] || [ h$con == hn ]; then
     echo
   else
@@ -194,7 +194,7 @@ elif [ h$input == h9 ]; then
   ./rmaliasiloop.sh
 elif [ h$input == hA ] || [ h$input == ha ]; then
   echo >>.var/devmode "This is a devmode file. You can manually remove it to disable dev mode if you don't want to use the program to disable it for some reason."
-  ./start.sh
+  ./start.sh nope
 elif [ h$input == hB ] || [ h$input == hb ]; then
   clear
 else
