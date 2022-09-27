@@ -31,6 +31,7 @@ if [ -f .var/vc ]; then
       if [ h$hh == hy ] || [ h$hh == hY ]; then
         git pull origin main
       fi
+      exit
     fi
     rm .version
   fi
