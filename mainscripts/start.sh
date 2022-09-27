@@ -17,6 +17,9 @@ if [ -f .var/vc ]; then
   ver=$(sed '1!d' $(dirname $(pwd))/.version) #get version
   if ! [ h$1 == hnope ]; then
     echo "Checking version..."
+    if [ -f .version ]; then
+      rm .version
+    fi
     wget -q https://raw.githubusercontent.com/0K9090/ScratchLang/main/.version
     utd=1
     if ! [ "$ver" == "$(sed '1!d' .version)" ]; then
@@ -26,14 +29,7 @@ if [ -f .var/vc ]; then
       echo "Your version of ScratchLang ($ver) is outdated. The current version is $(sed '1!d' .version). Would you like to update? [Y/N]"
       read -sn 1 hh
       if [ h$hh == hy ] || [ h$hh == hY ]; then
-        cd ../
-        cd ../
-        mv ScratchLang slold
-        cp -r slold/projects
-        rm -rf slold
-        git clone https://github.com/0K9090/ScratchLang.git
-        cp projects ScratchLang
-        exit
+        git pull origin main
       fi
     fi
     rm .version
