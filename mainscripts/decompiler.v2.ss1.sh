@@ -2,7 +2,7 @@
 #Decompiler coded by
 #0K9090 (ThatCoder77471 on Scratch)
 #
-#
+# cd ../ goes to the prev directory
 #
 echo
 RED='\033[0;31m'
@@ -19,24 +19,27 @@ else
   input3=y
 fi
 echo
-if [ h$input3 == hY ] || [ h$input3 == hy ]; then
+if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the command zenity
   if ! [ -f .var/zenity ]; then
     echo >>.var/zenity
   fi
   echo -e "Select the .sb3 you want to decompile. ${RED}WARNING! THE NAME OF THE FILE CANNOT HAVE ANY SPACES OR IT WILL NOT UNZIP CORRECTLY!!!${NC}"
   sleep 2
-  file=$(zenity -file-selection -file-filter 'Scratch SB3 *.sb3')
+  file=$(zenity -file-selection -file-filter 'Scratch SB3 *.sb3') #Select .sb3
   echo
-  echo -e "Name of project? ${RED}Keep in mind that it cannot be empty or it will not be created properly.${NC}"
+  echo -e "Name of project? ${RED}Keep in mind that it cannot be empty or it will not be created properly.${NC}" #Name your project
   read name
   echo
+  if [ h$name == h ]; then
+  echo -e "${RED}Error: Project name cannot be empty.${NC}"
+  fi
   cd ../
   if ! [ -d projects ]; then
-    mkdir projects
+    mkdir projects #Create projects directory if it doesn't exist
   fi
   cd projects
   if [ -d $name ]; then
-    echo "Project $name already exists. Replace? [Y/N]"
+    echo "Project $name already exists. Replace? [Y/N]" #If a project named the same thing you named it, then replace it
     read -sn 1 anss
     if [ h$anss == hY ] || [ h$anss == hy ]; then
       rm -rf $name
@@ -48,32 +51,32 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   echo "Decompiling project..."
   echo
   sleep 1
-  mkdir $name
+  mkdir $name #Create a directory named the project name
   cd $name
-  echo >>.maindir "Please don't remove this file."
+  echo >>.maindir "Please don't remove this file." #This tells the compiler that it's in the right directory.
   echo "Extracting .sb3..."
   echo
-  unzip $file
+  unzip $file #unzip the .sb3
   echo
   echo >>.maindir "Please don't remove this file."
   mkdir Stage
   cd Stage
-  mkdir assets
+  mkdir assets #Create the assets folder
   #Starting decomp scripts for stage
   cd ../
-  jsonfile=$(cat project.json)
+  jsonfile=$(cat project.json) #Get the project.json in a variable.
   i=55
-  getchar() { #stops loop when it detects char $1
+  getchar() { 
     if ! [ -$2 == -++ ]; then
-      char=${jsonfile:$i:1}
+      char=${jsonfile:$i:1} #get char index i from $jsonfile. the first char is 0, and it goes from left to right.
       if [ -$char == "$1" ]; then
-        b=1
+        b=1 #if the char index from i equals $1, then set b to 1.
       fi
     else
       if ! [ -$char == "$1" ]; then
         char=${jsonfile:$(expr $i + 1):1}
         if [ -$char == "$1" ]; then
-          b=1
+          b=1 #if the char index from i + 1 equals $1, then set b to 1. Don't use this one.
         fi
         char=${jsonfile:$i:1}
       else
@@ -83,18 +86,18 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   }
   nextquote() { #main while loop
     b=0
-    while :; do
-      i
-      getchar -\"
+    while :; do #infinite loop
+      i #change i by 1
+      getchar -\" #detect if char index from i equals "
       if [ $b == 1 ]; then
-        break
+        break #stop infinite loop if char index from i equals "
       fi
     done
   }
   i() { #change i by 1
     ((i++))
   }
-  i-() {
+  i-() { #change i by -1
     ((i--))
   }
   start() {
@@ -106,7 +109,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     getchar -\"
     if ! [ $b == 1 ]; then
       if [ h$1 == h ]; then
-        next="fin"
+        next="fin" #if next equals null, then set the variable next to fin
       fi
     else
       b=0
@@ -120,7 +123,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         varname+=$char
       done
       if [ h$1 == h ]; then
-        next=$varname
+        next=$varname #if next is not null, set next to whatever it is
       fi
     fi
     nextquote
@@ -129,7 +132,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
     i
     b=0
     getchar -\"
-    if ! [ $b == 1 ]; then
+    if ! [ $b == 1 ]; then #if parent equals null
       if [ h$1 == h ]; then
         echo >>$dcd/$name.ss1 "\nscript"
         parent=1
@@ -149,7 +152,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   }
   addblock() {
     parent=0
-    if [ $1 == event_broadcast ]; then
+    #Comments explaining what the scripts do will be added soon.
+    if [ $1 == event_broadcast ]; then #Broadcast block
       start
       nextquote
       nextquote
@@ -168,7 +172,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "broadcast [$varname]"
       echo "Added block: \"broadcast [$varname]\""
-    elif [ $1 == motion_movesteps ]; then
+    elif [ $1 == motion_movesteps ]; then #move () steps block
       start
       nextquote
       nextquote
@@ -187,7 +191,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "move (\"$varname\") steps"
       echo "Added block: \"move (\"$varname\") steps\""
-    elif [ $1 == control_wait ]; then
+    elif [ $1 == control_wait ]; then #wait () seconds block
       start
       nextquote
       nextquote
@@ -206,7 +210,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "wait (\"$varname\") seconds"
       echo "Added block: \"wait (\"$varname\") seconds\""
-    elif [ $1 == looks_switchbackdropto ]; then
+    elif [ $1 == looks_switchbackdropto ]; then #switch backdrop to () block
       start
       nextquote
       nextquote
@@ -254,7 +258,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "switch backdrop to (\"$varname\")"
       echo "Added block: \"switch backdrop to (\"$varname\")\""
-    elif [ $1 == looks_switchbackdroptoandwait ]; then
+    elif [ $1 == looks_switchbackdroptoandwait ]; then #switch backdrop to () and wait block
       start
       nextquote
       nextquote
@@ -302,11 +306,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "switch backdrop to (\"$varname\") and wait"
       echo "Added block: \"switch backdrop to (\"$varname\") and wait\""
-    elif [ $1 == looks_nextbackdrop ]; then
+    elif [ $1 == looks_nextbackdrop ]; then #next backdrop block
       start
       echo >>$dcd/$name.ss1 "next backdrop"
       echo "Added block: \"next backdrop\""
-    elif [ $1 == looks_changeeffectby ]; then
+    elif [ $1 == looks_changeeffectby ]; then #change [] effect by () block
       start
       nextquote
       nextquote
@@ -340,7 +344,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "change [$varname] effect by (\"$varvalue\")"
       echo "Added block: \"change [$varname] effect by (\"$varvalue\")\""
-    elif [ $1 == looks_backdropnumbername ]; then
+    elif [ $1 == looks_backdropnumbername ]; then #(backdrop []) block
       start
       nextquote
       nextquote
@@ -361,7 +365,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "(backdrop [$word])"
       echo "Added block: \"(backdrop [$word])\""
-    elif [ $1 == sound_playuntildone ]; then
+    elif [ $1 == sound_playuntildone ]; then #play sound () until done block
       start
       nextquote
       nextquote
@@ -409,7 +413,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "play sound (\"$varname\") until done"
       echo "Added block: \"play sound (\"$varname\") until done\""
-    elif [ $1 == looks_seteffectto ]; then
+    elif [ $1 == looks_seteffectto ]; then #set [] effect to () block
       start
       nextquote
       nextquote
@@ -443,7 +447,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "set [$varname] effect to (\"$varvalue\")"
       echo "Added block: \"set [$varname] effect to (\"$varvalue\")\""
-    elif [ $1 == sound_play ]; then
+    elif [ $1 == sound_play ]; then #start sound () block
       start
       nextquote
       nextquote
@@ -491,11 +495,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "start sound (\"$varname\")"
       echo "Added block: \"start sound (\"$varname\")\""
-    elif [ $1 == sound_stopallsounds ]; then
+    elif [ $1 == sound_stopallsounds ]; then #stop all sounds block
       start
       echo >>$dcd/$name.ss1 "stop all sounds"
       echo "Added block: \"stop all sounds\""
-    elif [ $1 == sound_changeeffectby ]; then
+    elif [ $1 == sound_changeeffectby ]; then #change [] effect by () block
       start
       nextquote
       nextquote
@@ -529,7 +533,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "change [$varname] effect by (\"$varvalue\")"
       echo "Added block: \"change [$varname] effect by (\"$varvalue\")\""
-    elif [ $1 == sound_seteffectto ]; then
+    elif [ $1 == sound_seteffectto ]; then #set [] effect to () block
       start
       nextquote
       nextquote
@@ -563,11 +567,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "set [$varname] effect to (\"$varvalue\")"
       echo "Added block: \"set [$varname] effect to (\"$varvalue\")\""
-    elif [ $1 == sound_cleareffects ]; then
+    elif [ $1 == sound_cleareffects ]; then #clear sound effects block
       start
       echo >>$dcd/$name.ss1 "clear sound effects"
       echo "Added block: \"clear sound effects\""
-    elif [ $1 == sound_changevolumeby ]; then
+    elif [ $1 == sound_changevolumeby ]; then #change volume by () block
       start
       nextquote
       nextquote
@@ -586,15 +590,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "change volume by (\"$varname\")"
       echo "Added block: \"change volume by (\"$varname\")\""
-    elif [ $1 == sound_volume ]; then
+    elif [ $1 == sound_volume ]; then #(volume) block
       start
       echo >>$dcd/$name.ss1 "(volume)"
       echo "Added block: \"(volume)\""
-    elif [ $1 == event_whenflagclicked ]; then
+    elif [ $1 == event_whenflagclicked ]; then #when flag clicked block
       start
       echo >>$dcd/$name.ss1 "when flag clicked"
       echo "Added block: \"when flag clicked\""
-    elif [ $1 == event_whenkeypressed ]; then
+    elif [ $1 == event_whenkeypressed ]; then #when [] key pressed block
       start
       nextquote
       nextquote
@@ -615,11 +619,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "when [$varname] key pressed"
       echo "Added block: \"when [$varname] key pressed\""
-    elif [ $1 == event_whenstageclicked ]; then
+    elif [ $1 == event_whenstageclicked ]; then #when stage clicked block
       start
       echo >>$dcd/$name.ss1 "when stage clicked"
       echo "Added block: \"when stage clicked\""
-    elif [ $1 == event_whenbroadcastreceived ]; then
+    elif [ $1 == event_whenbroadcastreceived ]; then #when i receive [] block
       start
       nextquote
       nextquote
@@ -640,7 +644,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "when i receieve [$word]"
       echo "Added block: \"when i receieve [$word]\""
-    elif [ $1 == event_broadcastandwait ]; then
+    elif [ $1 == event_broadcastandwait ]; then #broadcast [] and wait block
       start
       nextquote
       nextquote
@@ -659,7 +663,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "broadcast [$varname] and wait"
       echo "Added block: \"broadcast [$varname] and wait\""
-    elif [ $1 == sound_setvolumeto ]; then
+    elif [ $1 == sound_setvolumeto ]; then #set volume to () % block
       start
       nextquote
       nextquote
@@ -678,7 +682,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "set volume to (\"$varname\") %"
       echo "Added block: \"set volume to (\"$varname\") %\""
-    elif [ $1 == event_whenbackdropswitchesto ]; then
+    elif [ $1 == event_whenbackdropswitchesto ]; then #when backdrop switches to [] block
       start
       nextquote
       nextquote
@@ -699,11 +703,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "when backdrop switches to [$varname]"
       echo "Added block: \"when backdrop switches to [$varname]\""
-    elif [ $1 == looks_cleargraphiceffects ]; then
+    elif [ $1 == looks_cleargraphiceffects ]; then #clear graphic effects block
       start
       echo >>$dcd/$name.ss1 "clear graphic effects"
       echo "Added block: \"clear graphic effects\""
-    elif [ $1 == event_whengreaterthan ]; then
+    elif [ $1 == event_whengreaterthan ]; then #when [] > () block
       start
       nextquote
       nextquote
@@ -737,7 +741,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       done
       echo >>$dcd/$name.ss1 "when [$varname] > (\"$varvalue\")"
       echo "Added block: \"when [$varname] > (\"$varvalue\")\""
-    elif [ $1 == control_repeat ]; then
+    elif [ $1 == control_repeat ]; then #repeat () {}block
       start
       nextquote
       nextquote
@@ -798,7 +802,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         echo
         echo "Ended repeat."
       fi
-    elif [ $1 == control_forever ]; then
+    elif [ $1 == control_forever ]; then #forever {} block
       start
       nextquote
       nextquote
@@ -847,8 +851,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         echo "Ended forever."
       fi
     fi
-    if ! [ $next == fin ]; then
-      i=1
+    if ! [ $next == fin ]; then #if not next equals fin do these
+      i=1 #the below scripts look for "topLevel", which is the end of most opcodes. It goes to the next "}" then looks at the thing in quotes after that. That is the block ID. It uses this to compile all the blocks in order.
       while :; do
         b=0
         word=
@@ -860,7 +864,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
           fi
           word+=$char
         done
-        if [ "$word" == blocks ]; then
+        if [ "$word" == blocks ]; then 
           i
           i
           i
@@ -908,13 +912,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
         fi
       done
     else
-      if ! [ $rep == 0 ]; then
+      if ! [ $rep == 0 ]; then #if not rep=0 then it was compiling a c-block
         next=$rep
         rep=0
         echo >>$dcd/$name.ss1 "}"
         echo "}"
         echo
-        if [ h$per == hr ]; then
+        if [ h$per == hr ]; then #$per is the c-block identity. r=repeat, f=forever
           echo "Ended repeat."
         elif [ h$per == hf ]; then
           echo "Ended forever."
@@ -1059,23 +1063,35 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   echo
   i=$(expr $i + 9)
   while :; do
-    nextquote
     i
-    nextquote
+    i
     b=0
-    novars=0
-    while :; do
+    getchar -\}
+    if [ $b == 1 ]; then
+      novars=1
+      i-
+      i-
+    else
+      i-
+      i-
+      nextquote
       i
-      getchar -\[
-      if [ $b == 1 ]; then
-        break
-      fi
-      getchar -\}
-      if [ $b == 1 ]; then
-        novars=1
-        break
-      fi
-    done
+      nextquote
+      b=0
+      novars=0
+      while :; do
+        i
+        getchar -\[
+        if [ $b == 1 ]; then
+          break
+        fi
+        getchar -\}
+        if [ $b == 1 ]; then
+          novars=1
+          break
+        fi
+      done
+    fi
     if [ $novars == 0 ]; then
       i
       b=0
@@ -1180,18 +1196,31 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   i=$(expr $i + 14)
   b=0
   novars=0
-  while :; do #repeat until char = [
-    i
-    getchar -\"
-    if [ $b == 1 ]; then
-      break
-    fi
-    getchar -\}
-    if [ $b == 1 ]; then
-      novars=1
-      break
-    fi
-  done
+  i
+  i
+  b=0
+  getchar -\}
+  if [ $b == 1 ]; then
+    novars=1
+    i-
+    i-
+  else
+  i-
+  i-
+    while :; do #repeat until char = [
+      i
+      getchar -\"
+      if [ $b == 1 ]; then
+        break
+      fi
+      getchar -\}
+      if [ $b == 1 ]; then
+        novars=1
+        break
+      fi
+    done
+    nextquote
+  fi
   if [ $novars == 0 ]; then
     while :; do
       i
