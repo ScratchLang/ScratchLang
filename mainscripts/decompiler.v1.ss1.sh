@@ -1,7 +1,7 @@
 #!/bin/bash
 #Decompiler coded by
 #0K9090 (ThatCoder77471 on Scratch)
-#
+#No comments will be added because this version is not being programmed anymore.
 #
 #
 echo

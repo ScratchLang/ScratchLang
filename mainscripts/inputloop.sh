@@ -15,7 +15,7 @@ if [ h$1 == h ]; then
   echo "A. Enable Developer Mode."
   echo "B. Exit."
   read -sn 1 input
-elif [ $1 == -1 ]; then
+elif [ $1 == -1 ]; then #if there's arguments, set input to the arg
   input=1
 elif [ $1 == -2 ]; then
   input=2
@@ -30,13 +30,13 @@ elif [ $1 == -6 ]; then
 else
   echo -e "${RED}Error: $1 is not an argument.${NC}"
   sleep 2
-  ./start.sh nope
+  ./start.sh nope #make sure not to check the version when running ./start.sh again
   exit
 fi
 if [ h$input == h1 ]; then
   dir=$(pwd)
   echo
-  echo "Name your project. Keep in mind that it cannot be empty or it will not be created properly."
+  echo "Name your project. Keep in mind that it cannot be empty or it will not be created properly." #Name you project
   read name
   if [ h$name == h ]; then
     echo -e "${RED}Error: Project name empty.${NC}"
@@ -49,20 +49,20 @@ if [ h$input == h1 ]; then
   fi
   cd projects
   mkdir $name
-  cd $name
-  echo >>.maindir "Please don't remove this file."
+  cd $name #go to project dir, create a folder named whatever you named it, and go into that
+  echo >>.maindir "Please don't remove this file." #tells the compiler that it's in the right directory
   mkdir Stage
   cd Stage
   mkdir assets
   cd ../
   cd ../
   cd ../
-  cp resources/cd21514d0531fdffb22204e0ec5ed84a.svg projects/$name/Stage/assets
+  cp resources/cd21514d0531fdffb22204e0ec5ed84a.svg projects/$name/Stage/assets #Copy blank background svg to Stage/assets
   cd projects/$name/Stage
-  echo >>$name.ss \#There should be no empty lines.
+  echo >>$name.ss \#There should be no empty lines. #create .ss file
   echo >>$name.ss ss
   cd ../
-  mkdir Sprite1
+  mkdir Sprite1 #create sprite 1
   cd Sprite1
   echo >>$name.ss \#There should be no empty lines.
   echo >>$name.ss ss
@@ -70,7 +70,7 @@ if [ h$input == h1 ]; then
   cd ../
   cd ../
   cd ../
-  cp resources/341ff8639e74404142c11ad52929b021.svg projects/$name/Sprite1/assets
+  cp resources/341ff8639e74404142c11ad52929b021.svg projects/$name/Sprite1/assets #copy scratch cat sprites to the assets folder
   cp resources/c9466893cdbdda41de3ec986256e5a47.svg projects/$name/Sprite1/assets
   cd mainscripts
 elif [ h$input == h2 ]; then
@@ -97,7 +97,7 @@ elif [ h$input == h3 ]; then
   ./compiler.sh
 elif [ h$input == h4 ]; then
   if [ -f .var/ds ]; then
-    chmod 755 $(sed '1!d' .var/ds)
+    chmod 755 $(sed '1!d' .var/ds) #if there is a custom compiler, get the command from the ds file and run it
     ./$(sed '1!d' .var/ds)
   else
     chmod 755 decompiler.v2.ss1.sh
@@ -117,7 +117,7 @@ elif [ h$input == h5 ]; then
   read pgrd
   if ! [ h$pgrd == h ]; then
     if [ -d $pgrd ]; then
-      tar -cf $pgrd.ssa $pgrd #ScratchScript Archive
+      tar -cf $pgrd.ssa $pgrd #export project as a ScratchScript Archive
       cd ../
       cp projects/$pgrd.ssa exports
       rm projects/$pgrd.ssa
@@ -128,20 +128,20 @@ elif [ h$input == h5 ]; then
   fi
 elif [ h$input == h6 ]; then
   if ! [ -f .var/zenity ]; then
-    echo "Do you have the command zenity? [Y/N]"
+    echo "Do you have the command zenity? [Y/N]" #Ask user if they have the command zenity
     read -sn 1 input3
   else
     input3=y
   fi
   if [ h$input3 == hY ] || [ h$input3 == hy ]; then
-    import=$(zenity -file-selection -file-filter 'ScratchScript\ Archive *.ssa')
+    import=$(zenity -file-selection -file-filter 'ScratchScript\ Archive *.ssa') #Look for ScratchScript Archives
     cd ../
     if ! [ -d projects ]; then
       mkdir projects
     fi
     cd projects
-    tar -xf $import
-    echo "Remove .ssa file? [Y/N]"
+    tar -xf $import #extract .ssa archive
+    echo "Remove .ssa file? [Y/N]" #remove the .ssa archive if wanted
     read -sn 1 f
     if [ h$f == hY ] || [ h$f == hy ]; then
       rm $import
@@ -152,28 +152,28 @@ elif [ h$input == h6 ]; then
     echo "${RED}Error: $input3 not an input.${NC}"
   fi
 elif [ h$input == h7 ]; then
-  echo "This only works for MSYS2/MINGW. Continue? [Y/N]"
+  echo "This only works for MSYS2/MINGW. Continue? [Y/N]" 
   read -sn 1 con
-  if [ h$con == hY ] || [ h$con == hy ]; then
+  if [ h$con == hY ] || [ h$con == hy ]; then #Start installing dependencies for mingw
     echo
-    bit=$(getconf LONG_BIT)
+    bit=$(getconf LONG_BIT) #get bit number (32, 64) of PC
     dir=$(pwd)
     cd
-    mkdir zenity
+    mkdir zenity #start installing zenity
     cd zenity
     if [ $bit == 64 ]; then
-      wget https://github.com/ncruces/zenity/releases/download/v0.9.0/zenity_win64.zip
+      wget https://github.com/ncruces/zenity/releases/download/v0.9.0/zenity_win64.zip #get zenity64
       version=zenity_win64
     else
-      wget https://github.com/ncruces/zenity/releases/download/v0.9.0/zenity_win32.zip
+      wget https://github.com/ncruces/zenity/releases/download/v0.9.0/zenity_win32.zip #get zenity 32
       version=zenity_win32
     fi
     unzip -n $version.zip
-    cp zenity.exe /usr/bin
+    cp zenity.exe /usr/bin #copy zenity to /usr/bin and remove original exe
     cd ../
     rm -rf zenity
     cd $dir
-    pacman -S mingw-w64-x86_64-jq
+    pacman -S git #install git
     ./start.sh nope
   elif [ h$con == hN ] || [ h$con == hn ]; then
     echo
@@ -182,17 +182,16 @@ elif [ h$input == h7 ]; then
   fi
 elif [ h$input == h8 ]; then
   dir=$(pwd)
-  if ! [ -f .var/alias ]; then
-
+  if ! [ -f .var/alias ]; then #create scratchlang command
     echo >>/usr/bin/scratchlang "cd $dir && ./start.sh \$1 \$2 \$3"
     echo >>.var/alias "This file tells the program that the command is already created. Please don't touch this."
   else
-    echo "alias has already been created."
+    echo "scratchlang command has already been created."
   fi
-elif [ h$input == h9 ]; then
+elif [ h$input == h9 ]; then #scratchlang command removal loop
   chmod 755 rmaliasiloop.sh
   ./rmaliasiloop.sh
-elif [ h$input == hA ] || [ h$input == ha ]; then
+elif [ h$input == hA ] || [ h$input == ha ]; then #enable devmode
   echo >>.var/devmode "This is a devmode file. You can manually remove it to disable dev mode if you don't want to use the program to disable it for some reason."
   ./start.sh nope
 elif [ h$input == hB ] || [ h$input == hb ]; then
