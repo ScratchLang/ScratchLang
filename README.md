@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.5.4a**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6a**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -6,10 +6,12 @@
 This is for people who want to use Scratch like other programming languages.
 
 # Latest big updates
-Starting over and making a new decompiler.
+Added every block from V1 into V2, PLUS REPEAT AND FOREVER BLOCKS!
+
+The new decompiler is programmed so that it uses "parent" and "next" to decompile the blocks in order. However, C-Blocks in C-Blocks don't work yet. Bug listed below.
 
 # Open-Source
-This is an open-source project. Anyone can contribute.
+This is an open-source project. Anyone can contribute. If there's anything discouraging you from contributing, let me know and I'll try to fix it.
 
 # The Plan
 This is mainly made in Shell Script, but if you know languages like C and Python, then you can make some stuff in that so people have many options to choose from.
@@ -25,12 +27,9 @@ A project.json is also included in the resources folder to help understand and r
 I'm programming the decompiler. First I'm gonna program it to decompile all the global and stage-exclusive blocks, then sprite-exclusive blocks.
 
 ## Contributing to the decompiler
-If you want to help with the decompiler but you don't understand any of the code, just ask and I'll link a discussion explaining it. If there is no discussion, I'll create one.
-
-## Notice
-I am restarting the decompiler, because C-Blocks are added to the json really weird, and that makes a hurdle too tall to jump for decomiler V1. Maybe if you're a really advanced coder, you could get V1 to work with C-Blocks.
-
-Also, I renamed the file extension to .ss1 because I am planning on having multiple formats.
+I am currently putting comments in my code so people understand it. Please wait.
+# Notice
+I renamed the file extension to .ss1 because I am planning on having multiple formats.
 ss1 Will be it's own language
 ss2 Will be similar to c
 ss3 Python or javascript?
@@ -86,6 +85,8 @@ This is what people will do.
 Program the decompiler
 ### wendiner
 I don't know what they're doing
+### redstone-scratch
+make it in python ig
 
 # ScratchLang Language
 ScratchLang's language is called ScratchScript. ScratchLang is the program that manages ScratchScript programs.
@@ -97,8 +98,8 @@ list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma
 # Decompiler V2 Blocks
 ## Vanilla Scratch Blocks
 ### Added blocks
-0/90 Stage Blocks + Pen | 0% Done <br />
-0/141 Every Block + Pen | 0% Done <br />
+28/90 Stage Blocks + Pen | 31.11% Done <br />
+28/141 Every Block + Pen | 19.86% Done <br />
 
 Write every block in the order they are defined. <br />
 
@@ -106,14 +107,45 @@ Remember, quotes tell the compiler that it is not a variable. If you want to put
 Also, the compiler can't tell the difference between a string and a boolean/variable yet. So most number inputs have no quotation marks. <br />
 
 Brackets means that there cannot be a variable in there. It's either a defined object or an object from a set list. <br />
-### Very buggy blocks
-None yet.
+### Buggy Blocks
+repeat (num) { <br />
+
+} - (Repeat everything in the braces for (num) times.) Still less buggy than in V1. <br />
+
+**forever {** <br />
+
+**} - (Repeat everything in the braces forever.) Still less buggy than in V1.** <br />
 
 ### Stable blocks
 var=string - (Define [or set] a variable) <br />
+**list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma after the equal sign.)** <br />
+move ("num") steps (Move an amount of steps.) <br />
+**wait ("num") seconds - (Wait for an amount of seconds.)** <br />
+switch backdrop to ("backdrop") - (Changes backdrop.) <br />
+**switch backdrop to ("backdrop") and wait -  (Changes backdrop and waits.)** <br />
+next backdrop - (Changes backdrop by 1.)
+**change [EFFECT #has to be in caps] effect by ("num") - (Change an effect by an amount.)** <br />
+set [EFFECT] effect to ("num") - (Sets an effect to an amount.) <br />
+**clear graphic effects - (Clears all effects applied to the stage or sprite.)** <br />
+(backdrop [number/name]) - (Reports the number or name of the backdrop.) <br />
+**play sound ("sound") until done - (Play a sound until done.)**
+start sound ("sound") - (Start a sound.) <br />
+**stop all sounds (Stop all sounds.)** <br />
+change [EFFECT] effect by ("num") (Change an effect by an amount.) <br />
+**set [EFFECT] effect to ("num") - (Sets an effect to an amount.)** <br />
+clear sound effects - (Clear sound effects.) <br />
+**change volume by ("num") - (Change the volume by an amount.)** <br />
+set volume to ("num") % - (Set the volume to an amount.) <br />
+**(volume) - (Reports the volume.)** <br />
+when flag clicked - (When green flag clicked.) <br />
+**when [key] key pressed - (Runs the script when a certain key is pressed.)** <br />
+when stage clicked - (Runs the script when the stage is clicked.) <br />
+**when backdrop switches to [backdrop] - (Runs the script when the stage changes to a certain backdrop.)** <br />
+when [THING] > ("num") <br />
+**when i receive [broadcast] - (Runs the script when a certain message is broadcasted.)** <br />
 
 ### Blocks to Add
-move () steps <br />
+
 turn cw () deg <br />
 turn ccw () deg <br />
 go to () <br />
@@ -138,9 +170,6 @@ think () for () seconds <br />
 think () <br />
 switch costume to () <br />
 next costume <br />
-switch backdrop to () <br />
-switch backdrop to () and wait <br />
-next backdrop <br />
 change size by () <br />
 set size to () <br />
 show <br />
@@ -148,37 +177,7 @@ hide <br />
 go to [] layer <br />
 go [] () layers <br />
 (costume []) <br />
-(backdrop []) <br />
 (size) <br />
-
-play sound () until done <br />
-start sound () <br />
-stop all sounds <br />
-change [] effect by () <br />
-set [] effect to <br />
-clear sound effects <br />
-change volume by () <br />
-set volume to () % <br />
-(volume) <br />
-
-when flag clicked <br />
-when [] key pressed <br />
-when this sprite clicked <br />
-when stage clicked <br />
-when backdrop switches to [] <br />
-when [] > () <br />
-when i receive [] <br />
-broadcast () <br />
-broadcast () and wait <br />
-
-wait () seconds <br />
-repeat () { <br />
-
-} <br />
-
-forever { <br />
-
-} <br />
 
 if <> then { <br />
 
@@ -192,7 +191,6 @@ else { <br />
 } <br />
 
 wait until <> <br />
-
 repeat until <> { <br />
 
 } <br />
@@ -249,11 +247,9 @@ reset timer <br />
 ([] of ()) #abs of block <br />
 
 (my variable) <br />
-set [] to () <br />
 change [] by () <br />
 show variable [] <br />
 hide variable [] <br />
-
 (my list) <br />
 add () to [] <br />
 delete () of [] <br />
@@ -478,13 +474,13 @@ pen|set pen size to () <br />
 # Troubleshooting
 ## Variable or List taking a very long time to decompile?
 The variable or list is probably long.
-## Decompiler just stops or is outputting random junk
+## Decompiler is hanging or is outputting random junk
 The decompiler is not complete yet, which means stuff like that will happen.
 
 # Bugs
 ## V1 Decomp Bugs (This version is no longer being programmed.)
 Loads broadcasts even if there are none. (Try decompiling decompilerteset.sb3 which is in the resources folder.)
 ## V2 Decomp Bugs
-Since I copied the broadcast loading script to V2, it's safe to assume that the 1st bug for V1 can still happen in V2.
+C-Blocks can't be in other C-Blocks. The program forgets about all C-Blocks except the last one decompiled.
 
 ![de20ca3a12e96a8b00a2063151b1ad84](https://user-images.githubusercontent.com/78574005/192591165-e642bc95-7625-487d-aeba-c74d8d85eb9d.png)
