@@ -8,7 +8,7 @@ echo
 RED='\033[0;31m'
 NC='\033[0m'
 echo -e "${RED}Decompiler 2.0${NC}"
-DecompCurrentDir=Stage
+dcd=Stage
 echo
 echo "Remember, both the compiler and decompiler don't work yet. The decompiler can extract the sb3, define variables, build lists, load broadcasts, and decompile some blocks, but it can't do anything else yet."
 echo
@@ -96,6 +96,892 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   }
   i-() {
     ((i--))
+  }
+  start() {
+    nextquote
+    nextquote
+    i
+    i
+    b=0
+    getchar -\"
+    if ! [ $b == 1 ]; then
+      if [ h$1 == h ]; then
+        next="fin"
+      fi
+    else
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      if [ h$1 == h ]; then
+        next=$varname
+      fi
+    fi
+    nextquote
+    nextquote
+    i
+    i
+    b=0
+    getchar -\"
+    if ! [ $b == 1 ]; then
+      if [ h$1 == h ]; then
+        echo >>$dcd/$name.ss1 "\nscript"
+        parent=1
+      fi
+    else
+      b=0
+      pname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        pname+=$char
+      done
+    fi
+  }
+  addblock() {
+    parent=0
+    if [ $1 == event_broadcast ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "broadcast [$varname]"
+      echo "Added block: \"broadcast [$varname]\""
+    elif [ $1 == motion_movesteps ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "move (\"$varname\") steps"
+      echo "Added block: \"move (\"$varname\") steps\""
+    elif [ $1 == control_wait ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "wait (\"$varname\") seconds"
+      echo "Added block: \"wait (\"$varname\") seconds\""
+    elif [ $1 == looks_switchbackdropto ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      while :; do
+        i
+        getchar -\}
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      start n
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "switch backdrop to (\"$varname\")"
+      echo "Added block: \"switch backdrop to (\"$varname\")\""
+    elif [ $1 == looks_switchbackdroptoandwait ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      while :; do
+        i
+        getchar -\}
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      start n
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "switch backdrop to (\"$varname\") and wait"
+      echo "Added block: \"switch backdrop to (\"$varname\") and wait\""
+    elif [ $1 == looks_nextbackdrop ]; then
+      start
+      echo >>$dcd/$name.ss1 "next backdrop"
+      echo "Added block: \"next backdrop\""
+    elif [ $1 == looks_changeeffectby ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varvalue=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "change [$varname] effect by (\"$varvalue\")"
+      echo "Added block: \"change [$varname] effect by (\"$varvalue\")\""
+    elif [ $1 == looks_backdropnumbername ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      word=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        word+=$char
+      done
+      echo >>$dcd/$name.ss1 "(backdrop [$word])"
+      echo "Added block: \"(backdrop [$word])\""
+    elif [ $1 == sound_playuntildone ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      while :; do
+        i
+        getchar -\}
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      start n
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "play sound (\"$varname\") until done"
+      echo "Added block: \"play sound (\"$varname\") until done\""
+    elif [ $1 == looks_seteffectto ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varvalue=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "set [$varname] effect to (\"$varvalue\")"
+      echo "Added block: \"set [$varname] effect to (\"$varvalue\")\""
+    elif [ $1 == sound_play ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      while :; do
+        i
+        getchar -\}
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      start n
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "start sound (\"$varname\")"
+      echo "Added block: \"start sound (\"$varname\")\""
+    elif [ $1 == sound_stopallsounds ]; then
+      start
+      echo >>$dcd/$name.ss1 "stop all sounds"
+      echo "Added block: \"stop all sounds\""
+    elif [ $1 == sound_changeeffectby ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varvalue=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "change [$varname] effect by (\"$varvalue\")"
+      echo "Added block: \"change [$varname] effect by (\"$varvalue\")\""
+    elif [ $1 == sound_seteffectto ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varvalue=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "set [$varname] effect to (\"$varvalue\")"
+      echo "Added block: \"set [$varname] effect to (\"$varvalue\")\""
+    elif [ $1 == sound_cleareffects ]; then
+      start
+      echo >>$dcd/$name.ss1 "clear sound effects"
+      echo "Added block: \"clear sound effects\""
+    elif [ $1 == sound_changevolumeby ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "change volume by (\"$varname\")"
+      echo "Added block: \"change volume by (\"$varname\")\""
+    elif [ $1 == sound_volume ]; then
+      start
+      echo >>$dcd/$name.ss1 "(volume)"
+      echo "Added block: \"(volume)\""
+    elif [ $1 == event_whenflagclicked ]; then
+      start
+      echo >>$dcd/$name.ss1 "when flag clicked"
+      echo "Added block: \"when flag clicked\""
+    elif [ $1 == event_whenkeypressed ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "when [$varname] key pressed"
+      echo "Added block: \"when [$varname] key pressed\""
+    elif [ $1 == event_whenstageclicked ]; then
+      start
+      echo >>$dcd/$name.ss1 "when stage clicked"
+      echo "Added block: \"when stage clicked\""
+    elif [ $1 == event_whenbroadcastreceived ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      word=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        word+=$char
+      done
+      echo >>$dcd/$name.ss1 "when i receieve [$word]"
+      echo "Added block: \"when i receieve [$word]\""
+    elif [ $1 == event_broadcastandwait ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "broadcast [$varname] and wait"
+      echo "Added block: \"broadcast [$varname] and wait\""
+    elif [ $1 == sound_setvolumeto ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "set volume to (\"$varname\") %"
+      echo "Added block: \"set volume to (\"$varname\") %\""
+    elif [ $1 == event_whenbackdropswitchesto ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "when backdrop switches to [$varname]"
+      echo "Added block: \"when backdrop switches to [$varname]\""
+    elif [ $1 == looks_cleargraphiceffects ]; then
+      start
+      echo >>$dcd/$name.ss1 "clear graphic effects"
+      echo "Added block: \"clear graphic effects\""
+    elif [ $1 == event_whengreaterthan ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varvalue=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      echo >>$dcd/$name.ss1 "when [$varname] > (\"$varvalue\")"
+      echo "Added block: \"when [$varname] > (\"$varvalue\")\""
+    elif [ $1 == control_repeat ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      varvalue=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varvalue+=$char
+      done
+      nextquote
+      b=0
+      word=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        word+=$char
+      done
+      if [ "$word" == SUBSTACK ]; then
+        nextquote
+        b=0
+        varname=
+        while :; do
+          i
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+          varname+=$char
+        done
+        rep=$next
+        per=r
+        next=$varname
+        echo
+        echo "Starting repeat."
+        echo
+        echo >>$dcd/$name.ss1 "repeat ($varvalue) {"
+        echo "repeat ($varvalue) {"
+      else
+        echo
+        echo "Starting repeat."
+        echo
+        echo >>$dcd/$name.ss1 "repeat ($varvalue) {"
+        echo "repeat ($varvalue) {"
+        echo >>$dcd/$name.ss1
+        echo
+        echo >>$dcd/$name.ss1 "}"
+        echo "}"
+        echo
+        echo "Ended repeat."
+      fi
+    elif [ $1 == control_forever ]; then
+      start
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      word=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        word+=$char
+      done
+      if [ "$word" == SUBSTACK ]; then
+        nextquote
+        b=0
+        varname=
+        while :; do
+          i
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+          varname+=$char
+        done
+        rep=$next
+        per=f
+        next=$varname
+        echo
+        echo "Starting forever.."
+        echo
+        echo >>$dcd/$name.ss1 "forever {"
+        echo "forever {"
+      else
+        echo
+        echo "Starting forever."
+        echo
+        echo >>$dcd/$name.ss1 "forever {"
+        echo "forever {"
+        echo >>$dcd/$name.ss1
+        echo
+        echo >>$dcd/$name.ss1 "}"
+        echo "}"
+        echo
+        echo "Ended forever."
+      fi
+    fi
+    if ! [ $next == fin ]; then
+      i=1
+      while :; do
+        b=0
+        word=
+        while :; do
+          i
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+          word+=$char
+        done
+        if [ "$word" == blocks ]; then
+          i
+          i
+          i
+          b=0
+          word=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            word+=$char
+          done
+          if [ "$word" == "$next" ]; then
+            nextquote
+            break
+          fi
+        else
+          if [ "$word" == topLevel ]; then
+            b=0
+            while :; do
+              i
+              getchar -\}
+              if [ $b == 1 ]; then
+                break
+              fi
+            done
+            i
+            i
+            b=0
+            word=
+            while :; do
+              i
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+              word+=$char
+            done
+            if [ "$word" == "$next" ]; then
+              nextquote
+              break
+            fi
+          fi
+        fi
+      done
+    else
+      if ! [ $rep == 0 ]; then
+        next=$rep
+        rep=0
+        echo >>$dcd/$name.ss1 "}"
+        echo "}"
+        echo
+        if [ h$per == hr ]; then
+          echo "Ended repeat."
+        elif [ h$per == hf ]; then
+          echo "Ended forever."
+        fi
+        if ! [ $next == fin ]; then
+          i=1
+          while :; do
+            b=0
+            word=
+            while :; do
+              i
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+              word+=$char
+            done
+            if [ "$word" == blocks ]; then
+              i
+              i
+              i
+              b=0
+              word=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                word+=$char
+              done
+              if [ "$word" == "$next" ]; then
+                nextquote
+                break
+              fi
+            else
+              if [ "$word" == topLevel ]; then
+                b=0
+                while :; do
+                  i
+                  getchar -\}
+                  if [ $b == 1 ]; then
+                    break
+                  fi
+                done
+                i
+                i
+                b=0
+                word=
+                while :; do
+                  i
+                  getchar -\"
+                  if [ $b == 1 ]; then
+                    break
+                  fi
+                  word+=$char
+                done
+                if [ "$word" == "$next" ]; then
+                  nextquote
+                  break
+                fi
+              fi
+            fi
+          done
+        fi
+      fi
+    fi
   }
   #Decompile variables
   echo "Defining variables..."
@@ -333,8 +1219,73 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
       i
       i
     done
+    rep=0
+    echo "Making blocks..."
+    dcd=Stage
+    k=-1
+    done=0
+    while :; do
+      i=$k
+      while :; do
+        b=0
+        word=
+        while :; do
+          i
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+          word+=$char
+        done
+        if [ "$word" == parent ]; then
+          k=$i
+          i
+          i
+          b=0
+          getchar -\"
+          if ! [ $b == 1 ]; then
+            break
+          fi
+        fi
+        if [ "$word" == comments ]; then
+          done=1
+          break
+        fi
+      done
+      if [ $done == 0 ]; then
+        b=0
+        while :; do
+          i-
+          getchar -\{
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        i
+        while :; do
+          nextquote
+          nextquote
+          b=0
+          word=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            word+=$char
+          done
+          addblock $word
+          if [ $next == fin ]; then
+            break
+          fi
+        done
+      fi
+      if [ $done == 1 ]; then
+        break
+      fi
+    done
   fi
-  echo -e "${RED}Decompiler V2 is not working right now. (The reason it did the above stuff is because I am too lazy to reprogram absolutely everything, so I kept the var, list, and broadcast decomp scripts.) If you want, you could enable developer mode and input D to change the decompiler to a different version.${NC}"
 elif [ h$input3 == hn ] || [ h$input3 == hN ]; then
   echo "Install zenity for MSYS2, or this won't work."
 else
