@@ -3,6 +3,7 @@ NC='\033[0m' #Reset text color.
 P='\033[0;35m' #Purple
 basedir=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')") #get the base directory of start.sh
 cd $basedir
+ver=$(sed '1!d' $(dirname $(pwd))/.version) #get local version
 if ! [ -f .var/asked ]; then #this is in place so it only asks the below question once, ever.
   if ! [ -f .var/vc ]; then #I don't know why this is here anymore
     echo "Would you like ScratchLang to check its version every time you start it? [Y/N]"
@@ -14,7 +15,6 @@ if ! [ -f .var/asked ]; then #this is in place so it only asks the below questio
   fi
 fi
 if [ -f .var/vc ]; then
-  ver=$(sed '1!d' $(dirname $(pwd))/.version) #get local version
   if ! [ h$1 == hnope ]; then
     echo "Checking version..."
     if [ -f .version ]; then
