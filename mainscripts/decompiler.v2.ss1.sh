@@ -1626,13 +1626,26 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   #add spaces
   echo
   echo "Indenting code to make it easier to read (This may take a while depending on how big your project is)..."
+  echo
   gql() {
     line=$(sed $q'!d' $dcd/$name.ss1)
   }
-  getper() {
+  gpsvar() {
     per=$(echo "scale = 2; $q / $(sed -n '$=' $dcd/$name.ss1) * 100" | bc)
+    pb=$(tput cols)
+    ps=$(echo "scale = 2; $per / 100 * $pb" | bc)
     per+="%"
-    echo -e "$per \e[1A"
+  }
+  x=0
+  getper() {
+    gpsvar
+    ps=$(printf '%.*f\n' 0 $ps)
+    pbr=
+    for ((v = 1; v <= $ps; v++)); do
+      pbr+="#"
+    done
+    echo -e "$per done. \e[2A"
+    echo -e "$pbr"
   }
   echo
   q=0
