@@ -31,7 +31,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   read name
   echo
   if [ h$name == h ]; then
-  echo -e "${RED}Error: Project name cannot be empty.${NC}"
+    echo -e "${RED}Error: Project name cannot be empty.${NC}"
   fi
   cd ../
   if ! [ -d projects ]; then
@@ -66,7 +66,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   cd ../
   jsonfile=$(cat project.json) #Get the project.json in a variable.
   i=55
-  getchar() { 
+  getchar() {
     if ! [ -$2 == -++ ]; then
       char=${jsonfile:$i:1} #get char index i from $jsonfile. the first char is 0, and it goes from left to right.
       if [ -$char == "$1" ]; then
@@ -86,8 +86,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   }
   nextquote() { #main while loop
     b=0
-    while :; do #infinite loop
-      i #change i by 1
+    while :; do   #infinite loop
+      i           #change i by 1
       getchar -\" #detect if char index from i equals "
       if [ $b == 1 ]; then
         break #stop infinite loop if char index from i equals "
@@ -150,6 +150,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
     fi
   }
+  cm=0
+  ci=()
+  ca=()
+  alreadydiddone=()
   addblock() {
     parent=0
     #Comments explaining what the scripts do will be added soon.
@@ -781,9 +785,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           fi
           varname+=$char
         done
-        rep=$next
-        per=r
+        ca+=($next)
         next=$varname
+        rep=${ca[-1]}
+        ci+=('r')
+        per=r
+        ((cm++))
         echo
         echo "Starting repeat."
         echo
@@ -829,8 +836,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           fi
           varname+=$char
         done
-        rep=$next
+        ca+=($next)
+        rep=${ca[-1]}
+        ci+=('f')
         per=f
+        ((cm++))
         next=$varname
         echo
         echo "Starting forever.."
@@ -852,7 +862,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       fi
     fi
     if ! [ $next == fin ]; then #if not next equals fin do these
-      i=1 #the below scripts look for "topLevel", which is the end of most opcodes. It goes to the next "}" then looks at the thing in quotes after that. That is the block ID. It uses this to compile all the blocks in order.
+      i=1                       #the below scripts look for "topLevel", which is the end of most opcodes. It goes to the next "}" then looks at the thing in quotes after that. That is the block ID. It uses this to compile all the blocks in order.
       while :; do
         b=0
         word=
@@ -864,7 +874,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           fi
           word+=$char
         done
-        if [ "$word" == blocks ]; then 
+        if [ "$word" == blocks ]; then
           i
           i
           i
@@ -912,34 +922,35 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
       done
     else
-      if ! [ $rep == 0 ]; then #if not rep=0 then it was compiling a c-block
-        next=$rep
-        rep=0
-        echo >>$dcd/$name.ss1 "}"
-        echo "}"
-        echo
-        if [ h$per == hr ]; then #$per is the c-block identity. r=repeat, f=forever
-          echo "Ended repeat."
-        elif [ h$per == hf ]; then
-          echo "Ended forever."
-        fi
-        if ! [ $next == fin ]; then
-          i=1
+      if ! [ $rep == 0 ]; then
+        if [ $cm -gt 0 ]; then #if not rep=0 then it was compiling a c-block
+          next=$rep
+          unset ca[-1]
+          rep=0
+          if ! [ $cm == 0 ]; then
+            rep=${ca[-1]}
+          fi
+          p=0
           while :; do
-            b=0
-            word=
+            ((p++))
+            echo >>$dcd/$name.ss1 "}"
+            echo "}"
+            if [ $p == $cm ]; then
+              break
+            fi
+          done
+          cm=0
+          if [ h$per == hr ]; then #$per is the c-block identity. r=repeat, f=forever
+            echo "Ended repeat."
+          elif [ h$per == hf ]; then
+            echo "Ended forever."
+          fi
+          unset ci[-1]
+          per=${ci}
+          next=$rep
+          if ! [ $next == fin ]; then
+            i=1
             while :; do
-              i
-              getchar -\"
-              if [ $b == 1 ]; then
-                break
-              fi
-              word+=$char
-            done
-            if [ "$word" == blocks ]; then
-              i
-              i
-              i
               b=0
               word=
               while :; do
@@ -950,20 +961,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                 fi
                 word+=$char
               done
-              if [ "$word" == "$next" ]; then
-                nextquote
-                break
-              fi
-            else
-              if [ "$word" == topLevel ]; then
-                b=0
-                while :; do
-                  i
-                  getchar -\}
-                  if [ $b == 1 ]; then
-                    break
-                  fi
-                done
+              if [ "$word" == blocks ]; then
+                i
                 i
                 i
                 b=0
@@ -980,9 +979,36 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                   nextquote
                   break
                 fi
+              else
+                if [ "$word" == topLevel ]; then
+                  b=0
+                  while :; do
+                    i
+                    getchar -\}
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
+                  i
+                  i
+                  b=0
+                  word=
+                  while :; do
+                    i
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                    word+=$char
+                  done
+                  if [ "$word" == "$next" ]; then
+                    nextquote
+                    break
+                  fi
+                fi
               fi
-            fi
-          done
+            done
+          fi
         fi
       fi
     fi
@@ -1205,8 +1231,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     i-
     i-
   else
-  i-
-  i-
+    i-
+    i-
     while :; do #repeat until char = [
       i
       getchar -\"
@@ -1315,6 +1341,62 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       fi
     done
   fi
+
+  #add spaces
+  gql() {
+    line=$(sed $q'!d' $dcd/$name.ss1)
+  }
+  q=2
+  while :; do
+    ((q++))
+    gql
+    if [ "$line" == "\nscript" ]; then
+      break
+    fi
+  done
+  r=0
+  ff() {
+    ((q++))
+    gql
+    if [[ "$line" == *"repeat"* ]] || [[ "$line" == *"forever"* ]]; then
+      echo >>$dcd/a.txt "$intent""$line"
+      ((r++))
+      while :; do
+        ff
+        gql
+        if [ "$line" == \} ]; then
+          break
+        fi
+      done
+    else
+      if [ $r -gt 0 ]; then
+        intent=
+        m=0
+        if [ "$line" == \} ]; then
+          ((r--))
+        fi
+        while :; do
+          ((m++))
+          if [ $m -gt $r ]; then
+            break
+          fi
+          intent+="  "
+        done
+        echo >>$dcd/a.txt "$intent""$line"
+      else
+        echo >>$dcd/a.txt "$line"
+      fi
+    fi
+  }
+  while :; do
+    ff
+    if [ "$q" == "$(sed -n '$=' $dcd/$name.ss1)" ]; then
+      break
+    fi
+  done
+  mv $dcd/$name.ss1 $dcd/b.txt
+  mv $dcd/a.txt $dcd/$name.ss1
+  rm $dcd/b.txt
 elif [ h$input3 == hn ] || [ h$input3 == hN ]; then
   echo "Install zenity for MSYS2, or this won't work."
 else
