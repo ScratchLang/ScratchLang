@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6a**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.1a**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -6,9 +6,9 @@
 This is for people who want to use Scratch like other programming languages.
 
 # Latest big updates
-Added every block from V1 into V2, PLUS REPEAT AND FOREVER BLOCKS!
+The decompiler can now decompile C-blocks in C-blocks. It couldn't do that before, but I slightly changed how it reads the .json and now it can do it. It's slower, but it's worth it.
 
-The new decompiler is programmed so that it uses "parent" and "next" to decompile the blocks in order. However, C-Blocks in C-Blocks don't work yet. Bug listed below.
+The new decompiler is programmed so that it uses "opcode",  "parent", and "next" to decompile the blocks in order.
 
 # Open-Source
 This is an open-source project. Anyone can contribute. If there's anything discouraging you from contributing, let me know and I'll try to fix it.
@@ -29,7 +29,9 @@ I'm programming the decompiler. First I'm gonna program it to decompile all the 
 ## Contributing to the decompiler
 I am currently putting comments in my code so people understand it. Please wait.
 # Notice
-I renamed the file extension to .ss1 because I am planning on having multiple formats.
+Because of how the decompiler is programmed, if you have a big enough json, decompiling 1 block could take 1 minute. The cause of that is the farther the block is from the start of the json, the longer it takes to decompiler. Perhaps there's a more effecient way to decompile blocks from the json?
+
+Also, I renamed the file extension to .ss1 because I am planning on having multiple formats.
 ss1 Will be it's own language
 ss2 Will be similar to c
 ss3 Python or javascript?
@@ -475,12 +477,13 @@ pen|set pen size to () <br />
 ## Variable or List taking a very long time to decompile?
 The variable or list is probably long.
 ## Decompiler is hanging or is outputting random junk
-The decompiler is not complete yet, which means stuff like that will happen.
-
+The decompiler is not complete yet, which means stuff like that may happen.
+## Decompiler takes a really long time to indent
+Your .ss1 file is probably big.
 # Bugs
 ## V1 Decomp Bugs (This version is no longer being programmed.)
-Loads broadcasts even if there are none. (Try decompiling decompilerteset.sb3 which is in the resources folder.)
+Loads broadcasts even if there are none. (Try decompiling decompilertest.sb3 which is in the resources folder.)
 ## V2 Decomp Bugs
-C-Blocks can't be in other C-Blocks. The program forgets about all C-Blocks except the last one decompiled.
+None found yet.
 
 ![de20ca3a12e96a8b00a2063151b1ad84](https://user-images.githubusercontent.com/78574005/192591165-e642bc95-7625-487d-aeba-c74d8d85eb9d.png)

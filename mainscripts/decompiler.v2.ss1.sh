@@ -786,22 +786,22 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           varname+=$char
         done
         ca+=($next)
+        rep=$next
         next=$varname
-        rep=${ca[-1]}
         ci+=('r')
         per=r
         ((cm++))
         echo
         echo "Starting repeat."
         echo
-        echo >>$dcd/$name.ss1 "repeat ($varvalue) {"
-        echo "repeat ($varvalue) {"
+        echo >>$dcd/$name.ss1 "repeat (\"$varvalue\") {"
+        echo "repeat (\"$varvalue\") {"
       else
         echo
         echo "Starting repeat."
         echo
-        echo >>$dcd/$name.ss1 "repeat ($varvalue) {"
-        echo "repeat ($varvalue) {"
+        echo >>$dcd/$name.ss1 "repeat (\"$varvalue\") {"
+        echo "repeat (\"$varvalue\") {"
         echo >>$dcd/$name.ss1
         echo
         echo >>$dcd/$name.ss1 "}"
@@ -825,28 +825,55 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         word+=$char
       done
       if [ "$word" == SUBSTACK ]; then
-        nextquote
+        z=$i
         b=0
-        varname=
         while :; do
           i
-          getchar -\"
+          getchar -\]
           if [ $b == 1 ]; then
             break
           fi
-          varname+=$char
         done
-        ca+=($next)
-        rep=${ca[-1]}
-        ci+=('f')
-        per=f
-        ((cm++))
-        next=$varname
-        echo
-        echo "Starting forever.."
-        echo
-        echo >>$dcd/$name.ss1 "forever {"
-        echo "forever {"
+        i-
+        b=0
+        getchar -\"
+        if [ $b == 0 ]; then
+          echo
+          echo "Starting forever."
+          echo
+          echo >>$dcd/$name.ss1 "forever {"
+          echo "forever {"
+          echo >>$dcd/$name.ss1
+          echo
+          echo >>$dcd/$name.ss1 "}"
+          echo "}"
+          echo
+          echo "Ended forever."
+        else
+          i=$z
+          nextquote
+          b=0
+          varname=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            varname+=$char
+          done
+          ca+=($next)
+          rep=$next
+          ci+=('f')
+          per=f
+          ((cm++))
+          next=$varname
+          echo
+          echo "Starting forever.."
+          echo
+          echo >>$dcd/$name.ss1 "forever {"
+          echo "forever {"
+        fi
       else
         echo
         echo "Starting forever."
@@ -862,7 +889,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       fi
     fi
     if ! [ $next == fin ]; then #if not next equals fin do these
-      i=1                       #the below scripts look for "topLevel", which is the end of most opcodes. It goes to the next "}" then looks at the thing in quotes after that. That is the block ID. It uses this to compile all the blocks in order.
+      i=2                       #the below scripts look for "opcode", which is the end of most opcodes. It goes to the next "}" then looks at the thing in quotes after that. That is the block ID. It uses this to compile all the blocks in order.
       while :; do
         b=0
         word=
@@ -893,17 +920,31 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             break
           fi
         else
-          if [ "$word" == topLevel ]; then
+          if [ "$word" == opcode ]; then
             b=0
             while :; do
-              i
-              getchar -\}
+              i-
+              getchar -\"
               if [ $b == 1 ]; then
                 break
               fi
             done
-            i
-            i
+            b=0
+            while :; do
+              i-
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+            done
+            b=0
+            while :; do
+              i-
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+            done
             b=0
             word=
             while :; do
@@ -918,14 +959,21 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
               nextquote
               break
             fi
+            i=$(expr $i + 10)
           fi
         fi
       done
     else
       if ! [ $rep == 0 ]; then
-        if [ $cm -gt 0 ]; then #if not rep=0 then it was compiling a c-block
-          next=$rep
+        if [ $cm -gt 0 ]; then #if not rep=0 then it was compiling a c-block9
+          ok=$ca
+          e=0
           unset ca[-1]
+          if [ h$ca == h ]; then
+            ca=("$ok")
+            e=1
+          fi
+          next=$rep
           rep=0
           if ! [ $cm == 0 ]; then
             rep=${ca[-1]}
@@ -940,6 +988,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
           done
           cm=0
+          echo
           if [ h$per == hr ]; then #$per is the c-block identity. r=repeat, f=forever
             echo "Ended repeat."
           elif [ h$per == hf ]; then
@@ -947,7 +996,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           fi
           unset ci[-1]
           per=${ci}
+          if [ $e == 1 ]; then
+            ca=
+          fi
           next=$rep
+          if [ h$next == h ]; then
+            next=fin
+          fi
           if ! [ $next == fin ]; then
             i=1
             while :; do
@@ -980,17 +1035,31 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                   break
                 fi
               else
-                if [ "$word" == topLevel ]; then
+                if [ "$word" == opcode ]; then
                   b=0
                   while :; do
-                    i
-                    getchar -\}
+                    i-
+                    getchar -\"
                     if [ $b == 1 ]; then
                       break
                     fi
                   done
-                  i
-                  i
+                  b=0
+                  while :; do
+                    i-
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
+                  b=0
+                  while :; do
+                    i-
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
                   b=0
                   word=
                   while :; do
@@ -1005,6 +1074,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                     nextquote
                     break
                   fi
+                  i=$(expr $i + 10)
                 fi
               fi
             done
@@ -1219,9 +1289,24 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   done #Load broadcasts next
   echo "Loading broadcasts..."
   echo
-  i=$(expr $i + 14)
+  while :; do
+    b=0
+    word=
+    while :; do
+      i
+      getchar -\"
+      if [ $b == 1 ]; then
+        break
+      fi
+      word+=$char
+    done
+    if [ "$word" == broadcasts ]; then
+      break
+    fi
+  done
   b=0
   novars=0
+  i
   i
   i
   b=0
@@ -1251,7 +1336,6 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     while :; do
       i
       nextquote
-      nextquote
       b=0
       varname=
       while :; do
@@ -1273,6 +1357,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       fi
       i
       i
+      nextquote
     done
     rep=0
     echo "Making blocks..."
@@ -1341,15 +1426,18 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       fi
     done
   fi
-
   #add spaces
+  echo
+  echo "Indenting code to make it easier to read (This may take a while depending on how big your project is)..."
+  echo
   gql() {
     line=$(sed $q'!d' $dcd/$name.ss1)
   }
-  q=2
+  q=0
   while :; do
     ((q++))
     gql
+    echo >>$dcd/a.txt "$line"
     if [ "$line" == "\nscript" ]; then
       break
     fi
@@ -1358,7 +1446,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   ff() {
     ((q++))
     gql
-    if [[ "$line" == *"repeat"* ]] || [[ "$line" == *"forever"* ]]; then
+    if [[ "$line" == *"repeat ("* ]] || [[ "$line" == *"forever {"* ]]; then
+      intent=
+      m=0
+      while :; do
+        ((m++))
+        if [ $m -gt $r ]; then
+          break
+        fi
+        intent+="  "
+      done
       echo >>$dcd/a.txt "$intent""$line"
       ((r++))
       while :; do
