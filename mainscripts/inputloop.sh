@@ -174,6 +174,7 @@ elif [ h$input == h7 ]; then
     rm -rf zenity
     cd $dir
     pacman -S git #install git
+    pacman -S bc #install bc
     ./start.sh nope
   elif [ h$con == hN ] || [ h$con == hn ]; then
     echo

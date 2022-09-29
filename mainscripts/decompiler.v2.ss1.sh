@@ -150,10 +150,93 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
     fi
   }
+  start2() {
+    nextquote
+    nextquote
+    i
+    i
+    b=0
+    getchar -\"
+    if ! [ $b == 1 ]; then
+      if [ h$1 == h ]; then
+        condition="fin" #if next equals null, then set the variable next to fin
+      fi
+    else
+      b=0
+      varname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        varname+=$char
+      done
+      if [ h$1 == h ]; then
+        condition=$varname #if next is not null, set next to whatever it is
+      fi
+    fi
+    nextquote
+    nextquote
+    i
+    i
+    b=0
+    getchar -\"
+    if ! [ $b == 1 ]; then #if parent equals null
+      if [ h$1 == h ]; then
+        echo >>$dcd/$name.ss1 "\nscript"
+        parent=1
+      fi
+    else
+      b=0
+      pname=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        pname+=$char
+      done
+    fi
+  }
   cm=0
   ci=()
   ca=()
   alreadydiddone=()
+  addop() {
+    if [ $1 == operator_equals]; then
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      o1=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        o1+=$char
+      done
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      o2=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        o2+=$char
+      done
+      addt="<($o1) = ($o2) >"
+    fi
+  }
   addblock() {
     parent=0
     #Comments explaining what the scripts do will be added soon.
@@ -887,6 +970,120 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         echo
         echo "Ended forever."
       fi
+    elif [ $1 == control_if ]; then #if <> {} block
+      start
+      nextquote
+      nextquote
+      nextquote
+      b=0
+      word=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        word+=$char
+      done
+      echo
+      echo "Starting if."
+      echo
+      if [ $word == CONDITION ]; then
+        nextquote
+        b=0
+        condition=
+        while :; do
+          i
+          getchar -\"
+          if [ $b == 0 ]; then
+            break
+          fi
+          condition+=$char
+        done
+        i=1
+        while :; do
+          while :; do
+            b=0
+            word=
+            while :; do
+              i
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+              word+=$char
+            done
+            if [ $word == opcode ]; then
+              break
+            fi
+          done
+          b=0
+          while :; do
+            i-
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          while :; do
+            i-
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          while :; do
+            i-
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+          done
+          b=0
+          word=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            word+=$char
+          done
+          if [ "$word" == $condition ]; then
+            break
+          fi
+        done
+        while :; do
+          nextquote
+          nextquote
+          nextquote
+          b=0
+          word=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            word+=$char
+          done
+          addop $word
+          if [ $condition == fin ]; then
+            break
+          fi
+        done
+      else
+        echo >>$dcd/$name.ss1 "if <> then {"
+        echo "if <> then {"
+        echo >>$dcd/$name.ss1
+        echo
+        echo >>$dcd/$name.ss1 "}"
+        echo "}"
+        echo
+        echo "Ended if."
+      fi
     fi
     if ! [ $next == fin ]; then #if not next equals fin do these
       i=2                       #the below scripts look for "opcode", which is the end of most opcodes. It goes to the next "}" then looks at the thing in quotes after that. That is the block ID. It uses this to compile all the blocks in order.
@@ -1429,22 +1626,30 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   #add spaces
   echo
   echo "Indenting code to make it easier to read (This may take a while depending on how big your project is)..."
-  echo
   gql() {
     line=$(sed $q'!d' $dcd/$name.ss1)
   }
+  getper() {
+    per=$(echo "scale = 2; $q / $(sed -n '$=' $dcd/$name.ss1) * 100" | bc)
+    per+="%"
+    echo -e "$per \e[1A"
+  }
+  echo
   q=0
   while :; do
     ((q++))
+    getper
     gql
     echo >>$dcd/a.txt "$line"
     if [ "$line" == "\nscript" ]; then
       break
     fi
+    getper
   done
   r=0
   ff() {
     ((q++))
+    getper
     gql
     if [[ "$line" == *"repeat ("* ]] || [[ "$line" == *"forever {"* ]]; then
       intent=
@@ -1490,6 +1695,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     if [ "$q" == "$(sed -n '$=' $dcd/$name.ss1)" ]; then
       break
     fi
+    getper
   done
   mv $dcd/$name.ss1 $dcd/b.txt
   mv $dcd/a.txt $dcd/$name.ss1
