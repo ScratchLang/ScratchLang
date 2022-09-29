@@ -8,6 +8,8 @@ This is for people who want to use Scratch like other programming languages.
 # Latest big updates
 The decompiler can now decompile C-blocks in C-blocks. It couldn't do that before, but I slightly changed how it reads the .json and now it can do it. It's slower, but it's worth it.
 
+It can also indent code to make it easier to read.
+
 The new decompiler is programmed so that it uses "opcode",  "parent", and "next" to decompile the blocks in order.
 
 # Open-Source
