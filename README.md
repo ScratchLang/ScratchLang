@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.2a**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.3a**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -6,7 +6,8 @@
 This is for people who want to use Scratch like other programming languages.
 
 # Latest big updates
-The decompiler can now decompile C-blocks in C-blocks. It couldn't do that before, but I slightly changed how it reads the .json and now it can do it. It's slower, but it's worth it.
+IF STATEMENTS ARE NOW ADDED! However, I only added 1 operator so far: <() = ()>
+If else statements are also not added yet.
 
 It can also indent code to make it easier to read.
 
@@ -33,10 +34,10 @@ I am currently putting comments in my code so people understand it. Please wait.
 # Notice
 Because of how the decompiler is programmed, if you have a big enough json, decompiling 1 block could take 1 minute. The cause of that is the farther the block is from the start of the json, the longer it takes to decompiler. Perhaps there's a more effecient way to decompile blocks from the json?
 
-Also, I renamed the file extension to .ss1 because I am planning on having multiple formats.
-ss1 Will be it's own language
-ss2 Will be similar to c
-ss3 Python or javascript?
+Also, I renamed the file extension to .ss1 because I am planning on having multiple formats. <br />
+ss1 Will be it's own language <br />
+ss2 Will be similar to c <br />
+ss3 Python or javascript? <br />
 
 # How to use
 Download [MSYS2](https://www.msys2.org) if you're on Windows. <br />
@@ -55,6 +56,8 @@ If you create a scratchlang command, start the project wtih
 ```
 scratchlang
 ```
+
+If you want to test out the decompiler, run `start.sh -4` and select the .sb3 "decompiler-all-added-blocks.sb3" which is in the resources folder. You get to see it decompile all the blocks added so far.
 
 To code, edit the .ss(es) in you favorite glorified text editor like VSC or Atom.
 
@@ -110,18 +113,11 @@ list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma
 Write every block in the order they are defined. <br />
 
 Remember, quotes tell the compiler that it is not a variable. If you want to put in a variable, don't put quotation marks. <br />
-Also, the compiler can't tell the difference between a string and a boolean/variable yet. So most number inputs have no quotation marks. <br />
+Also, the compiler can't tell the difference between a string and a boolean/variable yet. So most inputs have quotation marks. <br />
 
 Brackets means that there cannot be a variable in there. It's either a defined object or an object from a set list. <br />
 ### Buggy Blocks
-repeat (num) { <br />
-
-} - (Repeat everything in the braces for (num) times.) Still less buggy than in V1. <br />
-
-**forever {** <br />
-
-**} - (Repeat everything in the braces forever.) Still less buggy than in V1.** <br />
-
+None yet.
 ### Stable blocks
 var=string - (Define [or set] a variable) <br />
 **list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma after the equal sign.)** <br />
@@ -149,6 +145,20 @@ when stage clicked - (Runs the script when the stage is clicked.) <br />
 **when backdrop switches to [backdrop] - (Runs the script when the stage changes to a certain backdrop.)** <br />
 when [THING] > ("num") <br />
 **when i receive [broadcast] - (Runs the script when a certain message is broadcasted.)** <br />
+
+repeat (num) { <br />
+
+} - (Repeat everything in the braces for (num) times.) <br />
+
+**forever {** <br />
+
+**} - (Repeat everything in the braces forever.)** <br />
+
+if <*INPUT> then { <br />
+
+} - (If *INPUT is true, then run everything in the braces.) <br />
+
+**<(num1) = (num2)> - (Reports true if num1 equals num2.)** <br />
 
 ### Blocks to Add
 
@@ -292,7 +302,6 @@ pen|set pen size to () <br />
 V1 Is no longer being programmed. Please use the latest version of the decompiler.
 ## Vanilla Scratch Blocks
 ### Added blocks
-#### V1
 25/90 Stage Blocks + Pen | 27.78% Done <br />
 25/141 Every Block + Pen | 17.73% Done <br />
 

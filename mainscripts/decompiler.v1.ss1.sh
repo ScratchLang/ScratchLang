@@ -2337,5 +2337,5 @@ elif [ h$input3 == hn ] || [ h$input3 == hN ]; then
   echo "Install zenity for MSYS2, or this won't work."
 else
   echo -e "${RED}Error: $input3 is not an input.${NC}"
-  ./compiler.sh
+  ./decompiler.v1.ss1.sh
 fi

@@ -9,7 +9,6 @@ RED='\033[0;31m'
 NC='\033[0m'
 echo -e "${RED}Decompiler 2.0${NC}"
 dcd=Stage
-echo
 echo "Remember, both the compiler and decompiler don't work yet. The decompiler can extract the sb3, define variables, build lists, load broadcasts, and decompile some blocks, but it can't do anything else yet."
 echo
 if ! [ -f .var/zenity ]; then
@@ -134,7 +133,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     getchar -\"
     if ! [ $b == 1 ]; then #if parent equals null
       if [ h$1 == h ]; then
-        echo >>$dcd/$name.ss1 "\nscript"
+        echo >>$dcd/project.ss1 "\nscript"
         parent=1
       fi
     else
@@ -159,7 +158,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     getchar -\"
     if ! [ $b == 1 ]; then
       if [ h$1 == h ]; then
-        condition="fin" #if next equals null, then set the variable next to fin
+        con="fin" #if next equals null, then set the variable next to fin
       fi
     else
       b=0
@@ -173,7 +172,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         varname+=$char
       done
       if [ h$1 == h ]; then
-        condition=$varname #if next is not null, set next to whatever it is
+        con=$varname #if next is not null, set next to whatever it is
       fi
     fi
     nextquote
@@ -184,7 +183,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     getchar -\"
     if ! [ $b == 1 ]; then #if parent equals null
       if [ h$1 == h ]; then
-        echo >>$dcd/$name.ss1 "\nscript"
+        echo >>$dcd/project.ss1 "\nscript"
         parent=1
       fi
     else
@@ -203,9 +202,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   cm=0
   ci=()
   ca=()
-  alreadydiddone=()
-  addop() {
-    if [ $1 == operator_equals]; then
+  addop() { #function to decomp operators
+    if [ $1 == operator_equals ]; then
+      start2
       nextquote
       nextquote
       nextquote
@@ -234,11 +233,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         o2+=$char
       done
-      addt="<($o1) = ($o2) >"
+      addt+="<($o1) = ($o2)>"
     fi
   }
   addblock() {
     parent=0
+    addt=
     #Comments explaining what the scripts do will be added soon.
     if [ $1 == event_broadcast ]; then #Broadcast block
       start
@@ -257,8 +257,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "broadcast [$varname]"
-      echo "Added block: \"broadcast [$varname]\""
+      echo >>$dcd/project.ss1 "broadcast [$varname]"
+      echo -e "${RED}Added block:${NC} \"broadcast [$varname]\""
     elif [ $1 == motion_movesteps ]; then #move () steps block
       start
       nextquote
@@ -276,8 +276,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "move (\"$varname\") steps"
-      echo "Added block: \"move (\"$varname\") steps\""
+      echo >>$dcd/project.ss1 "move (\"$varname\") steps"
+      echo -e "${RED}Added block:${NC} \"move (\"$varname\") steps\""
     elif [ $1 == control_wait ]; then #wait () seconds block
       start
       nextquote
@@ -295,8 +295,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "wait (\"$varname\") seconds"
-      echo "Added block: \"wait (\"$varname\") seconds\""
+      echo >>$dcd/project.ss1 "wait (\"$varname\") seconds"
+      echo -e "${RED}Added block:${NC} \"wait (\"$varname\") seconds\""
     elif [ $1 == looks_switchbackdropto ]; then #switch backdrop to () block
       start
       nextquote
@@ -343,8 +343,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "switch backdrop to (\"$varname\")"
-      echo "Added block: \"switch backdrop to (\"$varname\")\""
+      echo >>$dcd/project.ss1 "switch backdrop to (\"$varname\")"
+      echo -e "${RED}Added block:${NC} \"switch backdrop to (\"$varname\")\""
     elif [ $1 == looks_switchbackdroptoandwait ]; then #switch backdrop to () and wait block
       start
       nextquote
@@ -391,12 +391,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "switch backdrop to (\"$varname\") and wait"
-      echo "Added block: \"switch backdrop to (\"$varname\") and wait\""
+      echo >>$dcd/project.ss1 "switch backdrop to (\"$varname\") and wait"
+      echo -e "${RED}Added block:${NC} \"switch backdrop to (\"$varname\") and wait\""
     elif [ $1 == looks_nextbackdrop ]; then #next backdrop block
       start
-      echo >>$dcd/$name.ss1 "next backdrop"
-      echo "Added block: \"next backdrop\""
+      echo >>$dcd/project.ss1 "next backdrop"
+      echo -e "${RED}Added block:${NC} \"next backdrop\""
     elif [ $1 == looks_changeeffectby ]; then #change [] effect by () block
       start
       nextquote
@@ -429,8 +429,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "change [$varname] effect by (\"$varvalue\")"
-      echo "Added block: \"change [$varname] effect by (\"$varvalue\")\""
+      echo >>$dcd/project.ss1 "change [$varname] effect by (\"$varvalue\")"
+      echo -e "${RED}Added block:${NC} \"change [$varname] effect by (\"$varvalue\")\""
     elif [ $1 == looks_backdropnumbername ]; then #(backdrop []) block
       start
       nextquote
@@ -450,8 +450,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         word+=$char
       done
-      echo >>$dcd/$name.ss1 "(backdrop [$word])"
-      echo "Added block: \"(backdrop [$word])\""
+      echo >>$dcd/project.ss1 "(backdrop [$word])"
+      echo -e "${RED}Added block:${NC} \"(backdrop [$word])\""
     elif [ $1 == sound_playuntildone ]; then #play sound () until done block
       start
       nextquote
@@ -498,8 +498,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "play sound (\"$varname\") until done"
-      echo "Added block: \"play sound (\"$varname\") until done\""
+      echo >>$dcd/project.ss1 "play sound (\"$varname\") until done"
+      echo -e "${RED}Added block:${NC} \"play sound (\"$varname\") until done\""
     elif [ $1 == looks_seteffectto ]; then #set [] effect to () block
       start
       nextquote
@@ -532,8 +532,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "set [$varname] effect to (\"$varvalue\")"
-      echo "Added block: \"set [$varname] effect to (\"$varvalue\")\""
+      echo >>$dcd/project.ss1 "set [$varname] effect to (\"$varvalue\")"
+      echo -e "${RED}Added block:${NC} \"set [$varname] effect to (\"$varvalue\")\""
     elif [ $1 == sound_play ]; then #start sound () block
       start
       nextquote
@@ -580,12 +580,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "start sound (\"$varname\")"
-      echo "Added block: \"start sound (\"$varname\")\""
+      echo >>$dcd/project.ss1 "start sound (\"$varname\")"
+      echo -e "${RED}Added block:${NC} \"start sound (\"$varname\")\""
     elif [ $1 == sound_stopallsounds ]; then #stop all sounds block
       start
-      echo >>$dcd/$name.ss1 "stop all sounds"
-      echo "Added block: \"stop all sounds\""
+      echo >>$dcd/project.ss1 "stop all sounds"
+      echo -e "${RED}Added block:${NC} \"stop all sounds\""
     elif [ $1 == sound_changeeffectby ]; then #change [] effect by () block
       start
       nextquote
@@ -618,8 +618,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "change [$varname] effect by (\"$varvalue\")"
-      echo "Added block: \"change [$varname] effect by (\"$varvalue\")\""
+      echo >>$dcd/project.ss1 "change [$varname] effect by (\"$varvalue\")"
+      echo -e "${RED}Added block:${NC} \"change [$varname] effect by (\"$varvalue\")\""
     elif [ $1 == sound_seteffectto ]; then #set [] effect to () block
       start
       nextquote
@@ -652,12 +652,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "set [$varname] effect to (\"$varvalue\")"
-      echo "Added block: \"set [$varname] effect to (\"$varvalue\")\""
+      echo >>$dcd/project.ss1 "set [$varname] effect to (\"$varvalue\")"
+      echo -e "${RED}Added block:${NC} \"set [$varname] effect to (\"$varvalue\")\""
     elif [ $1 == sound_cleareffects ]; then #clear sound effects block
       start
-      echo >>$dcd/$name.ss1 "clear sound effects"
-      echo "Added block: \"clear sound effects\""
+      echo >>$dcd/project.ss1 "clear sound effects"
+      echo -e "${RED}Added block:${NC} \"clear sound effects\""
     elif [ $1 == sound_changevolumeby ]; then #change volume by () block
       start
       nextquote
@@ -675,16 +675,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "change volume by (\"$varname\")"
-      echo "Added block: \"change volume by (\"$varname\")\""
+      echo >>$dcd/project.ss1 "change volume by (\"$varname\")"
+      echo -e "${RED}Added block:${NC} \"change volume by (\"$varname\")\""
     elif [ $1 == sound_volume ]; then #(volume) block
       start
-      echo >>$dcd/$name.ss1 "(volume)"
-      echo "Added block: \"(volume)\""
+      echo >>$dcd/project.ss1 "(volume)"
+      echo -e "${RED}Added block:${NC} \"(volume)\""
     elif [ $1 == event_whenflagclicked ]; then #when flag clicked block
       start
-      echo >>$dcd/$name.ss1 "when flag clicked"
-      echo "Added block: \"when flag clicked\""
+      echo >>$dcd/project.ss1 "when flag clicked"
+      echo -e "${RED}Added block:${NC} \"when flag clicked\""
     elif [ $1 == event_whenkeypressed ]; then #when [] key pressed block
       start
       nextquote
@@ -704,12 +704,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "when [$varname] key pressed"
-      echo "Added block: \"when [$varname] key pressed\""
+      echo >>$dcd/project.ss1 "when [$varname] key pressed"
+      echo -e "${RED}Added block:${NC} \"when [$varname] key pressed\""
     elif [ $1 == event_whenstageclicked ]; then #when stage clicked block
       start
-      echo >>$dcd/$name.ss1 "when stage clicked"
-      echo "Added block: \"when stage clicked\""
+      echo >>$dcd/project.ss1 "when stage clicked"
+      echo -e "${RED}Added block:${NC} \"when stage clicked\""
     elif [ $1 == event_whenbroadcastreceived ]; then #when i receive [] block
       start
       nextquote
@@ -729,8 +729,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         word+=$char
       done
-      echo >>$dcd/$name.ss1 "when i receieve [$word]"
-      echo "Added block: \"when i receieve [$word]\""
+      echo >>$dcd/project.ss1 "when i receieve [$word]"
+      echo -e "${RED}Added block:${NC} \"when i receieve [$word]\""
     elif [ $1 == event_broadcastandwait ]; then #broadcast [] and wait block
       start
       nextquote
@@ -748,8 +748,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "broadcast [$varname] and wait"
-      echo "Added block: \"broadcast [$varname] and wait\""
+      echo >>$dcd/project.ss1 "broadcast [$varname] and wait"
+      echo -e "${RED}Added block:${NC} \"broadcast [$varname] and wait\""
     elif [ $1 == sound_setvolumeto ]; then #set volume to () % block
       start
       nextquote
@@ -767,8 +767,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "set volume to (\"$varname\") %"
-      echo "Added block: \"set volume to (\"$varname\") %\""
+      echo >>$dcd/project.ss1 "set volume to (\"$varname\") %"
+      echo -e "${RED}Added block:${NC} \"set volume to (\"$varname\") %\""
     elif [ $1 == event_whenbackdropswitchesto ]; then #when backdrop switches to [] block
       start
       nextquote
@@ -788,12 +788,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "when backdrop switches to [$varname]"
-      echo "Added block: \"when backdrop switches to [$varname]\""
+      echo >>$dcd/project.ss1 "when backdrop switches to [$varname]"
+      echo -e "${RED}Added block:${NC} \"when backdrop switches to [$varname]\""
     elif [ $1 == looks_cleargraphiceffects ]; then #clear graphic effects block
       start
-      echo >>$dcd/$name.ss1 "clear graphic effects"
-      echo "Added block: \"clear graphic effects\""
+      echo >>$dcd/project.ss1 "clear graphic effects"
+      echo -e "${RED}Added block:${NC} \"clear graphic effects\""
     elif [ $1 == event_whengreaterthan ]; then #when [] > () block
       start
       nextquote
@@ -826,8 +826,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>$dcd/$name.ss1 "when [$varname] > (\"$varvalue\")"
-      echo "Added block: \"when [$varname] > (\"$varvalue\")\""
+      echo >>$dcd/project.ss1 "when [$varname] > (\"$varvalue\")"
+      echo -e "${RED}Added block:${NC} \"when [$varname] > (\"$varvalue\")\""
     elif [ $1 == control_repeat ]; then #repeat () {}block
       start
       nextquote
@@ -875,22 +875,22 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         per=r
         ((cm++))
         echo
-        echo "Starting repeat."
+        echo -e "${RED}Starting repeat.${NC}"
         echo
-        echo >>$dcd/$name.ss1 "repeat (\"$varvalue\") {"
+        echo >>$dcd/project.ss1 "repeat (\"$varvalue\") {"
         echo "repeat (\"$varvalue\") {"
       else
         echo
-        echo "Starting repeat."
+        echo -e "${RED}Starting repeat.${NC}"
         echo
-        echo >>$dcd/$name.ss1 "repeat (\"$varvalue\") {"
+        echo >>$dcd/project.ss1 "repeat (\"$varvalue\") {"
         echo "repeat (\"$varvalue\") {"
-        echo >>$dcd/$name.ss1
+        echo >>$dcd/project.ss1
         echo
-        echo >>$dcd/$name.ss1 "}"
+        echo >>$dcd/project.ss1 "}"
         echo "}"
         echo
-        echo "Ended repeat."
+        echo -e "${RED}Ended repeat.${NC}"
       fi
     elif [ $1 == control_forever ]; then #forever {} block
       start
@@ -922,16 +922,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         getchar -\"
         if [ $b == 0 ]; then
           echo
-          echo "Starting forever."
+          echo -e "${RED}Starting forever.${NC}"
           echo
-          echo >>$dcd/$name.ss1 "forever {"
+          echo >>$dcd/project.ss1 "forever {"
           echo "forever {"
-          echo >>$dcd/$name.ss1
+          echo >>$dcd/project.ss1
           echo
-          echo >>$dcd/$name.ss1 "}"
+          echo >>$dcd/project.ss1 "}"
           echo "}"
           echo
-          echo "Ended forever."
+          echo -e "${RED}Ended forever.${NC}"
         else
           i=$z
           nextquote
@@ -952,23 +952,23 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           ((cm++))
           next=$varname
           echo
-          echo "Starting forever.."
+          echo -e "${RED}Starting forever.${NC}"
           echo
-          echo >>$dcd/$name.ss1 "forever {"
+          echo >>$dcd/project.ss1 "forever {"
           echo "forever {"
         fi
       else
         echo
-        echo "Starting forever."
+        echo -e "${RED}Starting forever.${NC}"
         echo
-        echo >>$dcd/$name.ss1 "forever {"
+        echo >>$dcd/project.ss1 "forever {"
         echo "forever {"
-        echo >>$dcd/$name.ss1
+        echo >>$dcd/project.ss1
         echo
-        echo >>$dcd/$name.ss1 "}"
+        echo >>$dcd/project.ss1 "}"
         echo "}"
         echo
-        echo "Ended forever."
+        echo -e "${RED}Ended forever.${NC}"
       fi
     elif [ $1 == control_if ]; then #if <> {} block
       start
@@ -986,20 +986,21 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         word+=$char
       done
       echo
-      echo "Starting if."
+      echo -e "${RED}Starting if.${NC}"
       echo
       if [ $word == CONDITION ]; then
         nextquote
         b=0
-        condition=
+        con=
         while :; do
           i
           getchar -\"
-          if [ $b == 0 ]; then
+          if [ $b == 1 ]; then
             break
           fi
-          condition+=$char
+          con+=$char
         done
+        v=$i
         i=1
         while :; do
           while :; do
@@ -1013,7 +1014,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
               fi
               word+=$char
             done
-            if [ $word == opcode ]; then
+            if [ "$word" == opcode ]; then
               break
             fi
           done
@@ -1051,9 +1052,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             word+=$char
           done
-          if [ "$word" == $condition ]; then
+          if [ "$word" == "$con" ]; then
             break
           fi
+          i=$(expr $i + 10)
         done
         while :; do
           nextquote
@@ -1070,19 +1072,59 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             word+=$char
           done
           addop $word
-          if [ $condition == fin ]; then
+          if [ $con == fin ]; then
             break
           fi
         done
+        echo >>$dcd/project.ss1 "if $addt then {"
+        echo "if $addt then {"
+        i=$v
+        nextquote
+        b=0
+        word=
+        while :; do
+          i
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+          word+=$char
+        done
+        if [ "$word" == SUBSTACK ]; then
+          nextquote
+          b=0
+          varname=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            varname+=$char
+          done
+          ca+=($next)
+          rep=$next
+          next=$varname
+          ci+=('i')
+          per=i
+          ((cm++))
+        else
+          echo >>$dcd/project.ss1
+          echo
+          echo >>$dcd/project.ss1 "}"
+          echo "}"
+          echo
+          echo -e "${RED}Ended if.${NC}"
+        fi
       else
-        echo >>$dcd/$name.ss1 "if <> then {"
+        echo >>$dcd/project.ss1 "if <> then {"
         echo "if <> then {"
-        echo >>$dcd/$name.ss1
+        echo >>$dcd/project.ss1
         echo
-        echo >>$dcd/$name.ss1 "}"
+        echo >>$dcd/project.ss1 "}"
         echo "}"
         echo
-        echo "Ended if."
+        echo -e "${RED}Ended if.${NC}"
       fi
     fi
     if ! [ $next == fin ]; then #if not next equals fin do these
@@ -1178,7 +1220,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           p=0
           while :; do
             ((p++))
-            echo >>$dcd/$name.ss1 "}"
+            echo >>$dcd/project.ss1 "}"
             echo "}"
             if [ $p == $cm ]; then
               break
@@ -1187,9 +1229,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           cm=0
           echo
           if [ h$per == hr ]; then #$per is the c-block identity. r=repeat, f=forever
-            echo "Ended repeat."
+            echo -e "${RED}Ended repeat.${NC}"
           elif [ h$per == hf ]; then
-            echo "Ended forever."
+            echo -e "${RED}Ended forever.${NC}"
+          elif [ h$per == hi ]; then
+            echo -e "${RED}Ended if.${NC}"
           fi
           unset ci[-1]
           per=${ci}
@@ -1325,14 +1369,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           break
         fi
       done
-      if ! [ -f Stage/$name.ss1 ]; then
-        echo >>Stage/$name.ss1 "#There should be no empty lines."
-        echo >>Stage/$name.ss1 ss1
-        echo >>Stage/$name.ss1 "\prep"
+      if ! [ -f Stage/project.ss1 ]; then
+        echo >>Stage/project.ss1 "#There should be no empty lines."
+        echo >>Stage/project.ss1 ss1
+        echo >>Stage/project.ss1 "\prep"
       fi
-      echo >>Stage/$name.ss1 $varname=$varvalue #Use echo >> if 2nd arg contains variables
-      echo "Added variable \"$varname\". Value:"
-      echo $varvalue
+      echo >>Stage/project.ss1 $varname=$varvalue #Use echo >> if 2nd arg contains variables
+      echo -e "${RED}Added variable:${NC} \"$varname\"."
+      echo -e "${RED}Value:${NC} $varvalue"
       echo
       b=0
       varname=
@@ -1346,9 +1390,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       i=$(expr $i - $isub)
     fi
     if [ $novars == 1 ]; then
-      echo >>Stage/$name.ss1 "#There should be no empty lines."
+      echo >>Stage/project.ss1 "#There should be no empty lines."
       echo >>Stage/$name ss1
-      echo >>Stage/$name.ss1 "\prep"
+      echo >>Stage/project.ss1 "\prep"
       break
     fi
   done #Finish compiling variables, lists next
@@ -1458,15 +1502,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
           done
         fi
-        echo >>Stage/$name.ss1 $listname=$(echo $(cat lists) | sed 's/ //g')
-        echo "Added list \"$listname\". Contents:"
-        echo $(cat lists) | sed 's/ //g'
+        echo >>Stage/project.ss1 $listname=$(echo $(cat lists) | sed 's/ //g')
+        echo -e "${RED}Added list:${NC} \"$listname\"."
+        echo -e "${RED}Contents:${NC} $(cat lists) | sed 's/ //g'"
         echo
         rm lists
       else
-        echo >>Stage/$name.ss1 $listname=,
-        echo "Added list \"$listname\". Contents:"
-        echo "Nothing."
+        echo >>Stage/project.ss1 $listname=,
+        echo -e "${RED}Added list:${NC} \"$listname\"."
+        echo -e "${RED}Contents:${NC} Nothing."
         echo
         if [ $novars == 1 ]; then
           break
@@ -1515,7 +1559,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   else
     i-
     i-
-    while :; do #repeat until char = [
+    while :; do #repeat until char = "
       i
       getchar -\"
       if [ $b == 1 ]; then
@@ -1543,8 +1587,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>Stage/$name.ss1 {broadcast}=$varname
-      echo "Loaded broadcast $varname"
+      echo >>Stage/project.ss1 {broadcast}=$varname
+      echo -e "${RED}Loaded broadcast:${NC} \"$varname\""
       echo
       i
       b=0
@@ -1558,6 +1602,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     done
     rep=0
     echo "Making blocks..."
+    echo
     dcd=Stage
     k=-1
     done=0
@@ -1628,10 +1673,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   echo "Indenting code to make it easier to read (This may take a while depending on how big your project is)..."
   echo
   gql() {
-    line=$(sed $q'!d' $dcd/$name.ss1)
+    line=$(sed $q'!d' $dcd/project.ss1)
   }
   gpsvar() {
-    per=$(echo "scale = 2; $q / $(sed -n '$=' $dcd/$name.ss1) * 100" | bc)
+    per=$(echo "scale = 2; $q / $(sed -n '$=' $dcd/project.ss1) * 100" | bc)
     pb=$(tput cols)
     ps=$(echo "scale = 2; $per / 100 * $pb" | bc)
     per+="%"
@@ -1657,24 +1702,23 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     if [ "$line" == "\nscript" ]; then
       break
     fi
-    getper
   done
   r=0
   ff() {
     ((q++))
     getper
     gql
-    if [[ "$line" == *"repeat ("* ]] || [[ "$line" == *"forever {"* ]]; then
-      intent=
+    if [[ "$line" == *"repeat ("* ]] || [[ "$line" == *"forever {"* ]] || [[ "$line" == *"if <"* ]]; then
+      indent=
       m=0
       while :; do
         ((m++))
         if [ $m -gt $r ]; then
           break
         fi
-        intent+="  "
+        indent+="  "
       done
-      echo >>$dcd/a.txt "$intent""$line"
+      echo >>$dcd/a.txt "$indent""$line"
       ((r++))
       while :; do
         ff
@@ -1685,7 +1729,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
     else
       if [ $r -gt 0 ]; then
-        intent=
+        indent=
         m=0
         if [ "$line" == \} ]; then
           ((r--))
@@ -1695,9 +1739,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           if [ $m -gt $r ]; then
             break
           fi
-          intent+="  "
+          indent+="  "
         done
-        echo >>$dcd/a.txt "$intent""$line"
+        echo >>$dcd/a.txt "$indent""$line"
       else
         echo >>$dcd/a.txt "$line"
       fi
@@ -1705,17 +1749,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   }
   while :; do
     ff
-    if [ "$q" == "$(sed -n '$=' $dcd/$name.ss1)" ]; then
+    if [ "$q" == "$(sed -n '$=' $dcd/project.ss1)" ]; then
       break
     fi
-    getper
   done
-  mv $dcd/$name.ss1 $dcd/b.txt
-  mv $dcd/a.txt $dcd/$name.ss1
+  mv $dcd/project.ss1 $dcd/b.txt
+  mv $dcd/a.txt $dcd/project.ss1
   rm $dcd/b.txt
+  echo
+  cd ../
+  echo
+  echo -e "${RED}Your project can be found in $(pwd)/$name.${NC}"
 elif [ h$input3 == hn ] || [ h$input3 == hN ]; then
   echo "Install zenity for MSYS2, or this won't work."
 else
   echo -e "${RED}Error: $input3 is not an input.${NC}"
-  ./compiler.sh
+  ./decompiler.v2.ss1.sh
 fi

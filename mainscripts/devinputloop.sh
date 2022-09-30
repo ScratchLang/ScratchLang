@@ -96,8 +96,8 @@ elif [ h$input == h2 ]; then
     fi
   fi
 elif [ h$input == h3 ]; then
-  chmod 755 compiler.sh
-  ./compiler.sh
+  chmod 755 compiler.v1.ss1.sh
+  ./compiler.v1.ss1.sh
 elif [ h$input == h4 ]; then
   if [ -f .var/ds ]; then
     chmod 755 $(sed '1!d' .var/ds) #if there is a custom compiler, get the command from the ds file and run it
