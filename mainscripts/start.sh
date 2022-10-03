@@ -8,7 +8,7 @@ if ! [ -f .var/asked ]; then #this is in place so it only asks the below questio
   if ! [ -f .var/vc ]; then #I don't know why this is here anymore
     echo "Would you like ScratchLang to check its version every time you start it? [Y/N]"
     read -sn 1 ff
-    if [ h$ff == hy ] || [ $ff == hY ]; then
+    if [ h$ff == hy ] || [ h$ff == hY ]; then
       echo >>.var/vc "Don't remove this file please." #when start.sh detects this file, it will check for a new version.
     fi
     echo >>.var/asked "Don't remove."
