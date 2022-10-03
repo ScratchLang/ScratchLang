@@ -83,7 +83,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       fi
     fi
   }
-  nextquote() { #main while loop
+  nq() { #main while loop
     b=0
     while :; do   #infinite loop
       i           #change i by 1
@@ -100,8 +100,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     ((i--))
   }
   start() {
-    nextquote
-    nextquote
+    nq
+    nq
     i
     i
     b=0
@@ -125,8 +125,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         next=$varname #if next is not null, set next to whatever it is
       fi
     fi
-    nextquote
-    nextquote
+    nq
+    nq
     i
     i
     b=0
@@ -150,8 +150,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     fi
   }
   start2() {
-    nextquote
-    nextquote
+    nq
+    nq
     i
     i
     b=0
@@ -175,8 +175,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         con=$varname #if next is not null, set next to whatever it is
       fi
     fi
-    nextquote
-    nextquote
+    nq
+    nq
     i
     i
     b=0
@@ -202,14 +202,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   cm=0
   ci=()
   ca=()
+  ops=()
   addop() { #function to decomp operators
     if [ $1 == operator_equals ]; then
       start2
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       o1=
       while :; do
@@ -220,9 +221,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         o1+=$char
       done
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
       b=0
       o2=
       while :; do
@@ -234,6 +235,753 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         o2+=$char
       done
       addt+="<($o1) = ($o2)>"
+    elif [ $1 == operator_gt ]; then
+      start2
+      nq
+      nq
+      nq
+      nq
+      nq
+      b=0
+      o1=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        o1+=$char
+      done
+      nq
+      nq
+      nq
+      b=0
+      o2=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        o2+=$char
+      done
+      addt+="<($o1) > ($o2)>"
+    elif [ $1 == operator_lt ]; then
+      start2
+      nq
+      nq
+      nq
+      nq
+      nq
+      b=0
+      o1=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        o1+=$char
+      done
+      nq
+      nq
+      nq
+      b=0
+      o2=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        o2+=$char
+      done
+      addt+="<($o1) < ($o2)>"
+    elif [ $1 == operator_and ]; then
+      start2
+      nq
+      nq
+      nq
+      b=0
+      word=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        word+=$char
+      done
+      if [ "$word" == "OPERAND2" ]; then
+        b=0
+        vi=$i
+        while :; do
+          i
+          getchar -\]
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        i-
+        b=0
+        getchar -\"
+        if [ $b == 0 ]; then
+          addt+="<<> and "
+          nq
+          b=0
+          word=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            word+=$char
+          done
+          if [ $word == "OPERAND1" ] || [ "$word" == "OPERAND2" ]; then
+            b=0
+            vi=$i
+            while :; do
+              i
+              getchar -\]
+              if [ $b == 1 ]; then
+                break
+              fi
+            done
+            i-
+            b=0
+            getchar -\"
+            if [ $b == 0 ]; then
+              addt+="<>>"
+            else
+              i=$vi
+              nq
+              b=0
+              op1=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                op1+=$char
+              done
+              wy=$i
+              i=1
+              while :; do
+                b=0
+                word=
+                while :; do
+                  i
+                  getchar -\"
+                  if [ $b == 1 ]; then
+                    break
+                  fi
+                  word+=$char
+                done
+                if [ "$word" == opcode ]; then
+                  b=0
+                  while :; do
+                    i-
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
+                  b=0
+                  while :; do
+                    i-
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
+                  b=0
+                  while :; do
+                    i-
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
+                  b=0
+                  word=
+                  while :; do
+                    i
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                    word+=$char
+                  done
+                  if [ "$word" == $op1 ]; then
+                    break
+                  fi
+                  i=$(expr $i + 10)
+                fi
+              done
+              nq
+              nq
+              nq
+              b=0
+              word=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                word+=$char
+              done
+              addop $word
+              addt+=">"
+            fi
+          else
+            addt+="<>>"
+          fi
+        else
+          i=$vi
+          nq
+          b=0
+          op1=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            op1+=$char
+          done
+          wy=$i
+          addt+="<"
+          i=1
+          while :; do
+            b=0
+            word=
+            while :; do
+              i
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+              word+=$char
+            done
+            if [ "$word" == opcode ]; then
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              word=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                word+=$char
+              done
+              if [ "$word" == $op1 ]; then
+                break
+              fi
+              i=$(expr $i + 10)
+            fi
+          done
+          nq
+          nq
+          nq
+          b=0
+          word=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            word+=$char
+          done
+          addop $word
+          i=$wy
+          addt+=" and "
+          nq
+          b=0
+          word=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            word+=$char
+          done
+          if [ "$word" == "OPERAND1" ]; then
+            b=0
+            vi=$i
+            while :; do
+              i
+              getchar -\]
+              if [ $b == 1 ]; then
+                break
+              fi
+            done
+            i-
+            b=0
+            getchar -\"
+            if [ $b == 0 ]; then
+              addt+="<>>"
+              i=$vi
+            else
+              i=$vi
+              nq
+              b=0
+              op2=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                op2+=$char
+              done
+              wy=$i
+              i=1
+              while :; do
+                b=0
+                word=
+                while :; do
+                  i
+                  getchar -\"
+                  if [ $b == 1 ]; then
+                    break
+                  fi
+                  word+=$char
+                done
+                if [ "$word" == opcode ]; then
+                  b=0
+                  while :; do
+                    i-
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
+                  b=0
+                  while :; do
+                    i-
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
+                  b=0
+                  while :; do
+                    i-
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
+                  b=0
+                  word=
+                  while :; do
+                    i
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                    word+=$char
+                  done
+                  if [ "$word" == $op2 ]; then
+                    break
+                  fi
+                  i=$(expr $i + 10)
+                fi
+              done
+              nq
+              nq
+              nq
+              b=0
+              word=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                word+=$char
+              done
+              addop $word
+              addt+=">"
+            fi
+          else
+            addt+="<>>"
+          fi
+        fi
+      else
+        addt+="<<> and <>>"
+      fi
+    elif [ $1 == operator_or ]; then
+      start2
+      nq
+      nq
+      nq
+      b=0
+      word=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        word+=$char
+      done
+      if [ "$word" == "OPERAND2" ]; then
+        b=0
+        vi=$i
+        while :; do
+          i
+          getchar -\]
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        i-
+        b=0
+        getchar -\"
+        if [ $b == 0 ]; then
+          addt+="<<> or "
+          nq
+          b=0
+          word=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            word+=$char
+          done
+          if [ $word == "OPERAND1" ]; then
+            b=0
+            vi=$i
+            while :; do
+              i
+              getchar -\]
+              if [ $b == 1 ]; then
+                break
+              fi
+            done
+            i-
+            b=0
+            getchar -\"
+            if [ $b == 0 ]; then
+              addt+="<>>"
+            else
+              i=$vi
+              nq
+              b=0
+              op1=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                op1+=$char
+              done
+              wy=$i
+              i=1
+              while :; do
+                b=0
+                word=
+                while :; do
+                  i
+                  getchar -\"
+                  if [ $b == 1 ]; then
+                    break
+                  fi
+                  word+=$char
+                done
+                if [ "$word" == opcode ]; then
+                  b=0
+                  while :; do
+                    i-
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
+                  b=0
+                  while :; do
+                    i-
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
+                  b=0
+                  while :; do
+                    i-
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
+                  b=0
+                  word=
+                  while :; do
+                    i
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                    word+=$char
+                  done
+                  if [ "$word" == $op1 ]; then
+                    break
+                  fi
+                  i=$(expr $i + 10)
+                fi
+              done
+              nq
+              nq
+              nq
+              b=0
+              word=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                word+=$char
+              done
+              addop $word
+              addt+=">"
+            fi
+          else
+            addt+="<>>"
+          fi
+        else
+          i=$vi
+          nq
+          b=0
+          op1=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            op1+=$char
+          done
+          wy=$i
+          addt+="<"
+          i=1
+          while :; do
+            b=0
+            word=
+            while :; do
+              i
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+              word+=$char
+            done
+            if [ "$word" == opcode ]; then
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              word=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                word+=$char
+              done
+              if [ "$word" == $op1 ]; then
+                break
+              fi
+              i=$(expr $i + 10)
+            fi
+          done
+          nq
+          nq
+          nq
+          b=0
+          word=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            word+=$char
+          done
+          addop $word
+          i=$wy
+          addt+=" or "
+          nq
+          b=0
+          word=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            word+=$char
+          done
+          if [ $word == "OPERAND1" ]; then
+            b=0
+            vi=$i
+            while :; do
+              i
+              getchar -\]
+              if [ $b == 1 ]; then
+                break
+              fi
+            done
+            i-
+            b=0
+            getchar -\"
+            if [ $b == 0 ]; then
+              addt+="<>>"
+            else
+              i=$vi
+              nq
+              b=0
+              op1=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                op1+=$char
+              done
+              wy=$i
+              i=1
+              while :; do
+                b=0
+                word=
+                while :; do
+                  i
+                  getchar -\"
+                  if [ $b == 1 ]; then
+                    break
+                  fi
+                  word+=$char
+                done
+                if [ "$word" == opcode ]; then
+                  b=0
+                  while :; do
+                    i-
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
+                  b=0
+                  while :; do
+                    i-
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
+                  b=0
+                  while :; do
+                    i-
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                  done
+                  b=0
+                  word=
+                  while :; do
+                    i
+                    getchar -\"
+                    if [ $b == 1 ]; then
+                      break
+                    fi
+                    word+=$char
+                  done
+                  if [ "$word" == $op1 ]; then
+                    break
+                  fi
+                  i=$(expr $i + 10)
+                fi
+              done
+              nq
+              nq
+              nq
+              b=0
+              word=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                word+=$char
+              done
+              addop $word
+              addt+=">"
+            fi
+          else
+            addt+="<>>"
+          fi
+        fi
+      else
+        addt+="<<> or <>>"
+      fi
     fi
   }
   addblock() {
@@ -242,11 +990,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     #Comments explaining what the scripts do will be added soon.
     if [ $1 == event_broadcast ]; then #Broadcast block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -261,11 +1009,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"broadcast [$varname]\""
     elif [ $1 == motion_movesteps ]; then #move () steps block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -280,11 +1028,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"move (\"$varname\") steps\""
     elif [ $1 == control_wait ]; then #wait () seconds block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -299,18 +1047,18 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"wait (\"$varname\") seconds\""
     elif [ $1 == looks_switchbackdropto ]; then #switch backdrop to () block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       while :; do
         i
@@ -319,20 +1067,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           break
         fi
       done
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       start n
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -347,18 +1095,18 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"switch backdrop to (\"$varname\")\""
     elif [ $1 == looks_switchbackdroptoandwait ]; then #switch backdrop to () and wait block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       while :; do
         i
@@ -367,20 +1115,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           break
         fi
       done
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       start n
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -399,11 +1147,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"next backdrop\""
     elif [ $1 == looks_changeeffectby ]; then #change [] effect by () block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varvalue=
       while :; do
@@ -414,11 +1162,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varvalue+=$char
       done
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -433,13 +1181,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"change [$varname] effect by (\"$varvalue\")\""
     elif [ $1 == looks_backdropnumbername ]; then #(backdrop []) block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       word=
       while :; do
@@ -454,18 +1202,18 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"(backdrop [$word])\""
     elif [ $1 == sound_playuntildone ]; then #play sound () until done block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       while :; do
         i
@@ -474,20 +1222,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           break
         fi
       done
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       start n
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -502,11 +1250,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"play sound (\"$varname\") until done\""
     elif [ $1 == looks_seteffectto ]; then #set [] effect to () block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varvalue=
       while :; do
@@ -517,11 +1265,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varvalue+=$char
       done
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -536,18 +1284,18 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"set [$varname] effect to (\"$varvalue\")\""
     elif [ $1 == sound_play ]; then #start sound () block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       while :; do
         i
@@ -556,20 +1304,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           break
         fi
       done
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       start n
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -588,11 +1336,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"stop all sounds\""
     elif [ $1 == sound_changeeffectby ]; then #change [] effect by () block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varvalue=
       while :; do
@@ -603,11 +1351,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varvalue+=$char
       done
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -622,11 +1370,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"change [$varname] effect by (\"$varvalue\")\""
     elif [ $1 == sound_seteffectto ]; then #set [] effect to () block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varvalue=
       while :; do
@@ -637,11 +1385,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varvalue+=$char
       done
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -660,11 +1408,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"clear sound effects\""
     elif [ $1 == sound_changevolumeby ]; then #change volume by () block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -687,13 +1435,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"when flag clicked\""
     elif [ $1 == event_whenkeypressed ]; then #when [] key pressed block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -712,13 +1460,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"when stage clicked\""
     elif [ $1 == event_whenbroadcastreceived ]; then #when i receive [] block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       word=
       while :; do
@@ -733,11 +1481,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"when i receieve [$word]\""
     elif [ $1 == event_broadcastandwait ]; then #broadcast [] and wait block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -752,11 +1500,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"broadcast [$varname] and wait\""
     elif [ $1 == sound_setvolumeto ]; then #set volume to () % block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -771,13 +1519,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"set volume to (\"$varname\") %\""
     elif [ $1 == event_whenbackdropswitchesto ]; then #when backdrop switches to [] block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -796,11 +1544,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Added block:${NC} \"clear graphic effects\""
     elif [ $1 == event_whengreaterthan ]; then #when [] > () block
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varvalue=
       while :; do
@@ -811,11 +1559,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varvalue+=$char
       done
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varname=
       while :; do
@@ -829,12 +1577,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo >>$dcd/project.ss1 "when [$varname] > (\"$varvalue\")"
       echo -e "${RED}Added block:${NC} \"when [$varname] > (\"$varvalue\")\""
     elif [ $1 == control_repeat ]; then #repeat () {}block
+      cbt=1
       start
-      nextquote
-      nextquote
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
+      nq
+      nq
       b=0
       varvalue=
       while :; do
@@ -845,7 +1594,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varvalue+=$char
       done
-      nextquote
+      nq
       b=0
       word=
       while :; do
@@ -857,7 +1606,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         word+=$char
       done
       if [ "$word" == SUBSTACK ]; then
-        nextquote
+        nq
         b=0
         varname=
         while :; do
@@ -893,10 +1642,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         echo -e "${RED}Ended repeat.${NC}"
       fi
     elif [ $1 == control_forever ]; then #forever {} block
+      cbt=1
       start
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
       b=0
       word=
       while :; do
@@ -934,7 +1684,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           echo -e "${RED}Ended forever.${NC}"
         else
           i=$z
-          nextquote
+          nq
           b=0
           varname=
           while :; do
@@ -971,10 +1721,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         echo -e "${RED}Ended forever.${NC}"
       fi
     elif [ $1 == control_if ]; then #if <> {} block
+      cbt=1
       start
-      nextquote
-      nextquote
-      nextquote
+      nq
+      nq
+      nq
       b=0
       word=
       while :; do
@@ -989,7 +1740,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Starting if.${NC}"
       echo
       if [ $word == CONDITION ]; then
-        nextquote
+        nq
         b=0
         con=
         while :; do
@@ -1058,9 +1809,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           i=$(expr $i + 10)
         done
         while :; do
-          nextquote
-          nextquote
-          nextquote
+          nq
+          nq
+          nq
           b=0
           word=
           while :; do
@@ -1079,7 +1830,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         echo >>$dcd/project.ss1 "if $addt then {"
         echo "if $addt then {"
         i=$v
-        nextquote
+        nq
         b=0
         word=
         while :; do
@@ -1091,7 +1842,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           word+=$char
         done
         if [ "$word" == SUBSTACK ]; then
-          nextquote
+          nq
           b=0
           varname=
           while :; do
@@ -1102,6 +1853,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             varname+=$char
           done
+          echo "$next"
           ca+=($next)
           rep=$next
           next=$varname
@@ -1155,7 +1907,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             word+=$char
           done
           if [ "$word" == "$next" ]; then
-            nextquote
+            nq
             break
           fi
         else
@@ -1195,7 +1947,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
               word+=$char
             done
             if [ "$word" == "$next" ]; then
-              nextquote
+              nq
               break
             fi
             i=$(expr $i + 10)
@@ -1203,8 +1955,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
       done
     else
-      if ! [ $rep == 0 ]; then
-        if [ $cm -gt 0 ]; then #if not rep=0 then it was compiling a c-block9
+      if ! [ "h$rep" == h0 ]; then
+        if [ $cm -gt 0 ]; then #if not rep=0 then it was compiling a c-block
           ok=$ca
           e=0
           unset ca[-1]
@@ -1272,7 +2024,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                   word+=$char
                 done
                 if [ "$word" == "$next" ]; then
-                  nextquote
+                  nq
                   break
                 fi
               else
@@ -1312,7 +2064,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                     word+=$char
                   done
                   if [ "$word" == "$next" ]; then
-                    nextquote
+                    nq
                     break
                   fi
                   i=$(expr $i + 10)
@@ -1328,9 +2080,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   echo "Defining variables..."
   echo
   while :; do
-    nextquote
+    nq
     i
-    nextquote
+    nq
     b=0
     novars=0
     while :; do #repeat until char = [
@@ -1411,9 +2163,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     else
       i-
       i-
-      nextquote
+      nq
       i
-      nextquote
+      nq
       b=0
       novars=0
       while :; do
@@ -1571,12 +2323,12 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         break
       fi
     done
-    nextquote
+    nq
   fi
   if [ $novars == 0 ]; then
     while :; do
       i
-      nextquote
+      nq
       b=0
       varname=
       while :; do
@@ -1598,9 +2350,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       fi
       i
       i
-      nextquote
+      nq
     done
     rep=0
+    cbt=0
     echo "Making blocks..."
     echo
     dcd=Stage
@@ -1645,8 +2398,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         done
         i
         while :; do
-          nextquote
-          nextquote
+          nq
+          nq
           b=0
           word=
           while :; do
@@ -1658,6 +2411,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             word+=$char
           done
           addblock $word
+          echo $next
           if [ $next == fin ]; then
             break
           fi

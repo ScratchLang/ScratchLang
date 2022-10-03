@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.3a**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.3aT**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -159,6 +159,10 @@ if <*INPUT> then { <br />
 } - (If *INPUT is true, then run everything in the braces.) <br />
 
 **<(num1) = (num2)> - (Reports true if num1 equals num2.)** <br />
+<(num1) > (num2)> - (Reports true if num1 is greater than num2.) <br />
+**<(num1) < (num2)> - (Reports true if num1 is less than num2.)** <br />
+<<1> and <2>> - (Reports true if both statement 1 and 2 report true.) <br />
+**<<1> or <2>> - (Reports true if either statement report true.)** <br />
 
 ### Blocks to Add
 
