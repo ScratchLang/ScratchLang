@@ -6,7 +6,7 @@ echo -e "${RED}Compiler 1.0${NC}"
 echo
 echo "Remember, both the compiler doesn't work yet."
 echo
-if ! [ -f .var/zenity ]; then
+if ! [ -f var/zenity ]; then
   echo "Do you have the command zenity? [Y/N]"
   read -sn 1 input3
 else
@@ -14,8 +14,8 @@ else
 fi
 echo
 if [ h$input3 == hY ] || [ h$input3 == hy ]; then
-  if ! [ -f .var/zenity ]; then
-    echo >>.var/zenity
+  if ! [ -f var/zenity ]; then
+    echo >>var/zenity
   fi
   echo "Select the project directory. (Not the directory called \"Projects\", your project dir inside the directory Projects.)"
   echo

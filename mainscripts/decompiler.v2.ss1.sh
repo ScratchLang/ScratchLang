@@ -11,7 +11,7 @@ echo -e "${RED}Decompiler 2.0${NC}"
 dcd=Stage
 echo "Remember, both the compiler and decompiler don't work yet. The decompiler can extract the sb3, define variables, build lists, load broadcasts, and decompile some blocks, but it can't do anything else yet."
 echo
-if ! [ -f .var/zenity ]; then
+if ! [ -f var/zenity ]; then
   echo "Do you have the command zenity? [Y/N]"
   read -sn 1 input3
 else
@@ -19,8 +19,8 @@ else
 fi
 echo
 if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the command zenity
-  if ! [ -f .var/zenity ]; then
-    echo >>.var/zenity
+  if ! [ -f var/zenity ]; then
+    echo >>var/zenity
   fi
   echo -e "Select the .sb3 you want to decompile. ${RED}WARNING! THE NAME OF THE FILE CANNOT HAVE ANY SPACES OR IT WILL NOT UNZIP CORRECTLY!!!${NC}"
   sleep 2
@@ -2254,9 +2254,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
           done
         fi
-        echo >>Stage/project.ss1 $listname=$(echo $(cat lists) | sed 's/ //g')
+        list=$(cat lists | tr '\n' ' ')
+        list=$(echo $list | tr -d ' ')
+        echo >>Stage/project.ss1 "$listname=$list"
         echo -e "${RED}Added list:${NC} \"$listname\"."
-        echo -e "${RED}Contents:${NC} $(cat lists) | sed 's/ //g'"
+        echo -e "${RED}Contents:${NC} $list"
         echo
         rm lists
       else
@@ -2411,7 +2413,6 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             word+=$char
           done
           addblock $word
-          echo $next
           if [ $next == fin ]; then
             break
           fi
@@ -2513,7 +2514,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   echo
   cd ../
   echo
-  echo -e "${RED}Your project can be found in $(pwd)/$name.${NC}"
+  echo -e "${RED}Your project can be found in $PWD/$name.${NC}"
 elif [ h$input3 == hn ] || [ h$input3 == hN ]; then
   echo "Install zenity for MSYS2, or this won't work."
 else

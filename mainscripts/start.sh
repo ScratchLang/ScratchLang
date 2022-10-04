@@ -3,18 +3,18 @@ NC='\033[0m' #Reset text color.
 P='\033[0;35m' #Purple
 basedir=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')") #get the base directory of start.sh
 cd $basedir
-ver=$(sed '1!d' $(dirname $(pwd))/.version) #get local version
-if ! [ -f .var/asked.txt ]; then #this is in place so it only asks the below question once, ever.
-  if ! [ -f .var/vc.txt]; then #I don't know why this is here anymore
+ver=$(sed '1!d' $(dirname $PWD)/.version) #get local version
+if ! [ -f var/asked ]; then #this is in place so it only asks the below question once, ever.
+  if ! [ -f var/vc ]; then #I don't know why this is here anymore
     echo "Would you like ScratchLang to check its version every time you start it? [Y/N]"
     read -sn 1 ff
     if [ h$ff == hy ] || [ h$ff == hY ]; then
-      echo >>.var/vc.txt "Don't remove this file please." #when start.sh detects this file, it will check for a new version.
+      echo >>var/vc "Don't remove this file please." #when start.sh detects this file, it will check for a new version.
     fi
-    echo >>.var/asked.txt "Don't remove."
+    echo >>var/asked "Don't remove."
   fi
 fi
-if [ -f .var/vc.txt]; then
+if [ -f var/vc ]; then
   if ! [ h$1 == hnope ]; then
     echo "Checking version..."
     if [ -f .version ]; then
@@ -63,7 +63,7 @@ else
   if [ h$1 == h ] || [ h$1 == hnope ]; then
     echo "Welcome to ScratchLang $ver. (Name suggested by @MagicCrayon9342 on Scratch)"
     echo "Please select an option."
-    if ! [ -f .var/devmode ]; then
+    if ! [ -f var/devmode ]; then
       chmod 755 inputloop.sh
       ./inputloop.sh #if devmode is not on
     else
@@ -71,7 +71,7 @@ else
       ./devinputloop.sh #if demode IS on
     fi
   else
-    if ! [ -f .var/devmode ]; then
+    if ! [ -f var/devmode ]; then
       chmod 755 inputloop.sh
       ./inputloop.sh $1 #if there is an arg and devmode is not on
     else

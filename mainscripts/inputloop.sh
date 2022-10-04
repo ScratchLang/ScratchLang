@@ -34,7 +34,7 @@ else
   exit
 fi
 if [ h$input == h1 ]; then
-  dir=$(pwd)
+  dir=$PWD
   echo
   echo "Name your project. Keep in mind that it cannot be empty or it will not be created properly." #Name you project
   read name
@@ -96,9 +96,9 @@ elif [ h$input == h3 ]; then
   chmod 755 compiler.v1.ss1.sh
   ./compiler.v1.ss1.sh
 elif [ h$input == h4 ]; then
-  if [ -f .var/ds ]; then
-    chmod 755 $(sed '1!d' .var/ds) #if there is a custom compiler, get the command from the ds file and run it
-    ./$(sed '1!d' .var/ds)
+  if [ -f var/ds ]; then
+    chmod 755 $(sed '1!d' var/ds) #if there is a custom compiler, get the command from the ds file and run it
+    ./$(sed '1!d' var/ds)
   else
     chmod 755 decompiler.v2.ss1.sh
     ./decompiler.v2.ss1.sh
@@ -127,7 +127,7 @@ elif [ h$input == h5 ]; then
     fi
   fi
 elif [ h$input == h6 ]; then
-  if ! [ -f .var/zenity ]; then
+  if ! [ -f var/zenity ]; then
     echo "Do you have the command zenity? [Y/N]" #Ask user if they have the command zenity
     read -sn 1 input3
   else
@@ -157,7 +157,7 @@ elif [ h$input == h7 ]; then
   if [ h$con == hY ] || [ h$con == hy ]; then #Start installing dependencies for mingw
     echo
     bit=$(getconf LONG_BIT) #get bit number (32, 64) of PC
-    dir=$(pwd)
+    dir=$PWD
     cd
     mkdir zenity #start installing zenity
     cd zenity
@@ -173,8 +173,8 @@ elif [ h$input == h7 ]; then
     cd ../
     rm -rf zenity
     cd $dir
-    pacman -S git #install git
-    pacman -S bc #install bc
+    pacman --noconfirm -S git #install git
+    pacman --noconfirm -S bc #install bc
     ./start.sh nope
   elif [ h$con == hN ] || [ h$con == hn ]; then
     echo
@@ -182,10 +182,10 @@ elif [ h$input == h7 ]; then
     echo -e "${RED}Error: $con not an input.${NC}"
   fi
 elif [ h$input == h8 ]; then
-  dir=$(pwd)
-  if ! [ -f .var/alias ]; then #create scratchlang command
+  dir=$PWD
+  if ! [ -f var/alias ]; then #create scratchlang command
     echo >>/usr/bin/scratchlang "cd $dir && ./start.sh \$1 \$2 \$3"
-    echo >>.var/alias "This file tells the program that the command is already created. Please don't touch this."
+    echo >>var/alias "This file tells the program that the command is already created. Please don't touch this."
   else
     echo "scratchlang command has already been created."
   fi
@@ -193,7 +193,7 @@ elif [ h$input == h9 ]; then #scratchlang command removal loop
   chmod 755 rmaliasiloop.sh
   ./rmaliasiloop.sh
 elif [ h$input == hA ] || [ h$input == ha ]; then #enable devmode
-  echo >>.var/devmode "This is a devmode file. You can manually remove it to disable dev mode if you don't want to use the program to disable it for some reason."
+  echo >>var/devmode "This is a devmode file. You can manually remove it to disable dev mode if you don't want to use the program to disable it for some reason."
   ./start.sh nope
 elif [ h$input == hB ] || [ h$input == hb ]; then
   clear
