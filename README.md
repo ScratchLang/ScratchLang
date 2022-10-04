@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.4a**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.41a**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -6,12 +6,15 @@
 This is for people who want to use Scratch like other programming languages.
 
 # Latest big updates
-IF STATEMENTS ARE NOW ADDED! However, I only added 1 operator so far: <() = ()>
+If statements and some inputs.
 If else statements are also not added yet.
 
 It can also indent code to make it easier to read.
 
 The new decompiler is programmed so that it uses "opcode",  "parent", and "next" to decompile the blocks in order.
+
+# The bug list
+is at the very bottom. Look at that list before posting bugs.
 
 # Open-Source
 This is an open-source project. Anyone can contribute. If there's anything discouraging you from contributing, let me know and I'll try to fix it.
@@ -34,6 +37,8 @@ I am currently putting comments in my code so people understand it. Please wait.
 # Notice
 Because of how the decompiler is programmed, if you have a big enough json, decompiling 1 block could take 1 minute. The cause of that is the farther the block is from the start of the json, the longer it takes to decompiler. Perhaps there's a more effecient way to decompile blocks from the json?
 
+And also, no more blocks will be added until I get ifs working consistently.
+
 Also, I renamed the file extension to .ss1 because I am planning on having multiple formats. <br />
 ss1 Will be it's own language <br />
 ss2 Will be similar to c <br />
@@ -41,6 +46,9 @@ ss3 Python or javascript? <br />
 
 # How to use
 Download [MSYS2](https://www.msys2.org) if you're on Windows. <br />
+
+Install dependencies (list below).
+
 Clone the repo with
 ```
 git clone https://github.com/0K9090/ScratchLang.git
@@ -68,7 +76,7 @@ You don't need ScratchLang to program ScratchScript (.ss) files, you can use a t
 # Dependencies
 ## Windows
 You need `zenity`.
-https://github.com/ncruces/zenity/wiki/Zenity-for-WSL%2C-Cygwin%2C-MSYS2 Download here, or you can run ./start.sh and input 5 to install zenity.
+https://github.com/ncruces/zenity/wiki/Zenity-for-WSL%2C-Cygwin%2C-MSYS2 Download here, or you can run ./start.sh and input 7 to install zenity.
 
 You also need these.
 ```
@@ -85,8 +93,8 @@ You also need these.
 sudo apt-get install -y git
 sudo apt-get install -y bc
 ```
-
-For any other distros, search it up.
+## Other Linux Distros
+For any other distros, search it up. I'm not gonna list the commands for every distro.
 
 Please write down any dependencies I missed.
 
@@ -101,7 +109,7 @@ I don't know what they're doing
 make it in python ig
 
 # ScratchLang Language
-ScratchLang's language is called ScratchScript. ScratchLang is the program that manages ScratchScript programs.
+ScratchLang's language is called ScratchScript.
 ## ScratchScript blocks
 \nscript - (Tells the compiler that it's a new script. Or maybe we could get rid of this and just detect for hat blocks.) <br />
 **\prep - (Everything below this [until the next instance of \nscript] is used for compiling the .json)** <br />
@@ -110,8 +118,8 @@ list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma
 # Decompiler V2 Blocks
 ## Vanilla Scratch Blocks
 ### Added blocks
-28/90 Stage Blocks + Pen | 31.11% Done <br />
-28/141 Every Block + Pen | 19.86% Done <br />
+34/90 Stage Blocks + Pen | 37.78% Done <br />
+34/141 Every Block + Pen | 24.11% Done <br />
 
 Write every block in the order they are defined. <br />
 
@@ -120,7 +128,9 @@ Also, the compiler can't tell the difference between a string and a boolean/vari
 
 Brackets means that there cannot be a variable in there. It's either a defined object or an object from a set list. <br />
 ### Buggy Blocks
-None yet.
+if <*INPUT> then { <br />
+
+} - (If *INPUT is true, then run everything in the braces.) <br />
 ### Stable blocks
 var=string - (Define [or set] a variable) <br />
 **list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma after the equal sign.)** <br />
@@ -157,15 +167,11 @@ repeat (num) { <br />
 
 **} - (Repeat everything in the braces forever.)** <br />
 
-if <*INPUT> then { <br />
-
-} - (If *INPUT is true, then run everything in the braces.) <br />
-
-**<(num1) = (num2)> - (Reports true if num1 equals num2.)** <br />
-<(num1) > (num2)> - (Reports true if num1 is greater than num2.) <br />
-**<(num1) < (num2)> - (Reports true if num1 is less than num2.)** <br />
-<<1> and <2>> - (Reports true if both statement 1 and 2 report true.) <br />
-**<<1> or <2>> - (Reports true if either statement report true.)** <br />
+<(num1) = (num2)> - (Reports true if num1 equals num2.) <br />
+**<(num1) > (num2)> - (Reports true if num1 is greater than num2.)** <br />
+<(num1) < (num2)> - (Reports true if num1 is less than num2.) <br />
+**<<1> and <2>> - (Reports true if both statement 1 and 2 report true.)** <br />
+<<1> or <2>> - (Reports true if either statement report true.) <br />
 
 ### Blocks to Add
 
@@ -201,10 +207,6 @@ go to [] layer <br />
 go [] () layers <br />
 (costume []) <br />
 (size) <br />
-
-if <> then { <br />
-
-} <br />
 
 if <> then { <br />
 
@@ -255,11 +257,6 @@ reset timer <br />
 (() * ()) <br />
 (() / ()) <br />
 (pick random () to ()) <br />
-<() > ()> <br />
-<() < ()> <br />
-<() = ()> <br />
-<<> and <>> <br />
-<<> or <>> <br />
 <not <>> <br />
 (join ()()) <br />
 (letter () of ()) <br />
@@ -504,6 +501,6 @@ Your .ss1 file is probably big.
 ## V1 Decomp Bugs (This version is no longer being programmed.)
 Loads broadcasts even if there are none. (Try decompiling decompilertest.sb3 which is in the resources folder.)
 ## V2 Decomp Bugs
-None found yet.
+Compilation can end even if there are still blocks left (only seen in ifs so far, but probably a bug for all C-Blocks)
 
 ![de20ca3a12e96a8b00a2063151b1ad84](https://user-images.githubusercontent.com/78574005/192591165-e642bc95-7625-487d-aeba-c74d8d85eb9d.png)

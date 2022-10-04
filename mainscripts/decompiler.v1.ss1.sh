@@ -21,7 +21,7 @@ fi
 echo
 if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   if ! [ -f .var/zenity ]; then
-    echo >>.var/zenity
+    echo >>var/zenity
   fi
   echo -e "Select the .sb3 you want to decompile. ${RED}WARNING! THE NAME OF THE FILE CANNOT HAVE ANY SPACES OR IT WILL NOT UNZIP CORRECTLY!!!${NC}"
   sleep 2

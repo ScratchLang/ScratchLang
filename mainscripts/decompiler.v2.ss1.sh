@@ -134,6 +134,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     if ! [ $b == 1 ]; then #if parent equals null
       if [ h$1 == h ]; then
         echo >>$dcd/project.ss1 "\nscript"
+        echo
         parent=1
       fi
     else
@@ -184,6 +185,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     if ! [ $b == 1 ]; then #if parent equals null
       if [ h$1 == h ]; then
         echo >>$dcd/project.ss1 "\nscript"
+        echo
         parent=1
       fi
     else
@@ -1853,7 +1855,6 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             varname+=$char
           done
-          echo "$next"
           ca+=($next)
           rep=$next
           next=$varname
