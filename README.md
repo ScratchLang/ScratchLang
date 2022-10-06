@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.42a**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.43a**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -128,9 +128,9 @@ Also, the compiler can't tell the difference between a string and a boolean/vari
 
 Brackets means that there cannot be a variable in there. It's either a defined object or an object from a set list. <br />
 ### Buggy Blocks
-if <*INPUT> then { <br />
+if \<INPUT\> then { <br />
 
-} - (If *INPUT is true, then run everything in the braces.) <br />
+} - (If \<INPUT\> is true, then run everything in the braces.) <br />
 ### Stable blocks
 var=string - (Define [or set] a variable) <br />
 **list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma after the equal sign.)** <br />
