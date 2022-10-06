@@ -1,0 +1,1 @@
+This is a base package. Rename the directory from "package-base" to "[YOUR PACKAGE NAME]". Don't take that literally.

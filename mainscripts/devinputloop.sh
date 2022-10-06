@@ -16,7 +16,8 @@ if [ h$1 == h ]; then
   echo "B. Delete all variables."
   echo "C. Prepare for commit and push."
   echo "D. Change decompiler script."
-  echo "E. Exit."
+  echo "E. Manage Packages"
+  echo "F. Exit."
   read -sn 1 input
 else
   case $1 in
@@ -282,6 +283,9 @@ elif [ h$input == hD ] || [ h$input == hd ]; then #switch you decompiler
   chmod 755 pick.sh
   ./pick.sh
 elif [ h$input == hE ] || [ h$input == he ]; then
+  chmod 755 pmloop.sh
+  ./pmloop.sh
+elif [ h$input == hF ] || [ h$input == hf ]; then
   clear
 else
   echo -e "${RED}Error: $input is not an input.${NC}"

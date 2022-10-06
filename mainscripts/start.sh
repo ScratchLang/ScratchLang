@@ -3,7 +3,7 @@ NC='\033[0m' #Reset text color.
 P='\033[0;35m' #Purple
 basedir=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')") #get the base directory of start.sh
 cd $basedir
-ver=$(sed '1!d' $(dirname $PWD)/.version) #get local version
+ver=$(sed '1!d' $(dirname $PWD)/version) #get local version
 if ! [ -f var/asked ]; then #this is in place so it only asks the below question once, ever.
   if ! [ -f var/vc ]; then #I don't know why this is here anymore
     echo "Would you like ScratchLang to check its version every time you start it? [Y/N]"
@@ -17,23 +17,23 @@ fi
 if [ -f var/vc ]; then
   if ! [ h$1 == hnope ]; then
     echo "Checking version..."
-    if [ -f .version ]; then
-      rm .version
+    if [ -f version ]; then
+      rm version
     fi
-    wget -q https://raw.githubusercontent.com/0K9090/ScratchLang/main/.version #get the .version file from github
+    wget -q https://raw.githubusercontent.com/0K9090/ScratchLang/main/version #get the version file from github
     utd=1
-    if ! [ "$ver" == "$(sed '1!d' .version)" ]; then #if local version doesn't match .version from github, then set utd to 0
+    if ! [ "$ver" == "$(sed '1!d' version)" ]; then #if local version doesn't match version from github, then set utd to 0
       utd=0
     fi
     if [ $utd == 0 ]; then #if utd = 0 then update
-      echo "Your version of ScratchLang ($ver) is outdated. The current version is $(sed '1!d' .version). Would you like to update? [Y/N]"
+      echo "Your version of ScratchLang ($ver) is outdated. The current version is $(sed '1!d' version). Would you like to update? [Y/N]"
       read -sn 1 hh
       if [ h$hh == hy ] || [ h$hh == hY ]; then
         git pull origin main
       fi
       exit
     fi
-    rm .version
+    rm version
   fi
 fi
 if [ h$1 == h-help ]; then #if you input argument -help then you get help commands

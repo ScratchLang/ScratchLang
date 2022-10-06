@@ -13,7 +13,8 @@ if [ h$1 == h ]; then
   echo "8. Create scratchlang command."
   echo "9. Remove scratchlang command."
   echo "A. Enable Developer Mode."
-  echo "B. Exit."
+  echo "B. Manage Packages"
+  echo "C. Exit."
   read -sn 1 input
 else #if there's arguments, set input to the arg
   case $1 in
@@ -206,6 +207,9 @@ elif [ h$input == hA ] || [ h$input == ha ]; then #enable devmode
   echo >>var/devmode "This is a devmode file. You can manually remove it to disable dev mode if you don't want to use the program to disable it for some reason."
   ./start.sh nope
 elif [ h$input == hB ] || [ h$input == hb ]; then
+  chmod 755 pmloop.sh
+  ./pmloop.sh
+elif [ h$input == hC ] || [ h$input == hc ]; then
   clear
 else
   echo -e "${RED}Error: $input is not an input.${NC}"
