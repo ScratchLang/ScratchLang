@@ -15,23 +15,33 @@ if [ h$1 == h ]; then
   echo "A. Enable Developer Mode."
   echo "B. Exit."
   read -sn 1 input
-elif [ $1 == -1 ]; then #if there's arguments, set input to the arg
-  input=1
-elif [ $1 == -2 ]; then
-  input=2
-elif [ $1 == -3 ]; then
-  input=3
-elif [ $1 == -4 ]; then
-  input=4
-elif [ $1 == -5 ]; then
-  input=5
-elif [ $1 == -6 ]; then
-  input=6
-else
-  echo -e "${RED}Error: $1 is not an argument.${NC}"
-  sleep 2
-  ./start.sh nope #make sure not to check the version when running ./start.sh again
-  exit
+else #if there's arguments, set input to the arg
+  case $1 in
+  -1)
+    input=1
+    ;;
+  -2)
+    input=2
+    ;;
+  -3)
+    input=3
+    ;;
+  -4)
+    input=4
+    ;;
+  -5)
+    input=5
+    ;;
+  -6)
+    input=6
+    ;;
+  esac
+  if [ "h$input" == h ]; then
+    echo -e "${RED}Error: $1 is not an argument.${NC}"
+    sleep 2
+    ./start.sh nope #make sure not to check the version when running ./start.sh again
+    exit
+  fi
 fi
 if [ h$input == h1 ]; then
   dir=$PWD
@@ -49,7 +59,7 @@ if [ h$input == h1 ]; then
   fi
   cd projects
   mkdir $name
-  cd $name #go to project dir, create a folder named whatever you named it, and go into that
+  cd $name                                         #go to project dir, create a folder named whatever you named it, and go into that
   echo >>.maindir "Please don't remove this file." #tells the compiler that it's in the right directory
   mkdir Stage
   cd Stage
@@ -140,7 +150,7 @@ elif [ h$input == h6 ]; then
       mkdir projects
     fi
     cd projects
-    tar -xf $import #extract .ssa archive
+    tar -xf $import                #extract .ssa archive
     echo "Remove .ssa file? [Y/N]" #remove the .ssa archive if wanted
     read -sn 1 f
     if [ h$f == hY ] || [ h$f == hy ]; then
@@ -152,7 +162,7 @@ elif [ h$input == h6 ]; then
     echo "${RED}Error: $input3 not an input.${NC}"
   fi
 elif [ h$input == h7 ]; then
-  echo "This only works for MSYS2/MINGW. Continue? [Y/N]" 
+  echo "This only works for MSYS2/MINGW. Continue? [Y/N]"
   read -sn 1 con
   if [ h$con == hY ] || [ h$con == hy ]; then #Start installing dependencies for mingw
     echo
@@ -174,7 +184,7 @@ elif [ h$input == h7 ]; then
     rm -rf zenity
     cd $dir
     pacman --noconfirm -S git #install git
-    pacman --noconfirm -S bc #install bc
+    pacman --noconfirm -S bc  #install bc
     ./start.sh nope
   elif [ h$con == hN ] || [ h$con == hn ]; then
     echo
