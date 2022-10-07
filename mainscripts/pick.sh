@@ -1,4 +1,49 @@
 #!/bin/bash
+if [ -f var/pe ]; then
+  getnextp() {
+    res=0
+    small=$1
+    execute=
+    while :; do
+      ((res++))
+      if [ "$res" -gt "$(sed -n '$=' plist)" ]; then
+        break
+      fi
+      reser=$(sed $res'!d' plist)
+      if [ "$reser" == "$0" ]; then
+        ((res++))
+        ((res++))
+        reser=$(sed $res'!d' plist)
+        if [ "$reser" -lt "$small" ]; then
+          small="$reser"
+          ((res--))
+          reser=$(sed $res'!d' plist)
+          execute=$reser
+          ((res++))
+        fi
+      fi
+    done
+    don=2
+  }
+  npl=999999999
+  don=1
+  step() {
+    if [ -d var ]; then
+      if [[ "$(cat plist)" == *"$0"* ]]; then
+        if [ "$don" == 1 ]; then
+          getnextp $1
+        fi
+        if [ "${BASH_LINENO[0]}" == "$small" ]; then
+          cd ../
+          ./packages/$execute
+          cd mainscripts
+          don=1
+        fi
+      fi
+    fi
+  }
+  trap "step $npl" DEBUG
+fi
 RED='\033[0;31m' #red
 NC='\033[0m'     #reset color
 echo
