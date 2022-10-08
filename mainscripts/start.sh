@@ -5,60 +5,60 @@ P='\033[0;35m'                                        #Purple
 basedir=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')") #get the base directory of start.sh
 cd $basedir
 #start initializing packagess
-if ! [ "h$1" == "hnope" ]; then
-  echo "Initializing packages..."
-  if [ -f plist ]; then
-    rm plist
-  fi
-  cd ../
-  cd packages
-  dcount=$(ls -1d */ | wc -l) #get number of directories
-  if [ -f dirlist ]; then
-    rm dirlist
-  fi
-  echo -e "$(ls -1d */)" >>dirlist
-  for ((i = 1; i <= $dcount; i++)); do
-    line=$(sed $i'!d' dirlist)
-    if ! [ "$line" == "package-base/" ]; then
-      pname="$line"
-      cd "$line"
-      lcount=
-      nee=$(sed -n '$=' intergrations)
-      for ((k = 1; k <= $nee; k++)); do
-        line=$(sed $k'!d' intergrations)
-        b=0
-        name=
-        while :; do
-          ((b++))
-          l=${line:$(expr $b - 1):1}
-          if [ "$l" == " " ]; then
-            break
-          fi
-          name+=$l
-        done
-        echo >>$(dirname $(dirname $PWD))/mainscripts/plist "$name"
-        echo >>$(dirname $(dirname $PWD))/mainscripts/plist "${pname}package.sh"
-        name=
-        while :; do
-          ((b++))
-          l=${line:$(expr $b - 1):1}
-          if [ "$l" == ";" ]; then
-            break
-          fi
-          name+=$l
-        done
-        echo >>$(dirname $(dirname $PWD))/mainscripts/plist "$name"
-        cd ../
-      done
-    fi
-  done
-  rm dirlist
-  cd ../
-  cd mainscripts
-fi
-#end initializing packages
-#every package has to start after this line if the package edits start.sh
 if [ -f var/pe ]; then
+  if ! [ "h$1" == "hnope" ]; then
+    echo "Initializing packages..."
+    if [ -f plist ]; then
+      rm plist
+    fi
+    cd ../
+    cd packages
+    dcount=$(ls -1d */ | wc -l) #get number of directories
+    if [ -f dirlist ]; then
+      rm dirlist
+    fi
+    echo -e "$(ls -1d */)" >>dirlist
+    for ((i = 1; i <= $dcount; i++)); do
+      line=$(sed $i'!d' dirlist)
+      if ! [ "$line" == "package-base/" ]; then
+        pname="$line"
+        cd "$line"
+        lcount=
+        nee=$(sed -n '$=' intergrations)
+        for ((k = 1; k <= $nee; k++)); do
+          line=$(sed $k'!d' intergrations)
+          b=0
+          name=
+          while :; do
+            ((b++))
+            l=${line:$(expr $b - 1):1}
+            if [ "$l" == " " ]; then
+              break
+            fi
+            name+=$l
+          done
+          echo >>$(dirname $(dirname $PWD))/mainscripts/plist "$name"
+          echo >>$(dirname $(dirname $PWD))/mainscripts/plist "${pname}package.sh"
+          name=
+          while :; do
+            ((b++))
+            l=${line:$(expr $b - 1):1}
+            if [ "$l" == ";" ]; then
+              break
+            fi
+            name+=$l
+          done
+          echo >>$(dirname $(dirname $PWD))/mainscripts/plist "$name"
+          cd ../
+        done
+      fi
+    done
+    rm dirlist
+    cd ../
+    cd mainscripts
+  fi
+  #end initializing packages
+  #every package has to start after this line if the package edits start.sh
   getnextp() {
     res=0
     small=$1
@@ -168,7 +168,7 @@ elif [ h$1 == hupdate ]; then
     rm packages.list
   fi
   wget -q https://raw.githubusercontent.com/0K9090/sl-packages/main/packages.list
-elif [ h$1 == h-help ]; then #if you input argument -help then you get help commands
+elif [ h$1 == h--help ]; then #if you input argument -help then you get help commands
   echo "scratchlang (or ./start.sh if you haven't created the scratchlang command)"
   echo
   echo "  -1                Create a project"
@@ -177,7 +177,7 @@ elif [ h$1 == h-help ]; then #if you input argument -help then you get help comm
   echo "  -4                Decompile a project"
   echo "  -5                Export a project"
   echo "  -6                Import a project"
-  echo "  -help             Display this help message."
+  echo "  --help            Display this help message."
   echo "  install [PACKAGE] Install packages"
   echo "  update            Update the package list"
 else

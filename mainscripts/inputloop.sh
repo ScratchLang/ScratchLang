@@ -54,7 +54,7 @@ if [ h$1 == h ]; then
   echo "4. Decompile a .sb3 file."
   echo "5. Export project."
   echo "6. Import project."
-  echo "7. Are options 3 and 4 not working? Input 7 to install dependencies.."
+  echo "7. Are options 3 and 4 not working? Input 7 to install dependencies."
   echo "8. Create scratchlang command."
   echo "9. Remove scratchlang command."
   echo "A. Enable Developer Mode."

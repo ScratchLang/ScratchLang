@@ -56,6 +56,7 @@ if [ -f var/pe ]; then
 else
   echo "4. Enable packages"
 fi
+echo "5. Exit"
 cd ../
 cd packages
 read -sn 1 jj
@@ -114,6 +115,13 @@ case $jj in
     echo >>var/pe
     echo "Keep in mind that packages are not reccomended, since scratchlang is very slow with them."
   fi
+  ;;
+5)
+  ccor=1
+  cd ../
+  cd mainscripts
+  ./start.sh nope
+  ;;
 esac
 if [ $ccor == 0 ]; then
   echo -e "${RED}Error: $jj is not an input.${NC}"
