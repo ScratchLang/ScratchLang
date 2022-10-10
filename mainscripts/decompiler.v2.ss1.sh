@@ -281,7 +281,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         o2+=$char
       done
-      addt+="<($o1) = ($o2)>"
+      addt+="<(\"$o1\") = (\"$o2\")>"
     elif [ $1 == operator_gt ]; then
       start2
       nq
@@ -312,7 +312,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         o2+=$char
       done
-      addt+="<($o1) > ($o2)>"
+      addt+="<(\"$o1\") > (\"$o2\")>"
     elif [ $1 == operator_lt ]; then
       start2
       nq
@@ -343,7 +343,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         o2+=$char
       done
-      addt+="<($o1) < ($o2)>"
+      addt+="<(\"$o1\") < (\"$o2\")>"
     elif [ $1 == operator_and ]; then
       start2
       nq

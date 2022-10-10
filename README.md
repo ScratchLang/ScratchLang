@@ -7,7 +7,7 @@ This is for people who want to use Scratch like other programming languages.
 
 Also, a devlog is at the bottom.
 # Latest big updates
-If statements working perfectly, and if/else statements added. if/elses inside if/elses don't work yet. <br/>
+If statements working perfectly, and if/else statements added. If/elses don't work consistiently, and if/elses inside if/elses don't work yet. <br/>
 Also, operators in operators don't work as well.
 
 The new decompiler is programmed so that it uses "opcode",  "parent", and "next" to decompile the blocks in order.
@@ -31,12 +31,10 @@ A project.json is also included in the resources folder to help understand and r
 
 I'm programming the decompiler. First I'm gonna program it to decompile all the global and stage-exclusive blocks, then sprite-exclusive blocks.
 
-## Contributing to the decompiler
-I am currently putting comments in my code so people understand it. Please wait.
+## Contributing
+I am currently putting comments in my code so people understand it. So for some sections, you will have to guess what the bash does. Sorry.
 # Notice
 Because of how the decompiler is programmed, if you have a big enough json, decompiling 1 block could take 1 minute. The cause of that is the farther the block is from the start of the json, the longer it takes to decompiler. Perhaps there's a more effecient way to decompile blocks from the json?
-
-And also, no more blocks will be added until I get ifs working consistently.
 
 Also, I renamed the file extension to .ss1 because I am planning on having multiple formats. <br />
 ss1 Will be it's own language <br />
