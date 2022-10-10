@@ -67,29 +67,38 @@ case $jj in
   dir=$(zenity -list $(ls -d */))
   cd $dir
   echo
-  echo "Package: $dir"
-  echo "Info: $(cat info.txt)"
-  echo "Version: $(sed '1!d' version)"
+  echo -e "${RED}Package:${NC} $dir"
+  echo
+  echo -e "${RED}Info:${NC} $(cat info.txt)"
+  echo
+  echo -e "${RED}Version:${NC} $(sed '1!d' version)"
   ;;
 2)
   ccor=1
   echo
   read -p "Enter package to install: " pack
+  if [ "h$pack" == h ]; then
+    echo -e "${RED}Error: Empty argument.${NC}"
+    exit
+  fi
   cd ../
   cd packages
   if [ -f packages.list ]; then
     pk=$(cat packages.list)
-    if [[ "$pk" == *"$pack"* ]]; then
+    echo "$pk, $pack"
+    if [[ "|$pk|" == *"|$pack|"* ]]; then
       b=0
       echo
       echo "Installing $pack..."
       while :; do
         ((b++))
         line=$(sed $b'!d' packages.list)
-        if [[ "$line" == *"$pack"* ]]; then
+        if [[ "$line" == "|$pack|" ]]; then
           break
         fi
       done
+      ((b++))
+      line=$(sed $b'!d' packages.list)
       eval $line
       unzip -q $pack
       rm -rf $pack.zip
@@ -113,7 +122,7 @@ case $jj in
     rm var/pe
   else
     echo >>var/pe
-    echo "Keep in mind that packages are not reccomended, since scratchlang is very slow with them."
+    echo "Keep in mind that packages are not reccomended, since ScratchLang is very slow with them."
   fi
   ;;
 5)

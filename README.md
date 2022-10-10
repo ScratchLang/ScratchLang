@@ -1,15 +1,14 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.6a**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.7a**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
 
 This is for people who want to use Scratch like other programming languages.
 
+Also, a devlog is at the bottom.
 # Latest big updates
-If statements and some inputs.
-If else statements are also not added yet.
-
-It can also indent code to make it easier to read.
+If statements working perfectly, and if/else statements added. if/elses inside if/elses don't work yet. <br/>
+Also, operators in operators don't work as well.
 
 The new decompiler is programmed so that it uses "opcode",  "parent", and "next" to decompile the blocks in order.
 
@@ -130,10 +129,13 @@ Brackets means that there cannot be a variable in there. It's either a defined o
 ### Buggy Blocks
 if \<INPUT\> then { <br />
 
-} - (If \<INPUT\> is true, then run everything in the braces.) <br />
+}  <br />
+else { <br />
+
+} - (If \<INPUT\> is true, run the stuff above the else. If it is not, run the stuff below the else.) <br />
 ### Stable blocks
 var=string - (Define [or set] a variable) <br />
-**list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma after the equal sign.)** <br />
+**list=item1,item2,item3,etc - (Overwrites anything in a list to the items listed. No spaces, and for an empty list, just add a comma after the equal sign.)** <br />
 move ("num") steps (Move an amount of steps.) <br />
 **wait ("num") seconds - (Wait for an amount of seconds.)** <br />
 switch backdrop to ("backdrop") - (Changes backdrop.) <br />
@@ -167,11 +169,16 @@ repeat (num) { <br />
 
 **} - (Repeat everything in the braces forever.)** <br />
 
-<(num1) = (num2)> - (Reports true if num1 equals num2.) <br />
-**<(num1) > (num2)> - (Reports true if num1 is greater than num2.)** <br />
-<(num1) < (num2)> - (Reports true if num1 is less than num2.) <br />
-**<<1> and <2>> - (Reports true if both statement 1 and 2 report true.)** <br />
-<<1> or <2>> - (Reports true if either statement report true.) <br />
+if \<INPUT\> then { <br />
+
+} - (If \<INPUT\> is true, then run everything in the braces.) <br />
+
+**<(num1) = (num2)> - (Reports true if num1 equals num2.)** <br />
+<(num1) > (num2)> - (Reports true if num1 is greater than num2.) <br />
+**<(num1) < (num2)> - (Reports true if num1 is less than num2.)** <br />
+<<1> and <2>> - (Reports true if both statement 1 and 2 report true.) <br />
+**<<1> or <2>> - (Reports true if either statement report true.)** <br />
+<not <1>> - (Reports true if statement 1 is false.) <br />
 
 ### Blocks to Add
 
@@ -207,13 +214,6 @@ go to [] layer <br />
 go [] () layers <br />
 (costume []) <br />
 (size) <br />
-
-if <> then { <br />
-
-} <br />
-else { <br />
-
-} <br />
 
 wait until <> <br />
 repeat until <> { <br />
@@ -257,7 +257,6 @@ reset timer <br />
 (() * ()) <br />
 (() / ()) <br />
 (pick random () to ()) <br />
-<not <>> <br />
 (join ()()) <br />
 (letter () of ()) <br />
 (length of ()) <br />
@@ -501,6 +500,12 @@ Your .ss1 file is probably big.
 ## V1 Decomp Bugs (This version is no longer being programmed.)
 Loads broadcasts even if there are none. (Try decompiling decompilertest.sb3 which is in the resources folder.)
 ## V2 Decomp Bugs
-Compilation can end even if there are still blocks left (only seen in ifs so far, but probably a bug for all C-Blocks)
+None known yet, I think.
 
 ![de20ca3a12e96a8b00a2063151b1ad84](https://user-images.githubusercontent.com/78574005/192591165-e642bc95-7625-487d-aeba-c74d8d85eb9d.png)
+
+# Devlog
+Format: MM.DD.YY - VERSION
+## 10.10.22 - 0.6.7a
+* Added a Devlog :)
+* added if/else blocks and not operator

@@ -359,7 +359,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         word+=$char
       done
-      if [ "$word" == "OPERAND2" ]; then
+      if [ "$word" == "OPERAND2" ] || [ "$word" == "OPERAND1" ]; then
         b=0
         vi=$i
         while :; do
@@ -581,7 +581,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             word+=$char
           done
-          if [ "$word" == "OPERAND1" ]; then
+          if [ "$word" == "OPERAND1" ] || [ "$word" == "OPERAND2" ]; then
             b=0
             vi=$i
             while :; do
@@ -702,7 +702,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         word+=$char
       done
-      if [ "$word" == "OPERAND2" ]; then
+      if [ "$word" == "OPERAND2" ] || [ "$word" == "OPERAND1" ]; then
         b=0
         vi=$i
         while :; do
@@ -728,7 +728,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             word+=$char
           done
-          if [ $word == "OPERAND1" ]; then
+          if [ $word == "OPERAND1" ] || [ "$word" == "OPERAND2" ]; then
             b=0
             vi=$i
             while :; do
@@ -924,7 +924,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             word+=$char
           done
-          if [ $word == "OPERAND1" ]; then
+          if [ "$word" == "OPERAND1" ] || [ "$word" == "OPERAND2" ]; then
             b=0
             vi=$i
             while :; do
@@ -939,18 +939,19 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             getchar -\"
             if [ $b == 0 ]; then
               addt+="<>>"
+              i=$vi
             else
               i=$vi
               nq
               b=0
-              op1=
+              op2=
               while :; do
                 i
                 getchar -\"
                 if [ $b == 1 ]; then
                   break
                 fi
-                op1+=$char
+                op2+=$char
               done
               wy=$i
               i=1
@@ -1000,7 +1001,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                     fi
                     word+=$char
                   done
-                  if [ "$word" == $op1 ]; then
+                  if [ "$word" == $op2 ]; then
                     break
                   fi
                   i=$(expr $i + 10)
@@ -1028,6 +1029,135 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
       else
         addt+="<<> or <>>"
+      fi
+    elif [ $1 == operator_not ]; then
+      start2
+      nq
+      nq
+      nq
+      b=0
+      word=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        word+=$char
+      done
+      if [ "$word" == "OPERAND" ]; then
+        b=0
+        vi=$i
+        while :; do
+          i
+          getchar -\]
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        i-
+        b=0
+        getchar -\"
+        if [ $b == 0 ]; then
+          addt+="<not <>>"
+        else
+          i=$vi
+          nq
+          b=0
+          op1=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            op1+=$char
+          done
+          wy=$i
+          addt+="<not "
+          i=1
+          while :; do
+            b=0
+            word=
+            while :; do
+              i
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+              word+=$char
+            done
+            if [ "$word" == opcode ]; then
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              word=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                word+=$char
+              done
+              if [ "$word" == $op1 ]; then
+                break
+              fi
+              i=$(expr $i + 10)
+            fi
+          done
+          nq
+          nq
+          nq
+          b=0
+          word=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            word+=$char
+          done
+          addop $word
+          i=$wy
+          addt+=">"
+          nq
+          b=0
+          word=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            word+=$char
+          done
+        fi
+      else
+        addt+="<not <>>"
       fi
     fi
   }
@@ -1787,6 +1917,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Starting if.${NC}"
       echo
       if [ $word == CONDITION ]; then
+        v=$i
         nq
         b=0
         con=
@@ -1798,7 +1929,6 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           fi
           con+=$char
         done
-        v=$i
         i=1
         while :; do
           while :; do
@@ -1877,18 +2007,221 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         echo >>$dcd/project.ss1 "if $addt then {"
         echo "if $addt then {"
         i=$v
+      else
+        echo >>$dcd/project.ss1 "if <> then {"
+        echo "if <> then {"
+      fi
+      b=0
+      while :; do
+        i
+        getchar -\]
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      nq
+      b=0
+      word=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        word+=$char
+      done
+      if [ "$word" == SUBSTACK ]; then
         nq
         b=0
-        word=
+        varname=
         while :; do
           i
           getchar -\"
           if [ $b == 1 ]; then
             break
           fi
-          word+=$char
+          varname+=$char
         done
-        if [ "$word" == SUBSTACK ]; then
+        ca+=($next)
+        rep=$next
+        next=$varname
+        ci+=('i')
+        per=i
+        ((cm++))
+      else
+        echo >>$dcd/project.ss1
+        echo
+        echo >>$dcd/project.ss1 "}"
+        echo "}"
+        echo
+        echo -e "${RED}Ended if.${NC}"
+      fi
+    elif [ $1 == control_if_else ]; then #if <> {} else {}  block
+      cbt=1
+      start
+      nst=$next
+      nq
+      nq
+      nq
+      b=0
+      word=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        word+=$char
+      done
+      echo
+      echo -e "${RED}Starting if/else.${NC}"
+      echo
+      if [ $word == CONDITION ]; then
+        v=$i
+        b=0
+        while :; do
+          i
+          getchar -,
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        i
+        b=0
+        getchar -\"
+        if [ $b == 1 ]; then
+          i=$v
+          nq
+          b=0
+          con=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            con+=$char
+          done
+          i=1
+          while :; do
+            while :; do
+              b=0
+              word=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                word+=$char
+              done
+              if [ "$word" == opcode ]; then
+                break
+              fi
+            done
+            b=0
+            while :; do
+              i-
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+            done
+            b=0
+            while :; do
+              i-
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+            done
+            b=0
+            while :; do
+              i-
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+            done
+            b=0
+            word=
+            while :; do
+              i
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+              word+=$char
+            done
+            if [ "$word" == "$con" ]; then
+              break
+            fi
+            i=$(expr $i + 10)
+          done
+          while :; do
+            nq
+            nq
+            nq
+            b=0
+            word=
+            while :; do
+              i
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+              word+=$char
+            done
+            addop $word
+            if [ $con == fin ]; then
+              break
+            fi
+          done
+          echo >>$dcd/project.ss1 "if $addt then {"
+          echo "if $addt then {"
+          i=$v
+        else
+          echo >>$dcd/project.ss1 "if <> then {"
+          echo "if <> then {"
+        fi
+      else
+        echo >>$dcd/project.ss1 "if <> then {"
+        echo "if <> then {"
+      fi
+      b=0
+      while :; do
+        i
+        getchar -\]
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      nq
+      b=0
+      word=
+      while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        word+=$char
+      done
+      if [ "$word" == "SUBSTACK" ]; then
+        previ=$i
+        b=0
+        while :; do
+          i
+          getchar -,
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        i
+        b=0
+        getchar -\"
+        if [ $b == 1 ]; then
+          i=$previ
           nq
           b=0
           varname=
@@ -1900,30 +2233,227 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             varname+=$char
           done
-          ca+=($next)
-          rep=$next
-          next=$varname
-          ci+=('i')
-          per=i
-          ((cm++))
+          tt="$varname"
+          i=-1
+          while :; do
+            b=0
+            word=
+            while :; do
+              i
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+              word+=$char
+            done
+            if [ "$word" == opcode ]; then
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              varname=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                varname+=$char
+              done
+              if [ "$tt" == "$varname" ]; then
+                nq
+                nq
+                nq
+                b=0
+                word=
+                while :; do
+                  i
+                  getchar -\"
+                  if [ $b == 1 ]; then
+                    break
+                  fi
+                  word+=$char
+                done
+                addblock $word
+                if [ $next == fin ]; then
+                  echo >>$dcd/project.ss1 "} else {"
+                  echo "} else {"
+                  break
+                fi
+              else
+                i=$(expr $i + 10)
+              fi
+            fi
+          done
+        else
+          echo >>$dcd/project.ss1
+          echo
+          echo >>$dcd/project.ss1 "} else {"
+          echo "} else {"
+        fi
+        i=$previ
+      else
+        echo >>$dcd/project.ss1
+        echo
+        echo >>$dcd/project.ss1 "} else {"
+        echo "} else {"
+      fi
+      if ! [ "$word" == "SUBSTACK2" ]; then
+        b=0
+        while :; do
+          i
+          getchar -\]
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        nq
+        b=0
+        word=
+        while :; do
+          i
+          getchar -\"
+          if [ $b == 1 ]; then
+            break
+          fi
+          word+=$char
+        done
+      fi
+      if [ "$word" == "SUBSTACK2" ]; then
+        previ=$i
+        b=0
+        while :; do
+          i
+          getchar -,
+          if [ $b == 1 ]; then
+            break
+          fi
+        done
+        i
+        b=0
+        getchar -\"
+        if [ $b == 1 ]; then
+          i=$previ
+          nq
+          b=0
+          varname=
+          while :; do
+            i
+            getchar -\"
+            if [ $b == 1 ]; then
+              break
+            fi
+            varname+=$char
+          done
+          tt="$varname"
+          i=-1
+          while :; do
+            b=0
+            word=
+            while :; do
+              i
+              getchar -\"
+              if [ $b == 1 ]; then
+                break
+              fi
+              word+=$char
+            done
+            if [ "$word" == opcode ]; then
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              while :; do
+                i-
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+              done
+              b=0
+              varname=
+              while :; do
+                i
+                getchar -\"
+                if [ $b == 1 ]; then
+                  break
+                fi
+                varname+=$char
+              done
+              if [ "$tt" == "$varname" ]; then
+                nq
+                nq
+                nq
+                b=0
+                word=
+                while :; do
+                  i
+                  getchar -\"
+                  if [ $b == 1 ]; then
+                    break
+                  fi
+                  word+=$char
+                done
+                addblock $word
+                if [ $next == fin ]; then
+                  echo >>$dcd/project.ss1 "}"
+                  echo "}"
+                  break
+                fi
+              else
+                i=$(expr $i + 10)
+              fi
+            fi
+          done
         else
           echo >>$dcd/project.ss1
           echo
           echo >>$dcd/project.ss1 "}"
           echo "}"
-          echo
-          echo -e "${RED}Ended if.${NC}"
         fi
+        i=$previ
       else
-        echo >>$dcd/project.ss1 "if <> then {"
-        echo "if <> then {"
         echo >>$dcd/project.ss1
         echo
         echo >>$dcd/project.ss1 "}"
         echo "}"
-        echo
-        echo -e "${RED}Ended if.${NC}"
+        echo -e "${RED}Ended if/else.${NC}"
       fi
+      next=$nst
     fi
     if ! [ $next == fin ]; then #if not next equals fin do these
       i=2                       #the below scripts look for "opcode", which is the end of most opcodes. It goes to the next "}" then looks at the thing in quotes after that. That is the block ID. It uses this to compile all the blocks in order.
@@ -2038,9 +2568,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           if [ $e == 1 ]; then
             ca=
           fi
-          next=$rep
-          if [ h$next == h ]; then
-            next=fin
+          if ! [ h$rep == h ]; then
+            next=$rep
           fi
           if ! [ $next == fin ]; then
             i=1
@@ -2400,16 +2929,55 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       i
       nq
     done
-    rep=0
-    cbt=0
-    echo "Making blocks..."
-    echo
-    dcd=Stage
-    k=-1
-    done=0
+  fi
+  rep=0
+  cbt=0
+  echo "Making blocks..."
+  echo
+  dcd=Stage
+  k="-1"
+  done=0
+  while :; do
+    i=$k
     while :; do
-      i=$k
+      b=0
+      word=
       while :; do
+        i
+        getchar -\"
+        if [ $b == 1 ]; then
+          break
+        fi
+        word+=$char
+      done
+      if [ "$word" == parent ]; then
+        k=$i
+        i
+        i
+        b=0
+        getchar -\"
+        if ! [ $b == 1 ]; then
+          break
+        fi
+      fi
+      if [ "$word" == comments ]; then
+        done=1
+        break
+      fi
+    done
+    if [ $done == 0 ]; then
+      b=0
+      while :; do
+        i-
+        getchar -\{
+        if [ $b == 1 ]; then
+          break
+        fi
+      done
+      i
+      while :; do
+        nq
+        nq
         b=0
         word=
         while :; do
@@ -2420,55 +2988,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           fi
           word+=$char
         done
-        if [ "$word" == parent ]; then
-          k=$i
-          i
-          i
-          b=0
-          getchar -\"
-          if ! [ $b == 1 ]; then
-            break
-          fi
-        fi
-        if [ "$word" == comments ]; then
-          done=1
+        addblock $word
+        if [ $next == fin ]; then
           break
         fi
       done
-      if [ $done == 0 ]; then
-        b=0
-        while :; do
-          i-
-          getchar -\{
-          if [ $b == 1 ]; then
-            break
-          fi
-        done
-        i
-        while :; do
-          nq
-          nq
-          b=0
-          word=
-          while :; do
-            i
-            getchar -\"
-            if [ $b == 1 ]; then
-              break
-            fi
-            word+=$char
-          done
-          addblock $word
-          if [ $next == fin ]; then
-            break
-          fi
-        done
-      fi
-      if [ $done == 1 ]; then
-        break
-      fi
-    done
-  fi
+    fi
+    if [ $done == 1 ]; then
+      break
+    fi
+  done
   #add spaces
   echo
   echo "Indenting code to make it easier to read (This may take a while depending on how big your project is)..."
@@ -2478,7 +3007,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   }
   gpsvar() {
     per=$(echo "scale = 2; $q / $(sed -n '$=' $dcd/project.ss1) * 100" | bc)
-    pb=$(tput cols)
+    pb=$(expr $(tput cols) - 9)
     ps=$(echo "scale = 2; $per / 100 * $pb" | bc)
     per+="%"
   }
@@ -2490,8 +3019,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     for ((v = 1; v <= $ps; v++)); do
       pbr+="#"
     done
-    echo -e "$per done. \e[2A"
-    echo -e "$pbr"
+    echo -e "\e[A\r$pbr $per"
   }
   echo
   q=0
@@ -2505,6 +3033,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     fi
   done
   r=0
+  bah=0
   ff() {
     ((q++))
     getper
@@ -2524,7 +3053,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       while :; do
         ff
         gql
-        if [ "$line" == \} ]; then
+        if [[ "$line" == *"}"* ]]; then
           break
         fi
       done
@@ -2532,7 +3061,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       if [ $r -gt 0 ]; then
         indent=
         m=0
-        if [ "$line" == \} ]; then
+        if [[ "$line" == *"}"* ]]; then
           ((r--))
         fi
         while :; do
@@ -2543,6 +3072,16 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           indent+="  "
         done
         echo >>$dcd/a.txt "$indent""$line"
+        if [[ "$line" == *"else"* ]]; then
+          ((r++))
+          while :; do
+            ff
+            gql
+            if [[ "$line" == *"}"* ]]; then
+              break
+            fi
+          done
+        fi
       else
         echo >>$dcd/a.txt "$line"
       fi

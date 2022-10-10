@@ -141,17 +141,19 @@ if [ h$1 == hinstall ]; then #install packages
   cd packages
   if [ -f packages.list ]; then
     pk=$(cat packages.list)
-    if [[ "$pk" == *"$2"* ]]; then
+    if [[ "|$pk|" == *"|$2|"* ]]; then
       b=0
       echo
       echo "Installing $2..."
       while :; do
         ((b++))
         line=$(sed $b'!d' packages.list)
-        if [[ "$line" == *"$2"* ]]; then
+        if [[ "$line" == "|$2|" ]]; then
           break
         fi
       done
+      ((b++))
+      line=$(sed $b'!d' packages.list)
       eval $line
       unzip -q $2
       rm -rf $2.zip
