@@ -10,7 +10,7 @@ NC='\033[0m'
 echo -e "${RED}Decompiler 1.F${NC}"
 DecompCurrentDir=Stage
 echo
-echo -e "${RED}This version of the decompiler is not being programmed anymore. 4 block categories were added, and that's it. C-Blocks became a barrier that is almost impossible to pass for this decompiler, so I had to make a new one. Please use V2 when it is available.${NC}"
+echo -e "${RED}This version of the decompiler is deprecated. 4 block categories were added, and that's it. C-Blocks became a barrier that is almost impossible to pass for this decompiler, so I had to make a new one. Please use V2 when it is available.${NC}"
 echo
 if ! [ -f .var/zenity ]; then
   echo "Do you have the command zenity? [Y/N]"

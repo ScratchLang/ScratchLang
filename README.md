@@ -300,7 +300,7 @@ pen|change pen size by () <br />
 pen|set pen size to () <br />
 
 # Decompiler V1 Blocks
-V1 Is no longer being programmed. Please use the latest version of the decompiler.
+V1 is officialy deprecated. Please use the latest version of the decompiler.
 ## Vanilla Scratch Blocks
 ### Added blocks
 25/90 Stage Blocks + Pen | 27.78% Done <br />
@@ -495,7 +495,7 @@ The decompiler is not complete yet, which means stuff like that may happen.
 ## Decompiler takes a really long time to indent
 Your .ss1 file is probably big.
 # Bugs
-## V1 Decomp Bugs (This version is no longer being programmed.)
+## V1 Decomp Bugs (This version is deprecated.)
 Loads broadcasts even if there are none. (Try decompiling decompilertest.sb3 which is in the resources folder.)
 ## V2 Decomp Bugs
 None known yet, I think.
