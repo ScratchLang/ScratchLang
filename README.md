@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.7a**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.71a**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -504,6 +504,8 @@ None known yet, I think.
 
 # Devlog
 Format: MM.DD.YY - VERSION
+## 10.11.22 -0.6.71a
+* Nothing major, forgot what I added.
 ## 10.10.22 - 0.6.7a
 * Added a Devlog :)
 * added if/else blocks and not operator

@@ -128,7 +128,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       fi
     fi
   }
-  nq() { #main while loop
+  nq() { #main while loop (go to the next quotation in the json)
     b=0
     while :; do   #infinite loop
       i           #change i by 1
@@ -144,13 +144,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   i-() { #change i by -1
     ((i--))
   }
-  start() {
+  start() { #go to the last quotation in "parent" or if the thing after it is not null, then go to the last quotation in that.
     nq
     nq
     i
     i
     b=0
-    getchar -\"
+    getchar -\" 
     if ! [ $b == 1 ]; then
       if [ h$1 == h ]; then
         next="fin" #if next equals null, then set the variable next to fin
@@ -195,7 +195,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
     fi
   }
-  start2() {
+  start2() { #does the same thing as above with a few changes
     nq
     nq
     i
@@ -251,7 +251,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   ca=()
   ops=()
   addop() { #function to decomp operators
-    if [ $1 == operator_equals ]; then
+    if [ $1 == operator_equals ]; then #<() = ()> block
       start2
       nq
       nq
@@ -282,7 +282,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         o2+=$char
       done
       addt+="<(\"$o1\") = (\"$o2\")>"
-    elif [ $1 == operator_gt ]; then
+    elif [ $1 == operator_gt ]; then #<() > ()> block
       start2
       nq
       nq
@@ -313,7 +313,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         o2+=$char
       done
       addt+="<(\"$o1\") > (\"$o2\")>"
-    elif [ $1 == operator_lt ]; then
+    elif [ $1 == operator_lt ]; then #<() < ()> block
       start2
       nq
       nq
@@ -344,7 +344,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         o2+=$char
       done
       addt+="<(\"$o1\") < (\"$o2\")>"
-    elif [ $1 == operator_and ]; then
+    elif [ $1 == operator_and ]; then #<<> and <>> block
       start2
       nq
       nq
@@ -687,7 +687,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       else
         addt+="<<> and <>>"
       fi
-    elif [ $1 == operator_or ]; then
+    elif [ $1 == operator_or ]; then #<<> or <>> block
       start2
       nq
       nq
@@ -1030,7 +1030,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       else
         addt+="<<> or <>>"
       fi
-    elif [ $1 == operator_not ]; then
+    elif [ $1 == operator_not ]; then #<not <>> block
       start2
       nq
       nq

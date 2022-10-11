@@ -179,9 +179,17 @@ elif [ h$1 == h--help ]; then #if you input argument -help then you get help com
   echo "  -4                Decompile a project"
   echo "  -5                Export a project"
   echo "  -6                Import a project"
+  echo "  --debug [FILE]    Debug a ScratchScript file"
   echo "  --help            Display this help message."
   echo "  install [PACKAGE] Install packages"
   echo "  update            Update the package list"
+elif [ h$1 == h--debug ]; then
+  if [ "h$2" == h ]; then
+    echo -e "${RED}Error: No file provided for debug.${NC}"
+  else
+    chmod 755 debug.sh
+    ./debug.sh $2
+  fi
 else
   logo="
 ╭━━━╮╱╱╱╱╱╱╱╭╮╱╱╱╭╮╱╭╮╱╱╱╱╱╱╱╱╱╱╱╱╱╭━┳━╮
