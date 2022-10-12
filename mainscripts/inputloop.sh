@@ -94,12 +94,23 @@ if [ h$input == h1 ]; then
   echo
   echo "Name your project. Keep in mind that it cannot be empty or it will not be created properly." #Name you project
   read name
-  if [ h$name == h ]; then
+  cd ../
+  if [ "h$name" == h ]; then
     echo -e "${RED}Error: Project name empty.${NC}"
     exit
+  elif [ -d projects/$name ]; then
+    echo "Project $name already exists. Replace? [Y/N]"
+    read -sn 1 yessor
+    if [ h$yessor == hy ] || [ h$yessor == hY ]; then
+      rm -rf projects/$name
+    elif [ h$yessor == hn ] || [ h$yessor == hN ]; then
+      exit
+    else
+      echo -e "${RED}Error: $yessor is not an input.${NC}"
+      exit
+    fi
   fi
   echo "You named your project $name. If you want to rename it, use the File Explorer."
-  cd ../
   if ! [ -d projects ]; then
     mkdir projects
   fi
@@ -115,13 +126,13 @@ if [ h$input == h1 ]; then
   cd ../
   cp resources/cd21514d0531fdffb22204e0ec5ed84a.svg projects/$name/Stage/assets #Copy blank background svg to Stage/assets
   cd projects/$name/Stage
-  echo >>$name.ss \#There should be no empty lines. #create .ss file
-  echo >>$name.ss ss
+  echo >>project.ss1 \#There should be no empty lines. #create .ss file
+  echo >>project.ss1 ss
   cd ../
   mkdir Sprite1 #create sprite 1
   cd Sprite1
-  echo >>$name.ss \#There should be no empty lines.
-  echo >>$name.ss ss
+  echo >>project.ss1 \#There should be no empty lines.
+  echo >>project.ss1 ss
   mkdir assets
   cd ../
   cd ../
