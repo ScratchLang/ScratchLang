@@ -2082,8 +2082,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         echo -e "${RED}Ended if.${NC}"
       fi
     elif [ $1 == control_if_else ]; then #if <> {} else {}  block
-      ncfs=$i
-      cbt=1
+      local ncfs=$i
+      local cbt=1
       start
       ((wew++))
       dte "1 $next"
@@ -2106,7 +2106,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo -e "${RED}Starting if/else.${NC}"
       echo
       if [ $word == CONDITION ]; then
-        v=$i
+        local v=$i
         b=0
         while :; do
           i
@@ -2122,7 +2122,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           i=$v
           nq
           b=0
-          con=
+          local con=
           while :; do
             i
             getchar -\"
@@ -2238,9 +2238,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           word+=$char
         done
       fi
-      previ3=$i
+      local previ3=$i
       if [ "$word" == "SUBSTACK" ]; then
-        previ=$i
+        local previ=$i
         b=0
         while :; do
           i
@@ -2265,7 +2265,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             varname+=$char
           done
-          tt="$varname"
+          local tt="$varname"
           dte "s1 $tt"
           i=-1
           while :; do
@@ -2335,7 +2335,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                   break
                 fi
                 dte "s1 $tt"
-                tt="$next"
+                local tt="$next"
                 dte "s1 $tt"
               else
                 i=$(expr $i + 10)
@@ -2352,7 +2352,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       else
         if [ "$word" == "SUBSTACK2" ]; then
           dte "Got Here"
-          previ=$i
+          local previ=$i
           b=0
           while :; do
             ((i++))
@@ -2374,7 +2374,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           done
           dte "$word"
           if [ "$word" == "SUBSTACK" ]; then
-            previ2=$i
+            local previ2=$i
             b=0
             while :; do
               i
@@ -2399,7 +2399,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                 fi
                 varname+=$char
               done
-              tt="$varname"
+              local tt="$varname"
               dte "s1 $tt"
               i=-1
               while :; do
@@ -2469,7 +2469,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                       break
                     fi
                     dte "s1 $tt"
-                    tt="$next"
+                    local tt="$next"
                     dte "s1 $tt"
                   else
                     i=$(expr $i + 10)
@@ -2539,7 +2539,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       fi
       dte "s3 $word"
       if [ "$word" == "SUBSTACK2" ]; then
-        previ=$i
+        local previ=$i
         b=0
         while :; do
           i
@@ -2564,7 +2564,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             varname+=$char
           done
-          tt="$varname"
+          local tt="$varname"
           dte "s3 $tt"
           i=-1
           while :; do
@@ -2634,7 +2634,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                   break
                 fi
                 dte "s3 $tt"
-                tt="$next"
+                local tt="$next"
                 dte "s3 $tt"
               else
                 i=$(expr $i + 10)
@@ -2646,6 +2646,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           echo
           echo >>$dcd/project.ss1 "}"
           echo "}"
+          echo -e "${RED}Ended if/else.${NC}"
         fi
         i=$previ
       else

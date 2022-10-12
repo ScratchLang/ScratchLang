@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.72a**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.8a**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -7,7 +7,7 @@ This is for people who want to use Scratch like other programming languages.
 
 Also, a devlog is at the bottom.
 # Latest big updates
-If statements working perfectly, and if/else statements added. If/elses in if/elses only seem to work on the if section, and not the else section.
+If statements working perfectly, and if/else statements added. If/elses in if/elses work good now.
 
 Also, operators in operators don't work as well.
 
@@ -116,8 +116,8 @@ list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma
 # Decompiler V2 Blocks
 ## Vanilla Scratch Blocks
 ### Added blocks
-34/90 Stage Blocks + Pen | 37.78% Done <br />
-34/141 Every Block + Pen | 24.11% Done <br />
+36/90 Stage Blocks + Pen | 40.00% Done <br />
+36/141 Every Block + Pen | 25.53% Done <br />
 
 Write every block in the order they are defined. <br />
 
@@ -126,12 +126,7 @@ Also, the compiler can't tell the difference between a string and a boolean/vari
 
 Brackets means that there cannot be a variable in there. It's either a defined object or an object from a set list. <br />
 ### Buggy Blocks
-if \<INPUT\> then { <br />
-
-}  <br />
-else { <br />
-
-} - (If \<INPUT\> is true, run the stuff above the else. If it is not, run the stuff below the else.) <br />
+None yet.
 ### Stable blocks
 var=string - (Define [or set] a variable) <br />
 **list=item1,item2,item3,etc - (Overwrites anything in a list to the items listed. No spaces, and for an empty list, just add a comma after the equal sign.)** <br />
@@ -178,6 +173,11 @@ if \<INPUT\> then { <br />
 <<1> and <2>> - (Reports true if both statement 1 and 2 report true.) <br />
 **<<1> or <2>> - (Reports true if either statement report true.)** <br />
 <not <1>> - (Reports true if statement 1 is false.) <br />
+**if \<INPUT\> then {** <br />
+
+**} else {** <br />
+
+**} - (If \<INPUT\> is true, run the stuff above the else. If it is not, run the stuff below the else.)** <br />
 
 ### Blocks to Add
 
