@@ -3,42 +3,42 @@ RED='\033[0;31m'                                      #red
 NC='\033[0m'                                          #Reset text color.
 P='\033[0;35m'                                        #Purple
 basedir=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')") #get the base directory of start.sh
-cd $basedir
+cd $basedir                                           #enter the base directory path/ScratchLang/mainscripts
 #start initializing packagess
-if [ -f var/pe ]; then
-  if ! [ "h$1" == "hnope" ]; then
+if [ -f var/pe ]; then            #if a file called pe exists
+  if ! [ "h$1" == "hnope" ]; then #if it is not being ran from another file
     echo "Initializing packages..."
-    if [ -f plist ]; then
+    if [ -f plist ]; then #if a file named plist already exists, remove it
       rm plist
     fi
-    cd ../
-    cd packages
+    cd ../                      #go to base directory of current dir path/ScratchLang
+    cd packages                 #go into the packages directory /path/ScratchLang/packages
     dcount=$(ls -1d */ | wc -l) #get number of directories
-    if [ -f dirlist ]; then
+    if [ -f dirlist ]; then     #if a file named dirlist already exists, remove it
       rm dirlist
     fi
-    echo -e "$(ls -1d */)" >>dirlist
-    for ((i = 1; i <= $dcount; i++)); do
-      line=$(sed $i'!d' dirlist)
-      if ! [ "$line" == "package-base/" ]; then
-        pname="$line"
-        cd "$line"
+    echo -e "$(ls -1d */)" >>dirlist            #echo all directories to the file dirlist
+    for ((i = 1; i <= $dcount; i++)); do        #repeat for how many directories there are
+      line=$(sed $i'!d' dirlist)                #get line $i of dirlist
+      if ! [ "$line" == "package-base/" ]; then #do this if the current line does not equal package-base/
+        pname="$line"                           #set the name of the directory to the line $i of dirname
+        cd "$line"                              #enter the package directory path/ScratchLang/packages/PACKAGEDIR
         lcount=
-        nee=$(sed -n '$=' intergrations)
-        for ((k = 1; k <= $nee; k++)); do
-          line=$(sed $k'!d' intergrations)
+        nee=$(sed -n '$=' intergrations)   #set this variable to the line count of the file intergrations
+        for ((k = 1; k <= $nee; k++)); do  #repeat for the line count of the file intergrations
+          line=$(sed $k'!d' intergrations) #set the variable to line $k of the file intergrations
           b=0
           name=
-          while :; do
-            ((b++))
-            l=${line:$(expr $b - 1):1}
+          while :; do                  #repeat until char $l of $line equals a space
+            ((b++))                    #change $b by 1
+            l=${line:$(expr $b - 1):1} #get the ${b}nth char from $line
             if [ "$l" == " " ]; then
               break
             fi
-            name+=$l
+            name+=$l #add the value of $l to the variable $name
           done
-          echo >>$(dirname $(dirname $PWD))/mainscripts/plist "$name"
-          echo >>$(dirname $(dirname $PWD))/mainscripts/plist "${pname}package.sh"
+          echo >>$(dirname $(dirname $PWD))/mainscripts/plist "$name"              #echo the var $name to the file plist
+          echo >>$(dirname $(dirname $PWD))/mainscripts/plist "${pname}package.sh" #echo more stuff to the file plist
           name=
           while :; do
             ((b++))
@@ -49,17 +49,17 @@ if [ -f var/pe ]; then
             name+=$l
           done
           echo >>$(dirname $(dirname $PWD))/mainscripts/plist "$name"
-          cd ../
+          cd ../ #go to base directory path/ScratchLang/packages
         done
       fi
     done
-    rm dirlist
-    cd ../
-    cd mainscripts
+    rm dirlist     #remove the dirlist file
+    cd ../         #go to base directory path/ScratchLang
+    cd mainscripts #go to path/ScratchLang/mainscripts
   fi
   #end initializing packages
   #every package has to start after this line if the package edits start.sh
-  getnextp() {
+  getnextp() { #package intergration scripts, don't worry about these
     res=0
     small=$1
     execute=
@@ -107,17 +107,17 @@ ver=$(sed '1!d' $(dirname $PWD)/version) #get local version
 if ! [ -f var/asked ]; then              #this is in place so it only asks the below question once, ever.
   if ! [ -f var/vc ]; then               #I don't know why this is here anymore
     echo "Would you like ScratchLang to check its version every time you start it? [Y/N]"
-    read -sn 1 ff
-    if [ h$ff == hy ] || [ h$ff == hY ]; then
+    read -sn 1 ff                                    #read user input
+    if [ h$ff == hy ] || [ h$ff == hY ]; then        #if y is input
       echo >>var/vc "Don't remove this file please." #when start.sh detects this file, it will check for a new version.
     fi
-    echo >>var/asked "Don't remove."
+    echo >>var/asked "Don't remove this file please."
   fi
 fi
 if [ -f var/vc ]; then
-  if ! [ h$1 == hnope ]; then
+  if ! [ h$1 == hnope ]; then #start checking version
     echo "Checking version..."
-    if [ -f version ]; then
+    if [ -f version ]; then #if the version file already exists, remove it
       rm version
     fi
     wget -q https://raw.githubusercontent.com/0K9090/ScratchLang/main/version #get the version file from github
@@ -127,16 +127,16 @@ if [ -f var/vc ]; then
     fi
     if [ $utd == 0 ]; then #if utd = 0 then update
       echo "Your version of ScratchLang ($ver) is outdated. The current version is $(sed '1!d' version). Would you like to update? [Y/N]"
-      read -sn 1 hh
+      read -sn 1 hh #get user input
       if [ h$hh == hy ] || [ h$hh == hY ]; then
-        git pull origin main
+        git pull origin main #pull the latest version from github
       fi
       exit
     fi
     rm version
   fi
 fi
-if [ h$1 == hinstall ]; then #install packages
+if [ h$1 == hinstall ]; then #install packages, don't worry about this
   cd ../
   cd packages
   if [ -f packages.list ]; then
@@ -163,14 +163,14 @@ if [ h$1 == hinstall ]; then #install packages
   else
     echo -e "${RED}Error: No package list. Run './start.sh update' or 'scratchlang update.'${NC}"
   fi
-elif [ h$1 == hupdate ]; then
+elif [ h$1 == hupdate ]; then #update package list
   cd ../
   cd packages
   if [ -f packages.list ]; then
     rm packages.list
   fi
-  wget -q https://raw.githubusercontent.com/0K9090/sl-packages/main/packages.list
-elif [ h$1 == h--help ]; then #if you input argument -help then you get help commands
+  wget -q https://raw.githubusercontent.com/0K9090/sl-packages/main/packages.list #download from github
+elif [ h$1 == h--help ]; then                                                     #if you input argument -help then you get help commands
   echo "scratchlang (or ./start.sh if you haven't created the scratchlang command)"
   echo
   echo "  -1                Create a project"
@@ -183,7 +183,7 @@ elif [ h$1 == h--help ]; then #if you input argument -help then you get help com
   echo "  --help            Display this help message."
   echo "  install [PACKAGE] Install packages"
   echo "  update            Update the package list"
-elif [ h$1 == h--debug ]; then
+elif [ h$1 == h--debug ]; then #debug a ScratchScript file, not working yet.
   if [ "h$2" == h ]; then
     echo -e "${RED}Error: No file provided for debug.${NC}"
   else
