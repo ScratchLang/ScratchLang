@@ -62,7 +62,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   if ! [ -f var/zenity ]; then
     echo >>var/zenity
   fi
-  echo "Select the project directory. (Not the directory called \"Projects\", your project dir inside the directory Projects.)"
+  echo "Select your project folder."
   echo
   sleep 2
   file=$(zenity -directory -file-selection)
