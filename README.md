@@ -506,7 +506,7 @@ None known yet, I think.
 # Devlog
 Format: MM.DD.YY - VERSION
 ## 10.12.22 - 0.6.72a
-* If/elses inside if/elses sort-of work.
+* If/elses inside if/elses work perfectly.
 ## 10.11.22 - 0.6.71a
 * Nothing major, forgot what I added.
 ## 10.10.22 - 0.6.7a
