@@ -54,7 +54,7 @@ if [ h$1 == h ]; then
   echo "4. Decompile a .sb3 file."
   echo "5. Export project."
   echo "6. Import project."
-  echo "7. Are options 3 and 5 not working? Input 5 to install dependencies."
+  echo "7. Are options 3 and 4 not working? Input 7 to install dependencies."
   echo "8. Create scratchlang command."
   echo "9. Remove scratchlang command."
   echo "A. Disable Developer Mode."
@@ -226,6 +226,7 @@ elif [ h$input == h7 ]; then
   read -sn 1 con
   if [ h$con == hY ] || [ h$con == hy ]; then #Start installing dependencies for mingw
     echo
+    pacman -S --noconfirm unzip
     bit=$(getconf LONG_BIT) #get bit number (32, 64) of PC
     dir=$PWD
     cd

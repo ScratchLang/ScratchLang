@@ -223,6 +223,7 @@ elif [ h$input == h7 ]; then
   read -sn 1 con
   if [ h$con == hY ] || [ h$con == hy ]; then #Start installing dependencies for mingw
     echo
+    pacman -S --noconfirm unzip
     bit=$(getconf LONG_BIT) #get bit number (32, 64) of PC
     dir=$PWD
     cd

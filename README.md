@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.8a**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.81a**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -80,6 +80,7 @@ You also need these.
 ```
 pacman -S git
 pacman -S bc
+pacman -S unzip
 ```
 ## Linux
 You need the command `zenity` to run the .sh.
@@ -90,6 +91,7 @@ You also need these.
 ```
 sudo apt-get install -y git
 sudo apt-get install -y bc
+sudo apt-get install unzip
 ```
 ## Other Linux Distros
 For any other distros, search it up. I'm not gonna list the commands for every distro.
@@ -116,8 +118,8 @@ list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma
 # Decompiler V2 Blocks
 ## Vanilla Scratch Blocks
 ### Added blocks
-36/90 Stage Blocks + Pen | 40.00% Done <br />
-36/141 Every Block + Pen | 25.53% Done <br />
+37/90 Stage Blocks + Pen | 41.11% Done <br />
+37/141 Every Block + Pen | 26.24% Done <br />
 
 Write every block in the order they are defined. <br />
 
@@ -178,6 +180,11 @@ if \<INPUT\> then { <br />
 **} else {** <br />
 
 **} - (If \<INPUT\> is true, run the stuff above the else. If it is not, run the stuff below the else.)** <br />
+wait until \<INPUT\> - (Pause the script until \<INPUT\> is true.) <br />
+
+# Limitations
+The decompiler cannot decompile boolean blocks ( <> blocks) which are inside other ones.
+You can't have variables or any round block as inputs yet.
 
 ### Blocks to Add
 
@@ -214,7 +221,6 @@ go [] () layers <br />
 (costume []) <br />
 (size) <br />
 
-wait until <> <br />
 repeat until <> { <br />
 
 } <br />
@@ -499,13 +505,15 @@ Your .ss1 file is probably big.
 ## V1 Decomp Bugs (This version is deprecated.)
 Loads broadcasts even if there are none. (Try decompiling decompilertest.sb3 which is in the resources folder.)
 ## V2 Decomp Bugs
-None known yet, I think.
+Sometimes (in the project.json) when decompiling a "switch backdrop to" block, the backdrop name is replaced with a number, causing some bugs.
 
 ![de20ca3a12e96a8b00a2063151b1ad84](https://user-images.githubusercontent.com/78574005/192591165-e642bc95-7625-487d-aeba-c74d8d85eb9d.png)
 
 # Devlog
 Format: MM.DD.YY - VERSION
-## 10.12.22 - 0.6.72a
+## 10.13.22 - 0.6.81a
+* wait until <> block added.
+## 10.12.22 - 0.6.8a
 * If/elses inside if/elses work perfectly.
 ## 10.11.22 - 0.6.71a
 * Nothing major, forgot what I added.
