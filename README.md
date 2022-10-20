@@ -91,7 +91,7 @@ You also need these.
 ```
 sudo apt-get install -y git
 sudo apt-get install -y bc
-sudo apt-get install unzip
+sudo apt-get install -y unzip
 ```
 ## Other Linux Distros
 For any other distros, search it up. I'm not gonna list the commands for every distro.
@@ -106,7 +106,7 @@ Program the decompiler
 ### wendiner
 I don't know what they're doing
 ### redstone-scratch
-make it in python ig
+They quit :/ Goodbye
 
 # ScratchLang Language
 ScratchLang's language is called ScratchScript.
@@ -118,8 +118,8 @@ list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma
 # Decompiler V2 Blocks
 ## Vanilla Scratch Blocks
 ### Added blocks
-37/90 Stage Blocks + Pen | 41.11% Done <br />
-37/141 Every Block + Pen | 26.24% Done <br />
+39/90 Stage Blocks + Pen | 43.33% Done <br />
+39/141 Every Block + Pen | 27.66% Done <br />
 
 Write every block in the order they are defined. <br />
 
@@ -175,12 +175,22 @@ if \<INPUT\> then { <br />
 <<1> and <2>> - (Reports true if both statement 1 and 2 report true.) <br />
 **<<1> or <2>> - (Reports true if either statement report true.)** <br />
 <not <1>> - (Reports true if statement 1 is false.) <br />
+
 **if \<INPUT\> then {** <br />
 
 **} else {** <br />
 
 **} - (If \<INPUT\> is true, run the stuff above the else. If it is not, run the stuff below the else.)** <br />
 wait until \<INPUT\> - (Pause the script until \<INPUT\> is true.) <br />
+
+
+**repeat until \<INPUT\> {** <br />
+
+**} - (Repeat everything in the braces until \<INPUT\> is true.)** <br />
+
+while \<INPUT\> { <br />
+
+} - (Repeat everything in the braces while \<INPUT\> is true. Stop when it is false.) <br />
 
 # Limitations
 The decompiler cannot decompile boolean blocks ( <> blocks) which are inside other ones.
@@ -220,14 +230,6 @@ go to [] layer <br />
 go [] () layers <br />
 (costume []) <br />
 (size) <br />
-
-repeat until <> { <br />
-
-} <br />
-
-while <> { <br />
-
-} <br />
 
 for each [] in () { <br />
 
@@ -503,14 +505,18 @@ The decompiler is not complete yet, which means stuff like that may happen.
 Your .ss1 file is probably big.
 # Bugs
 ## V1 Decomp Bugs (This version is deprecated.)
-Loads broadcasts even if there are none. (Try decompiling decompilertest.sb3 which is in the resources folder.)
+* Loads broadcasts even if there are none. (Try decompiling decompilertest.sb3 which is in the resources folder.)
 ## V2 Decomp Bugs
-Sometimes (in the project.json) when decompiling a "switch backdrop to" block, the backdrop name is replaced with a number, causing some bugs.
+* Sometimes (in the project.json) when decompiling a "switch backdrop to" block, the backdrop name is replaced with a number, causing some bugs.
+* Sometimes blocks don't compile at the right place if it's after a c-block.
 
-![de20ca3a12e96a8b00a2063151b1ad84](https://user-images.githubusercontent.com/78574005/192591165-e642bc95-7625-487d-aeba-c74d8d85eb9d.png)
+![sl.png](sl.png)
 
 # Devlog
 Format: MM.DD.YY - VERSION
+## 10.19.22 - 0.6.82a
+* repeat until block added.
+* while block added.
 ## 10.13.22 - 0.6.81a
 * wait until <> block added.
 ## 10.12.22 - 0.6.8a
