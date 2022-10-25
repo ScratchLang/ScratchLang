@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.81a**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.83a**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -514,6 +514,8 @@ Your .ss1 file is probably big.
 
 # Devlog
 Format: MM.DD.YY - VERSION
+## 10.24.22 - 0.6.83a
+* Using shellcheck, I optimized the scripts to go faster.
 ## 10.19.22 - 0.6.82a
 * repeat until block added.
 * while block added.

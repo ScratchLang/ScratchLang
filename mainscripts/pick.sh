@@ -9,15 +9,15 @@ if [ -f var/pe ]; then
       if [ "$res" -gt "$(sed -n '$=' plist)" ]; then
         break
       fi
-      reser=$(sed $res'!d' plist)
+      reser=$(sed "$res"'!d' plist)
       if [ "$reser" == "$0" ]; then
         ((res++))
         ((res++))
-        reser=$(sed $res'!d' plist)
+        reser=$(sed "$res"'!d' plist)
         if [ "$reser" -lt "$small" ]; then
           small="$reser"
           ((res--))
-          reser=$(sed $res'!d' plist)
+          reser=$(sed "$res"'!d' plist)
           execute=$reser
           ((res++))
         fi
@@ -31,18 +31,18 @@ if [ -f var/pe ]; then
     if [ -d var ]; then
       if [[ "$(cat plist)" == *"$0"* ]]; then
         if [ "$don" == 1 ]; then
-          getnextp $1
+          getnextp "$1"
         fi
         if [ "${BASH_LINENO[0]}" == "$small" ]; then
           cd ../
-          ./packages/$execute
-          cd mainscripts
+          ./packages/"$execute"
+          cd mainscripts || exit
           don=1
         fi
       fi
     fi
   }
-  trap "step $npl" DEBUG
+  trap 'step $npl' DEBUG
 fi
 RED='\033[0;31m' #red
 NC='\033[0m'     #reset color
@@ -50,7 +50,7 @@ echo
 echo "1. Pick one of the included decompilers."
 echo "2. Choose your own decompiler."
 echo "3. Reset to default. (decompiler.v2.ss1.sh)"
-read -sn 1 inf
+read -rsn 1 inf
 corr=0
 case $inf in
 1)
@@ -59,7 +59,7 @@ case $inf in
   echo "1. decompiler.v1.ss1.sh - First version of the decompiler. No longer being programmed. ScratchScript1 language."
   echo
   echo "2. decompiler.v2.ss1.sh - Latest and recommended version of the decompiler. ScratchScript1 language."
-  read -sn 1 nfi
+  read -rsn 1 nfi
   corr=0
   case $nfi in
   1)
@@ -85,7 +85,7 @@ case $inf in
   if [ -f var/ds ]; then
     rm var/ds
   fi
-  echo >>var/ds $(zenity -file-selection -file-filter 'Chose your own decompiler.')
+  zenity -file-selection -file-filter 'Chose your own decompiler.' >>var/ds
   ;;
 3)
   corr=1

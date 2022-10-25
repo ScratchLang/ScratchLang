@@ -23,15 +23,15 @@ if [ -f var/pe ]; then
       if [ "$res" -gt "$(sed -n '$=' plist)" ]; then
         break
       fi
-      reser=$(sed $res'!d' plist)
+      reser=$(sed "$res"'!d' plist)
       if [ "$reser" == "$0" ]; then
         ((res++))
         ((res++))
-        reser=$(sed $res'!d' plist)
+        reser=$(sed "$res"'!d' plist)
         if [ "$reser" -lt "$small" ]; then
           small="$reser"
           ((res--))
-          reser=$(sed $res'!d' plist)
+          reser=$(sed "$res"'!d' plist)
           execute=$reser
           ((res++))
         fi
@@ -45,18 +45,18 @@ if [ -f var/pe ]; then
     if [ -d var ]; then
       if [[ "$(cat plist)" == *"$0"* ]]; then
         if [ "$don" == 1 ]; then
-          getnextp $1
+          getnextp "$1"
         fi
         if [ "${BASH_LINENO[0]}" == "$small" ]; then
           cd ../
-          ./packages/$execute
-          cd mainscripts
+          ./packages/"$execute"
+          cd mainscripts || exit
           don=1
         fi
       fi
     fi
   }
-  trap "step $npl" DEBUG
+  trap 'step $npl' DEBUG
 fi
 echo
 RED='\033[0;31m'
@@ -72,7 +72,7 @@ echo "Remember, both the compiler and decompiler don't work yet. The decompiler 
 echo
 if ! [ -f var/zenity ]; then
   echo "Do you have the command zenity? [Y/N]"
-  read -sn 1 input3
+  read -rsn 1 input3
 else
   input3=y
 fi
@@ -90,21 +90,22 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     exit
   fi
   echo -e "Name of project? ${RED}Keep in mind that it cannot be empty or it will not be created properly.${NC}" #Name your project
-  read name
+  read -r name
   echo
-  if [ h$name == h ]; then
+  if [ h"$name" == h ]; then
     echo -e "${RED}Error: Project name cannot be empty.${NC}"
+    exit
   fi
   cd ../
   if ! [ -d projects ]; then
     mkdir projects #Create projects directory if it doesn't exist
   fi
-  cd projects
-  if [ -d $name ]; then
+  cd projects || exit
+  if [ -d "$name" ]; then
     echo "Project $name already exists. Replace? [Y/N]" #If a project named the same thing you named it, then replace it
-    read -sn 1 anss
-    if [ h$anss == hY ] || [ h$anss == hy ]; then
-      rm -rf $name
+    read -rsn 1 anss
+    if [ h"$anss" == hY ] || [ h"$anss" == hy ]; then
+      rm -rf "$name"
     else
       exit
     fi
@@ -113,31 +114,31 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   echo "Decompiling project..."
   echo
   sleep 1
-  mkdir $name #Create a directory named the project name
-  cd $name
+  mkdir "$name" #Create a directory named the project name
+  cd "$name" || exit
   echo >>.maindir "Please don't remove this file." #This tells the compiler that it's in the right directory.
   echo "Extracting .sb3..."
   echo
-  unzip $file #unzip the .sb3
+  unzip "$file" #unzip the .sb3
   echo
   echo >>.maindir "Please don't remove this file."
   mkdir Stage
-  cd Stage
+  cd Stage || exit
   mkdir assets #Create the assets folder
   #Starting decomp scripts for stage
   cd ../
   jsonfile=$(cat project.json) #Get the project.json in a variable.
   i=55
   getchar() {
-    if ! [ -$2 == -++ ]; then
+    if ! [ -"$2" == -++ ]; then
       char=${jsonfile:$i:1} #get char index i from $jsonfile. the first char is 0, and it goes from left to right.
-      if [ -$char == "$1" ]; then
+      if [ -"$char" == "$1" ]; then
         b=1 #if the char index from i equals $1, then set b to 1.
       fi
     else
-      if ! [ -$char == "$1" ]; then
-        char=${jsonfile:$(expr $i + 1):1}
-        if [ -$char == "$1" ]; then
+      if ! [ -"$char" == "$1" ]; then
+        char=${jsonfile:$((i + 1)):1}
+        if [ -"$char" == "$1" ]; then
           b=1 #if the char index from i + 1 equals $1, then set b to 1. Don't use this one.
         fi
         char=${jsonfile:$i:1}
@@ -170,7 +171,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     b=0
     getchar -\"
     if ! [ $b == 1 ]; then
-      if [ h$1 == h ]; then
+      if [ h"$1" == h ]; then
         next="fin" #if next equals null, then set the variable next to fin
       fi
     else
@@ -184,7 +185,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      if [ h$1 == h ]; then
+      if [ h"$1" == h ]; then
         next=$varname #if next is not null, set next to whatever it is
         dte "next: $next"
       fi
@@ -196,10 +197,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     b=0
     getchar -\"
     if ! [ $b == 1 ]; then #if parent equals null
-      if [ h$1 == h ]; then
+      if [ h"$1" == h ]; then
         echo >>$dcd/project.ss1 "\nscript"
         echo
-        parent=1
       fi
     else
       b=0
@@ -223,7 +223,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     b=0
     getchar -\"
     if ! [ $b == 1 ]; then
-      if [ h$1 == h ]; then
+      if [ h"$1" == h ]; then
         con="fin" #if next equals null, then set the variable next to fin
       fi
     else
@@ -237,7 +237,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      if [ h$1 == h ]; then
+      if [ h"$1" == h ]; then
         con=$varname #if next is not null, set next to whatever it is
       fi
     fi
@@ -248,10 +248,9 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     b=0
     getchar -\"
     if ! [ $b == 1 ]; then #if parent equals null
-      if [ h$1 == h ]; then
+      if [ h"$1" == h ]; then
         echo >>$dcd/project.ss1 "\nscript"
         echo
-        parent=1
       fi
     else
       b=0
@@ -271,11 +270,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   wew=0
   ci=()
   ca=()
-  ops=()
   nst=()
   addop() { #function to decomp operators
     dte "addop $1"
-    if [ $1 == operator_equals ]; then #<() = ()> block
+    if [ "$1" == operator_equals ]; then #<() = ()> block
       start2
       nq
       nq
@@ -306,7 +304,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         o2+=$char
       done
       addt+="<(\"$o1\") = (\"$o2\")>"
-    elif [ $1 == operator_gt ]; then #<() > ()> block
+    elif [ "$1" == operator_gt ]; then #<() > ()> block
       start2
       nq
       nq
@@ -337,7 +335,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         o2+=$char
       done
       addt+="<(\"$o1\") > (\"$o2\")>"
-    elif [ $1 == operator_lt ]; then #<() < ()> block
+    elif [ "$1" == operator_lt ]; then #<() < ()> block
       start2
       nq
       nq
@@ -368,7 +366,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         o2+=$char
       done
       addt+="<(\"$o1\") < (\"$o2\")>"
-    elif [ $1 == operator_and ]; then #<<> and <>> block
+    elif [ "$1" == operator_and ]; then #<<> and <>> block
       start2
       nq
       nq
@@ -409,7 +407,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             word+=$char
           done
-          if [ $word == "OPERAND1" ] || [ "$word" == "OPERAND2" ]; then
+          if [ "$word" == "OPERAND1" ] || [ "$word" == "OPERAND2" ]; then
             b=0
             vi=$i
             while :; do
@@ -485,10 +483,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                     fi
                     word+=$char
                   done
-                  if [ "$word" == $op1 ]; then
+                  if [ "$word" == "$op1" ]; then
                     break
                   fi
-                  i=$(expr $i + 10)
+                  i=$((i + 10))
                 fi
               done
               nq
@@ -504,7 +502,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                 fi
                 word+=$char
               done
-              addop $word
+              addop "$word"
               addt+=">"
             fi
           else
@@ -572,10 +570,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                 fi
                 word+=$char
               done
-              if [ "$word" == $op1 ]; then
+              if [ "$word" == "$op1" ]; then
                 break
               fi
-              i=$(expr $i + 10)
+              i=$((i + 10))
             fi
           done
           nq
@@ -591,7 +589,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             word+=$char
           done
-          addop $word
+          addop "$word"
           i=$wy
           addt+=" and "
           nq
@@ -682,10 +680,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                     fi
                     word+=$char
                   done
-                  if [ "$word" == $op2 ]; then
+                  if [ "$word" == "$op2" ]; then
                     break
                   fi
-                  i=$(expr $i + 10)
+                  i=$((i + 10))
                 fi
               done
               nq
@@ -701,7 +699,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                 fi
                 word+=$char
               done
-              addop $word
+              addop "$word"
               addt+=">"
             fi
           else
@@ -711,7 +709,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       else
         addt+="<<> and <>>"
       fi
-    elif [ $1 == operator_or ]; then #<<> or <>> block
+    elif [ "$1" == operator_or ]; then #<<> or <>> block
       start2
       nq
       nq
@@ -752,7 +750,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             word+=$char
           done
-          if [ $word == "OPERAND1" ] || [ "$word" == "OPERAND2" ]; then
+          if [ "$word" == "OPERAND1" ] || [ "$word" == "OPERAND2" ]; then
             b=0
             vi=$i
             while :; do
@@ -828,10 +826,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                     fi
                     word+=$char
                   done
-                  if [ "$word" == $op1 ]; then
+                  if [ "$word" == "$op1" ]; then
                     break
                   fi
-                  i=$(expr $i + 10)
+                  i=$((i + 10))
                 fi
               done
               nq
@@ -847,7 +845,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                 fi
                 word+=$char
               done
-              addop $word
+              addop "$word"
               addt+=">"
             fi
           else
@@ -915,10 +913,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                 fi
                 word+=$char
               done
-              if [ "$word" == $op1 ]; then
+              if [ "$word" == "$op1" ]; then
                 break
               fi
-              i=$(expr $i + 10)
+              i=$((i + 10))
             fi
           done
           nq
@@ -934,7 +932,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             word+=$char
           done
-          addop $word
+          addop "$word"
           i=$wy
           addt+=" or "
           nq
@@ -1025,10 +1023,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                     fi
                     word+=$char
                   done
-                  if [ "$word" == $op2 ]; then
+                  if [ "$word" == "$op2" ]; then
                     break
                   fi
-                  i=$(expr $i + 10)
+                  i=$((i + 10))
                 fi
               done
               nq
@@ -1044,7 +1042,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                 fi
                 word+=$char
               done
-              addop $word
+              addop "$word"
               addt+=">"
             fi
           else
@@ -1054,7 +1052,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       else
         addt+="<<> or <>>"
       fi
-    elif [ $1 == operator_not ]; then #<not <>> block
+    elif [ "$1" == operator_not ]; then #<not <>> block
       start2
       nq
       nq
@@ -1146,10 +1144,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                 fi
                 word+=$char
               done
-              if [ "$word" == $op1 ]; then
+              if [ "$word" == "$op1" ]; then
                 break
               fi
-              i=$(expr $i + 10)
+              i=$((i + 10))
             fi
           done
           nq
@@ -1165,7 +1163,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             word+=$char
           done
-          addop $word
+          addop "$word"
           i=$wy
           addt+=">"
           nq
@@ -1187,11 +1185,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   }
   addblock() {
     un=0
-    parent=0
     addt=
     #Comments explaining what the scripts do will be added soon.
     dte "addblock $1"
-    if [ $1 == event_broadcast ]; then #Broadcast block
+    if [ "$1" == event_broadcast ]; then #Broadcast block
       start
       nq
       nq
@@ -1210,7 +1207,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "broadcast [$varname]"
       echo -e "${RED}Added block:${NC} \"broadcast [$varname]\""
-    elif [ $1 == motion_movesteps ]; then #move () steps block
+    elif [ "$1" == motion_movesteps ]; then #move () steps block
       start
       nq
       nq
@@ -1229,7 +1226,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "move (\"$varname\") steps"
       echo -e "${RED}Added block:${NC} \"move (\"$varname\") steps\""
-    elif [ $1 == control_wait ]; then #wait () seconds block
+    elif [ "$1" == control_wait ]; then #wait () seconds block
       start
       nq
       nq
@@ -1248,7 +1245,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "wait (\"$varname\") seconds"
       echo -e "${RED}Added block:${NC} \"wait (\"$varname\") seconds\""
-    elif [ $1 == looks_switchbackdropto ]; then #switch backdrop to () block
+    elif [ "$1" == looks_switchbackdropto ]; then #switch backdrop to () block
       start
       nq
       nq
@@ -1296,7 +1293,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "switch backdrop to (\"$varname\")"
       echo -e "${RED}Added block:${NC} \"switch backdrop to (\"$varname\")\""
-    elif [ $1 == looks_switchbackdroptoandwait ]; then #switch backdrop to () and wait block
+    elif [ "$1" == looks_switchbackdroptoandwait ]; then #switch backdrop to () and wait block
       start
       nq
       nq
@@ -1344,11 +1341,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "switch backdrop to (\"$varname\") and wait"
       echo -e "${RED}Added block:${NC} \"switch backdrop to (\"$varname\") and wait\""
-    elif [ $1 == looks_nextbackdrop ]; then #next backdrop block
+    elif [ "$1" == looks_nextbackdrop ]; then #next backdrop block
       start
       echo >>$dcd/project.ss1 "next backdrop"
       echo -e "${RED}Added block:${NC} \"next backdrop\""
-    elif [ $1 == looks_changeeffectby ]; then #change [] effect by () block
+    elif [ "$1" == looks_changeeffectby ]; then #change [] effect by () block
       start
       nq
       nq
@@ -1382,7 +1379,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "change [$varname] effect by (\"$varvalue\")"
       echo -e "${RED}Added block:${NC} \"change [$varname] effect by (\"$varvalue\")\""
-    elif [ $1 == looks_backdropnumbername ]; then #(backdrop []) block
+    elif [ "$1" == looks_backdropnumbername ]; then #(backdrop []) block
       start
       nq
       nq
@@ -1403,7 +1400,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "(backdrop [$word])"
       echo -e "${RED}Added block:${NC} \"(backdrop [$word])\""
-    elif [ $1 == sound_playuntildone ]; then #play sound () until done block
+    elif [ "$1" == sound_playuntildone ]; then #play sound () until done block
       start
       nq
       nq
@@ -1451,7 +1448,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "play sound (\"$varname\") until done"
       echo -e "${RED}Added block:${NC} \"play sound (\"$varname\") until done\""
-    elif [ $1 == looks_seteffectto ]; then #set [] effect to () block
+    elif [ "$1" == looks_seteffectto ]; then #set [] effect to () block
       start
       nq
       nq
@@ -1485,7 +1482,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "set [$varname] effect to (\"$varvalue\")"
       echo -e "${RED}Added block:${NC} \"set [$varname] effect to (\"$varvalue\")\""
-    elif [ $1 == sound_play ]; then #start sound () block
+    elif [ "$1" == sound_play ]; then #start sound () block
       start
       nq
       nq
@@ -1533,11 +1530,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "start sound (\"$varname\")"
       echo -e "${RED}Added block:${NC} \"start sound (\"$varname\")\""
-    elif [ $1 == sound_stopallsounds ]; then #stop all sounds block
+    elif [ "$1" == sound_stopallsounds ]; then #stop all sounds block
       start
       echo >>$dcd/project.ss1 "stop all sounds"
       echo -e "${RED}Added block:${NC} \"stop all sounds\""
-    elif [ $1 == sound_changeeffectby ]; then #change [] effect by () block
+    elif [ "$1" == sound_changeeffectby ]; then #change [] effect by () block
       start
       nq
       nq
@@ -1571,7 +1568,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "change [$varname] effect by (\"$varvalue\")"
       echo -e "${RED}Added block:${NC} \"change [$varname] effect by (\"$varvalue\")\""
-    elif [ $1 == sound_seteffectto ]; then #set [] effect to () block
+    elif [ "$1" == sound_seteffectto ]; then #set [] effect to () block
       start
       nq
       nq
@@ -1605,11 +1602,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "set [$varname] effect to (\"$varvalue\")"
       echo -e "${RED}Added block:${NC} \"set [$varname] effect to (\"$varvalue\")\""
-    elif [ $1 == sound_cleareffects ]; then #clear sound effects block
+    elif [ "$1" == sound_cleareffects ]; then #clear sound effects block
       start
       echo >>$dcd/project.ss1 "clear sound effects"
       echo -e "${RED}Added block:${NC} \"clear sound effects\""
-    elif [ $1 == sound_changevolumeby ]; then #change volume by () block
+    elif [ "$1" == sound_changevolumeby ]; then #change volume by () block
       start
       nq
       nq
@@ -1628,15 +1625,15 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "change volume by (\"$varname\")"
       echo -e "${RED}Added block:${NC} \"change volume by (\"$varname\")\""
-    elif [ $1 == sound_volume ]; then #(volume) block
+    elif [ "$1" == sound_volume ]; then #(volume) block
       start
       echo >>$dcd/project.ss1 "(volume)"
       echo -e "${RED}Added block:${NC} \"(volume)\""
-    elif [ $1 == event_whenflagclicked ]; then #when flag clicked block
+    elif [ "$1" == event_whenflagclicked ]; then #when flag clicked block
       start
       echo >>$dcd/project.ss1 "when flag clicked"
       echo -e "${RED}Added block:${NC} \"when flag clicked\""
-    elif [ $1 == event_whenkeypressed ]; then #when [] key pressed block
+    elif [ "$1" == event_whenkeypressed ]; then #when [] key pressed block
       start
       nq
       nq
@@ -1657,11 +1654,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "when [$varname] key pressed"
       echo -e "${RED}Added block:${NC} \"when [$varname] key pressed\""
-    elif [ $1 == event_whenstageclicked ]; then #when stage clicked block
+    elif [ "$1" == event_whenstageclicked ]; then #when stage clicked block
       start
       echo >>$dcd/project.ss1 "when stage clicked"
       echo -e "${RED}Added block:${NC} \"when stage clicked\""
-    elif [ $1 == event_whenbroadcastreceived ]; then #when i receive [] block
+    elif [ "$1" == event_whenbroadcastreceived ]; then #when i receive [] block
       start
       nq
       nq
@@ -1682,7 +1679,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "when i receieve [$word]"
       echo -e "${RED}Added block:${NC} \"when i receieve [$word]\""
-    elif [ $1 == event_broadcastandwait ]; then #broadcast [] and wait block
+    elif [ "$1" == event_broadcastandwait ]; then #broadcast [] and wait block
       start
       nq
       nq
@@ -1701,7 +1698,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "broadcast [$varname] and wait"
       echo -e "${RED}Added block:${NC} \"broadcast [$varname] and wait\""
-    elif [ $1 == sound_setvolumeto ]; then #set volume to () % block
+    elif [ "$1" == sound_setvolumeto ]; then #set volume to () % block
       start
       nq
       nq
@@ -1720,7 +1717,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "set volume to (\"$varname\") %"
       echo -e "${RED}Added block:${NC} \"set volume to (\"$varname\") %\""
-    elif [ $1 == event_whenbackdropswitchesto ]; then #when backdrop switches to [] block
+    elif [ "$1" == event_whenbackdropswitchesto ]; then #when backdrop switches to [] block
       start
       nq
       nq
@@ -1741,11 +1738,11 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "when backdrop switches to [$varname]"
       echo -e "${RED}Added block:${NC} \"when backdrop switches to [$varname]\""
-    elif [ $1 == looks_cleargraphiceffects ]; then #clear graphic effects block
+    elif [ "$1" == looks_cleargraphiceffects ]; then #clear graphic effects block
       start
       echo >>$dcd/project.ss1 "clear graphic effects"
       echo -e "${RED}Added block:${NC} \"clear graphic effects\""
-    elif [ $1 == event_whengreaterthan ]; then #when [] > () block
+    elif [ "$1" == event_whengreaterthan ]; then #when [] > () block
       start
       nq
       nq
@@ -1779,8 +1776,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       done
       echo >>$dcd/project.ss1 "when [$varname] > (\"$varvalue\")"
       echo -e "${RED}Added block:${NC} \"when [$varname] > (\"$varvalue\")\""
-    elif [ $1 == control_repeat ]; then #repeat () {}block
-      cbt=1
+    elif [ "$1" == control_repeat ]; then #repeat () {}block
       start
       nq
       nq
@@ -1820,7 +1816,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           fi
           varname+=$char
         done
-        ca+=($next)
+        ca+=("$next")
         rep=$next
         next=$varname
         ci+=('r')
@@ -1844,8 +1840,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         echo
         echo -e "${RED}Ended repeat.${NC}"
       fi
-    elif [ $1 == control_forever ]; then #forever {} block
-      cbt=1
+    elif [ "$1" == control_forever ]; then #forever {} block
       start
       nq
       nq
@@ -1898,7 +1893,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             varname+=$char
           done
-          ca+=($next)
+          ca+=("$next")
           rep=$next
           ci+=('f')
           per=f
@@ -1923,8 +1918,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         echo
         echo -e "${RED}Ended forever.${NC}"
       fi
-    elif [ $1 == control_if ]; then #if <> {} block
-      cbt=1
+    elif [ "$1" == control_if ]; then #if <> {} block
       start
       nq
       nq
@@ -1942,7 +1936,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo
       echo -e "${RED}Starting if.${NC}"
       echo
-      if [ $word == CONDITION ]; then
+      if [ "$word" == CONDITION ]; then
         v=$i
         nq
         b=0
@@ -2009,7 +2003,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           if [ "$word" == "$con" ]; then
             break
           fi
-          i=$(expr $i + 10)
+          i=$((i + 10))
         done
         while :; do
           nq
@@ -2025,8 +2019,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             word+=$char
           done
-          addop $word
-          if [ $con == fin ]; then
+          addop "$word"
+          if [ "$con" == fin ]; then
             break
           fi
         done
@@ -2068,7 +2062,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           fi
           varname+=$char
         done
-        ca+=($next)
+        ca+=("$next")
         rep=$next
         next=$varname
         ci+=('i')
@@ -2082,15 +2076,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         echo
         echo -e "${RED}Ended if.${NC}"
       fi
-    elif [ $1 == control_if_else ]; then #if <> {} else {}  block
-      local ncfs=$i
-      local cbt=1
+    elif [ "$1" == control_if_else ]; then #if <> {} else {}  block
       local inpl=0
       start
       ((wew++))
       dte "1 $next"
       nst+=("$next")
-      dte "2 ${nst[@]}"
+      dte "2 ${nst[*]}"
       b=0
       while :; do
         i
@@ -2129,7 +2121,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo
       echo -e "${RED}Starting if/else.${NC}"
       echo
-      if [ $word == CONDITION ]; then
+      if [ "$word" == CONDITION ]; then
         local v=$i
         b=0
         while :; do
@@ -2209,7 +2201,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             if [ "$word" == "$con" ]; then
               break
             fi
-            i=$(expr $i + 10)
+            i=$((i + 10))
           done
           while :; do
             nq
@@ -2225,8 +2217,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
               fi
               word+=$char
             done
-            addop $word
-            if [ $con == fin ]; then
+            addop "$word"
+            if [ "$con" == fin ]; then
               break
             fi
           done
@@ -2289,7 +2281,6 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           word+=$char
         done
       fi
-      local previ3=$i
       if [ "$word" == "SUBSTACK" ]; then
         local previ=$i
         b=0
@@ -2379,8 +2370,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                   fi
                   word+=$char
                 done
-                addblock $word
-                if [ $next == fin ]; then
+                addblock "$word"
+                if [ "$next" == fin ]; then
                   echo >>$dcd/project.ss1 "} else {"
                   echo "} else {"
                   break
@@ -2389,7 +2380,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                 local tt="$next"
                 dte "s1 $tt"
               else
-                i=$(expr $i + 10)
+                i=$((i + 10))
               fi
             fi
           done
@@ -2513,8 +2504,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                       fi
                       word+=$char
                     done
-                    addblock $word
-                    if [ $next == fin ]; then
+                    addblock "$word"
+                    if [ "$next" == fin ]; then
                       echo >>$dcd/project.ss1 "} else {"
                       echo "} else {"
                       break
@@ -2523,7 +2514,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                     local tt="$next"
                     dte "s1 $tt"
                   else
-                    i=$(expr $i + 10)
+                    i=$((i + 10))
                   fi
                 fi
               done
@@ -2705,8 +2696,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                   fi
                   word+=$char
                 done
-                addblock $word
-                if [ $next == fin ]; then
+                addblock "$word"
+                if [ "$next" == fin ]; then
                   echo >>$dcd/project.ss1 "}"
                   echo "}"
                   echo -e "${RED}Ended if/else.${NC}"
@@ -2716,7 +2707,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                 local tt="$next"
                 dte "s3 $tt"
               else
-                i=$(expr $i + 10)
+                i=$((i + 10))
               fi
             fi
           done
@@ -2738,10 +2729,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       dte "1 $next"
       next=${nst[-1]}
       dte "2 $next"
-      dte "3 ${nst[@]}"
-      unset nst[-1]
-      dte "4 ${nst[@]}"
-    elif [ $1 == control_wait_until ]; then #wait until <> block
+      dte "3 ${nst[*]}"
+      unset "nst[-1]"
+      dte "4 ${nst[*]}"
+    elif [ "$1" == control_wait_until ]; then #wait until <> block
       start
       nq
       nq
@@ -2840,7 +2831,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
               if [ "$word" == "$varname" ]; then
                 break
               fi
-              i=$(expr $i + 10)
+              i=$((i + 10))
             fi
           done
           nq
@@ -2857,14 +2848,13 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             word+=$char
           done
           dte "wd $word"
-          addop $word
+          addop "$word"
           dte "op $addt"
           echo >>$dcd/project.ss1 "wait until $addt"
           echo -e "${RED}Added block:${NC} \"wait until $addt\""
         fi
       fi
-    elif [ $1 == control_repeat_until ]; then
-      cbt=1
+    elif [ "$1" == control_repeat_until ]; then
       start
       nq
       nq
@@ -2882,7 +2872,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo
       echo -e "${RED}Starting repeat until.${NC}"
       echo
-      if [ $word == CONDITION ]; then
+      if [ "$word" == CONDITION ]; then
         v=$i
         nq
         b=0
@@ -2949,7 +2939,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           if [ "$word" == "$con" ]; then
             break
           fi
-          i=$(expr $i + 10)
+          i=$((i + 10))
         done
         while :; do
           nq
@@ -2965,8 +2955,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             word+=$char
           done
-          addop $word
-          if [ $con == fin ]; then
+          addop "$word"
+          if [ "$con" == fin ]; then
             break
           fi
         done
@@ -2974,7 +2964,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         echo "repeat until $addt {"
         i=$v
       else
-        if [ $word == SUBSTACK ]; then
+        if [ "$word" == SUBSTACK ]; then
           nq
           b=0
           varname=
@@ -2986,7 +2976,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             varname+=$char
           done
-          ca+=($next)
+          ca+=("$next")
           rep=$next
           next=$varname
           ci+=('ru')
@@ -3028,14 +3018,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           fi
           varname+=$char
         done
-        ca+=($next)
+        ca+=("$next")
         rep=$next
         next=$varname
         ci+=('ru')
         per=ru
         ((cm++))
       else
-        if [ $word == CONDITION ]; then
+        if [ "$word" == CONDITION ]; then
           v=$i
           nq
           b=0
@@ -3102,7 +3092,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             if [ "$word" == "$con" ]; then
               break
             fi
-            i=$(expr $i + 10)
+            i=$((i + 10))
           done
           while :; do
             nq
@@ -3118,8 +3108,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
               fi
               word+=$char
             done
-            addop $word
-            if [ $con == fin ]; then
+            addop "$word"
+            if [ "$con" == fin ]; then
               break
             fi
           done
@@ -3135,8 +3125,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           echo -e "${RED}Ended repeat until.${NC}"
         fi
       fi
-    elif [ $1 == control_while ]; then
-      cbt=1
+    elif [ "$1" == control_while ]; then
       start
       nq
       nq
@@ -3154,7 +3143,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       echo
       echo -e "${RED}Starting while.${NC}"
       echo
-      if [ $word == CONDITION ]; then
+      if [ "$word" == CONDITION ]; then
         v=$i
         nq
         b=0
@@ -3221,7 +3210,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           if [ "$word" == "$con" ]; then
             break
           fi
-          i=$(expr $i + 10)
+          i=$((i + 10))
         done
         while :; do
           nq
@@ -3237,8 +3226,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             word+=$char
           done
-          addop $word
-          if [ $con == fin ]; then
+          addop "$word"
+          if [ "$con" == fin ]; then
             break
           fi
         done
@@ -3246,7 +3235,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         echo "while $addt {"
         i=$v
       else
-        if [ $word == SUBSTACK ]; then
+        if [ "$word" == SUBSTACK ]; then
           nq
           b=0
           varname=
@@ -3258,7 +3247,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
             varname+=$char
           done
-          ca+=($next)
+          ca+=("$next")
           rep=$next
           next=$varname
           ci+=('w')
@@ -3300,14 +3289,14 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           fi
           varname+=$char
         done
-        ca+=($next)
+        ca+=("$next")
         rep=$next
         next=$varname
         ci+=('w')
         per=w
         ((cm++))
       else
-        if [ $word == CONDITION ]; then
+        if [ "$word" == CONDITION ]; then
           v=$i
           nq
           b=0
@@ -3374,7 +3363,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             if [ "$word" == "$con" ]; then
               break
             fi
-            i=$(expr $i + 10)
+            i=$((i + 10))
           done
           while :; do
             nq
@@ -3390,8 +3379,8 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
               fi
               word+=$char
             done
-            addop $word
-            if [ $con == fin ]; then
+            addop "$word"
+            if [ "$con" == fin ]; then
               break
             fi
           done
@@ -3483,17 +3472,17 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                 nq
                 break
               fi
-              i=$(expr $i + 10)
+              i=$((i + 10))
             fi
           fi
         done
       else
         if ! [ "h$rep" == h0 ]; then
-          if [ $cm -gt 0 ]; then #if not rep=0 then it was compiling a c-block
-            ok=$ca
+          if [ "$cm" -gt 0 ]; then #if not rep=0 then it was compiling a c-block
+            ok=${ca[0]}
             e=0
-            unset ca[-1]
-            if [ h$ca == h ]; then
+            unset "ca[-1]"
+            if [ h"${ca[0]}" == h ]; then
               ca=("$ok")
               e=1
             fi
@@ -3501,7 +3490,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             next=$rep
             dte "2 $next"
             rep=0
-            if ! [ $cm == 0 ]; then
+            if ! [ "$cm" == 0 ]; then
               rep=${ca[-1]}
             fi
             p=0
@@ -3509,7 +3498,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
               ((p++))
               echo >>$dcd/project.ss1 "}"
               echo "}"
-              if [ $p == $cm ]; then
+              if [ "$p" == "$cm" ]; then
                 break
               fi
             done
@@ -3526,19 +3515,19 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             elif [ h$per == hw ]; then
               echo -e "${RED}Ended while.${NC}"
             fi
-            unset ci[-1]
-            per=${ci}
+            unset "ci[-1]"
+            per=${ci[0]}
             if [ $e == 1 ]; then
-              ca=
+              ca=()
             fi
             dte "3 $next"
-            if ! [ h$rep == hfin ]; then
-              if ! [ h$rep == h ]; then
+            if ! [ h"$rep" == hfin ]; then
+              if ! [ h"$rep" == h ]; then
                 next=$rep
               fi
             fi
             dte "4 $next"
-            if ! [ $next == fin ]; then
+            if ! [ "$next" == fin ]; then
               i=1
               while :; do
                 b=0
@@ -3609,7 +3598,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
                       nq
                       break
                     fi
-                    i=$(expr $i + 10)
+                    i=$((i + 10))
                   fi
                 fi
               done
@@ -3665,11 +3654,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
       done
       if ! [ -f Stage/project.ss1 ]; then
-        echo >>Stage/project.ss1 "#There should be no empty lines."
-        echo >>Stage/project.ss1 ss1
+        echo e >>Stage/project.ss1 "#There should be no empty lines.\nss1"
         echo >>Stage/project.ss1 "\prep"
       fi
-      echo >>Stage/project.ss1 $varname=$varvalue #Use echo >> if 2nd arg contains variables
+      echo >>Stage/project.ss1 "$varname"="$varvalue" #Use echo >> if 2nd arg contains variables
       echo -e "${RED}Added variable:${NC} \"$varname\"."
       echo -e "${RED}Value:${NC} $varvalue"
       echo
@@ -3682,18 +3670,18 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       if [ $b == 1 ]; then
         break
       fi
-      i=$(expr $i - $isub)
+      i=$((i - isub))
     fi
     if [ $novars == 1 ]; then
       echo >>Stage/project.ss1 "#There should be no empty lines."
-      echo >>Stage/$name ss1
+      echo >>Stage/"$name" ss1
       echo >>Stage/project.ss1 "\prep"
       break
     fi
   done #Finish compiling variables, lists next
   echo "Building lists..."
   echo
-  i=$(expr $i + 9)
+  i=$((i + 9))
   while :; do
     i
     i
@@ -3762,10 +3750,10 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             b=0
             getchar -\]
             if ! [ $b == 1 ]; then
-              echo >>lists $varname,
+              echo >>lists "$varname",
               i
             else
-              echo >>lists $varname
+              echo >>lists "$varname"
               break
             fi
           done
@@ -3790,22 +3778,22 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             b=0
             getchar -\]
             if ! [ $b == 1 ]; then
-              echo >>lists $varname,
+              echo >>lists "$varname",
             else
-              echo >>lists $varname
+              echo >>lists "$varname"
               break
             fi
           done
         fi
-        list=$(cat lists | tr '\n' ' ')
-        list=$(echo $list | tr -d ' ')
+        list=$(tr '\n' ' ' < lists)
+        list=$(echo "$list" | tr -d ' ')
         echo >>Stage/project.ss1 "$listname=$list"
         echo -e "${RED}Added list:${NC} \"$listname\"."
         echo -e "${RED}Contents:${NC} $list"
         echo
         rm lists
       else
-        echo >>Stage/project.ss1 $listname=,
+        echo >>Stage/project.ss1 "$listname"=,
         echo -e "${RED}Added list:${NC} \"$listname\"."
         echo -e "${RED}Contents:${NC} Nothing."
         echo
@@ -3884,7 +3872,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         varname+=$char
       done
-      echo >>Stage/project.ss1 {broadcast}=$varname
+      echo >>Stage/project.ss1 "{broadcast}=$varname"
       echo -e "${RED}Loaded broadcast:${NC} \"$varname\""
       echo
       i
@@ -3899,7 +3887,6 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     done
   fi
   rep=0
-  cbt=0
   echo "Making blocks..."
   echo
   dcd=Stage
@@ -3956,7 +3943,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
           fi
           word+=$char
         done
-        addblock $word
+        addblock "$word"
         if [ "h$next" == "hfin" ] || [ $un == 1 ]; then
           break
         fi
@@ -3971,21 +3958,20 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
   echo "Indenting code to make it easier to read (Please wait)..."
   echo
   gql() {
-    line=$(sed $q'!d' $dcd/project.ss1)
+    line=$(sed "$q"'!d' $dcd/project.ss1)
   }
   gpsvar() {
     per=$(echo "scale = 2; $q / $(sed -n '$=' $dcd/project.ss1) * 100" | bc)
-    pb=$(expr $(tput cols) - 9)
+    pb=$(($(tput cols) - 9))
     ps=$(echo "scale = 2; $per / 100 * $pb" | bc)
     per+="%"
   }
-  x=0
   getper() {
     if [ "1" == "0" ]; then #if you want a progress bar, change 0 to 1
       gpsvar
-      ps=$(printf '%.*f\n' 0 $ps)
+      ps=$(printf '%.*f\n' 0 "$ps")
       pbr=
-      for ((v = 1; v <= $ps; v++)); do
+      for ((v = 1; v <= ps; v++)); do
         pbr+="#"
       done
       echo -e "\e[A\r$pbr $per"
@@ -4003,7 +3989,6 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     fi
   done
   r=0
-  bah=0
   ff() {
     ((q++))
     getper
@@ -4013,7 +3998,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       m=0
       while :; do
         ((m++))
-        if [ $m -gt $r ]; then
+        if [ "$m" -gt $r ]; then
           break
         fi
         indent+="  "
@@ -4028,7 +4013,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
       done
     else
-      if [ $r -gt 0 ]; then
+      if [ "$r" -gt 0 ]; then
         indent=
         m=0
         if [[ "$line" == *"}"* ]]; then
@@ -4036,7 +4021,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
         while :; do
           ((m++))
-          if [ $m -gt $r ]; then
+          if [ "$m" -gt "$r" ]; then
             break
           fi
           indent+="  "

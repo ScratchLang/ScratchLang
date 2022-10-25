@@ -9,15 +9,15 @@ if [ -f var/pe ]; then
       if [ "$res" -gt "$(sed -n '$=' plist)" ]; then
         break
       fi
-      reser=$(sed $res'!d' plist)
+      reser=$(sed "$res"'!d' plist)
       if [ "$reser" == "$0" ]; then
         ((res++))
         ((res++))
-        reser=$(sed $res'!d' plist)
+        reser=$(sed "$res"'!d' plist)
         if [ "$reser" -lt "$small" ]; then
           small="$reser"
           ((res--))
-          reser=$(sed $res'!d' plist)
+          reser=$(sed "$res"'!d' plist)
           execute=$reser
           ((res++))
         fi
@@ -31,18 +31,18 @@ if [ -f var/pe ]; then
     if [ -d var ]; then
       if [[ "$(cat plist)" == *"$0"* ]]; then
         if [ "$don" == 1 ]; then
-          getnextp $1
+          getnextp "$1"
         fi
         if [ "${BASH_LINENO[0]}" == "$small" ]; then
           cd ../
-          ./packages/$execute
-          cd mainscripts
+          ./packages/"$execute"
+          cd mainscripts || exit
           don=1
         fi
       fi
     fi
   }
-  trap "step $npl" DEBUG
+  trap 'step $npl' DEBUG
 fi
 RED='\033[0;31m' #red
 NC='\033[0m'     #reset color
@@ -53,11 +53,11 @@ if ! [ -f /usr/bin/scratchlang ]; then #detect if the scratchlang command exists
 fi
 echo -e "${RED}WARNING:${NC} This will remove the scratchlang command."
 echo "Continue? [Y/N]"
-read -sn 1 input2
+read -rsn 1 input2
 echo
-if [ h$input2 == hY ] || [ h$input2 == hy ]; then
+if [ h"$input2" == hY ] || [ h"$input2" == hy ]; then
   rm /usr/bin/scratchlang #remove scratchlang command
-elif [ h$input2 == hn ] || [ h$input2 == hN ]; then
+elif [ h"$input2" == hn ] || [ h"$input2" == hN ]; then
   echo
 else
   echo -e "${RED}$input2 is not an option.${NC}"

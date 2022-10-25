@@ -9,15 +9,15 @@ if [ -f var/pe ]; then
       if [ "$res" -gt "$(sed -n '$=' plist)" ]; then
         break
       fi
-      reser=$(sed $res'!d' plist)
+      reser=$(sed "$res"'!d' plist)
       if [ "$reser" == "$0" ]; then
         ((res++))
         ((res++))
-        reser=$(sed $res'!d' plist)
+        reser=$(sed "$res"'!d' plist)
         if [ "$reser" -lt "$small" ]; then
           small="$reser"
           ((res--))
-          reser=$(sed $res'!d' plist)
+          reser=$(sed "$res"'!d' plist)
           execute=$reser
           ((res++))
         fi
@@ -31,18 +31,18 @@ if [ -f var/pe ]; then
     if [ -d var ]; then
       if [[ "$(cat plist)" == *"$0"* ]]; then
         if [ "$don" == 1 ]; then
-          getnextp $1
+          getnextp "$1"
         fi
         if [ "${BASH_LINENO[0]}" == "$small" ]; then
           cd ../
-          ./packages/$execute
-          cd mainscripts
+          ./packages/"$execute"
+          cd mainscripts || exit
           don=1
         fi
       fi
     fi
   }
-  trap "step $npl" DEBUG
+  trap 'step $npl' DEBUG
 fi
 RED='\033[0;31m'
 NC='\033[0m'
@@ -58,14 +58,14 @@ else
 fi
 echo "5. Exit"
 cd ../
-cd packages
-read -sn 1 jj
+cd packages || exit
+read -rsn 1 jj
 ccor=0
 case $jj in
 1)
   ccor=1
-  dir=$(zenity -list $(ls -d */))
-  cd $dir
+  dir=$(zenity -list "$(ls -d ./*/)")
+  cd "$dir" || exit
   echo
   echo -e "${RED}Package:${NC} $dir"
   echo
@@ -76,13 +76,13 @@ case $jj in
 2)
   ccor=1
   echo
-  read -p "Enter package to install: " pack
+  read -rp "Enter package to install: " pack
   if [ "h$pack" == h ]; then
     echo -e "${RED}Error: Empty argument.${NC}"
     exit
   fi
   cd ../
-  cd packages
+  cd packages || exit
   if [ -f packages.list ]; then
     pk=$(cat packages.list)
     echo "$pk, $pack"
@@ -92,16 +92,16 @@ case $jj in
       echo "Installing $pack..."
       while :; do
         ((b++))
-        line=$(sed $b'!d' packages.list)
+        line=$(sed "$b"'!d' packages.list)
         if [[ "$line" == "|$pack|" ]]; then
           break
         fi
       done
       ((b++))
-      line=$(sed $b'!d' packages.list)
-      eval $line
-      unzip -q $pack
-      rm -rf $pack.zip
+      line=$(sed "$b"'!d' packages.list)
+      eval "$line"
+      unzip -q "$pack"
+      rm -rf "$pack".zip
     else
       echo -e "${RED}Error: Package $pack not found. Try running './start.sh update' or 'scratchlang update.'${NC}"
     fi
@@ -111,13 +111,13 @@ case $jj in
   ;;
 3)
   ccor=1
-  dir=$(zenity -list $(ls -d */))
-  rm -rf $dir
+  dir=$(zenity -list "$(ls -d ./*/)")
+  rm -rf "$dir"
   ;;
 4)
   ccor=1
   cd ../
-  cd mainscripts
+  cd mainscripts || exit
   if [ -f var/pe ]; then
     rm var/pe
   else
@@ -128,7 +128,7 @@ case $jj in
 5)
   ccor=1
   cd ../
-  cd mainscripts
+  cd mainscripts || exit
   ./start.sh nope
   ;;
 esac
