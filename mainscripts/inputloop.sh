@@ -116,7 +116,7 @@ if [ h$input == h1 ]; then
   fi
   cd projects || exit
   mkdir "$name"
-  cd "$name" || exit                                         #go to project dir, create a folder named whatever you named it, and go into that
+  cd "$name" || exit                               #go to project dir, create a folder named whatever you named it, and go into that
   echo >>.maindir "Please don't remove this file." #tells the compiler that it's in the right directory
   mkdir Stage
   cd Stage || exit
@@ -164,8 +164,12 @@ elif [ h$input == h3 ]; then
   ./compiler.v1.ss1.sh
 elif [ h$input == h4 ]; then
   if [ -f var/ds ]; then
-    chmod 755 "$(sed '1!d' var/ds)" #if there is a custom compiler, get the command from the ds file and run it
-    ./"$(sed '1!d' var/ds)"
+    if [ "$(sed '1!d' var/ds)" == "py" ]; then
+      python3 decompilerpy.v1.ss1.py
+    else
+      chmod 755 "$(sed '1!d' var/ds)" #if there is a custom compiler, get the command from the ds file and run it
+      ./"$(sed '1!d' var/ds)"
+    fi
   else
     chmod 755 decompiler.v2.ss1.sh
     ./decompiler.v2.ss1.sh
@@ -207,7 +211,7 @@ elif [ h$input == h6 ]; then
       mkdir projects
     fi
     cd projects || exit
-    tar -xf "$import"                #extract .ssa archive
+    tar -xf "$import"              #extract .ssa archive
     echo "Remove .ssa file? [Y/N]" #remove the .ssa archive if wanted
     read -rsn 1 f
     if [ h"$f" == hY ] || [ h"$f" == hy ]; then

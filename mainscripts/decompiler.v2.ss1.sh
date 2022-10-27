@@ -89,7 +89,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
     echo -e "${RED}Error: Empty path.${NC}"
     exit
   fi
-  echo -e "Name of project? ${RED}Keep in mind that it cannot be empty or it will not be created properly.${NC}" #Name your project
+  echo -e "Name of project? ${RED}Keep in mind that it cannot be empty or it will not be created.${NC}" #Name your project
   read -r name
   echo
   if [ h"$name" == h ]; then
@@ -264,7 +264,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         pname+=$char
       done
     fi
-    dte "$next"
+    dte "$con"
   }
   cm=0
   wew=0
@@ -3654,7 +3654,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
         fi
       done
       if ! [ -f Stage/project.ss1 ]; then
-        echo e >>Stage/project.ss1 "#There should be no empty lines.\nss1"
+        echo -e "#There should be no empty lines.\nss1" >>Stage/project.ss1
         echo >>Stage/project.ss1 "\prep"
       fi
       echo >>Stage/project.ss1 "$varname"="$varvalue" #Use echo >> if 2nd arg contains variables
@@ -3673,8 +3673,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
       i=$((i - isub))
     fi
     if [ $novars == 1 ]; then
-      echo >>Stage/project.ss1 "#There should be no empty lines."
-      echo >>Stage/"$name" ss1
+      echo -e "#There should be no empty lines.\nss1" >>Stage/project.ss1
       echo >>Stage/project.ss1 "\prep"
       break
     fi
@@ -3785,7 +3784,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then #Continue if you have the comm
             fi
           done
         fi
-        list=$(tr '\n' ' ' < lists)
+        list=$(tr '\n' ' ' <lists)
         list=$(echo "$list" | tr -d ' ')
         echo >>Stage/project.ss1 "$listname=$list"
         echo -e "${RED}Added list:${NC} \"$listname\"."

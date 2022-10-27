@@ -49,7 +49,7 @@ NC='\033[0m'     #reset color
 echo
 echo "1. Pick one of the included decompilers."
 echo "2. Choose your own decompiler."
-echo "3. Reset to default. (decompiler.v2.ss1.sh)"
+echo "3. Reset to default. (decompilerpy.v1.ss1.py)"
 read -rsn 1 inf
 corr=0
 case $inf in
@@ -58,7 +58,9 @@ case $inf in
   echo
   echo "1. decompiler.v1.ss1.sh - First version of the decompiler. No longer being programmed. ScratchScript1 language."
   echo
-  echo "2. decompiler.v2.ss1.sh - Latest and recommended version of the decompiler. ScratchScript1 language."
+  echo "2. decompiler.v2.ss1.sh - Most up-to-date version of the decompiler. ScratchScript1 language."
+  echo
+  echo "3. decompilerpy.v1.ss1.py - Decompiler V2 remade in Python for speed and more capabilities. ScratchScript 1 language."
   read -rsn 1 nfi
   corr=0
   case $nfi in
@@ -70,10 +72,17 @@ case $inf in
     echo >>var/ds decompiler.v1.ss1.sh #set the compiler to V1
     ;;
   2)
-    corr-1
+    corr=1
     if [ -f var/ds ]; then
       rm var/ds
     fi
+    ;;
+  3)
+    corr=1
+    if [ -f var/ds ]; then
+      rm var/ds
+    fi
+    echo >>var/ds py
     ;;
   esac
   if [ $corr = 0 ]; then
@@ -92,6 +101,7 @@ case $inf in
   if [ -f var/ds ]; then
     rm var/ds
   fi
+  echo >>var/ds py
   ;;
 
 esac

@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.83a**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.84a**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -7,11 +7,7 @@ This is for people who want to use Scratch like other programming languages.
 
 Also, a devlog is at the bottom.
 # Latest big updates
-If statements working perfectly, and if/else statements added. If/elses in if/elses work good now.
-
-Also, operators in operators don't work as well.
-
-The new decompiler is programmed so that it uses "opcode",  "parent", and "next" to decompile the blocks in order.
+Working on a Python version. So far it is WAY faster.
 
 # The bug list
 is at the very bottom. Look at that list before posting bugs.
@@ -20,7 +16,7 @@ is at the very bottom. Look at that list before posting bugs.
 This is an open-source project. Anyone can contribute. If there's anything discouraging you from contributing, let me know and I'll try to fix it.
 
 # The Plan
-This is mainly made in Shell Script, but if you know languages like C and Python, then you can make some stuff in that so people have many options to choose from.
+This is mainly made in Shell Script and Python, but if you know languages like C, then you can make some stuff in that so people have many options to choose from.
 
 Some .sb3 files are included in the resources folder so you can test your comp/decomp scripts.
 
@@ -35,7 +31,13 @@ I'm programming the decompiler. First I'm gonna program it to decompile all the 
 ## Contributing
 I am currently putting comments in my code so people understand it. So for some sections, you will have to guess what the bash does. Sorry.
 # Notice
-Because of how the decompiler is programmed, if you have a big enough json, decompiling 1 block could take 1 minute. The cause of that is the farther the block is from the start of the json, the longer it takes to decompiler. Perhaps there's a more effecient way to decompile blocks from the json?
+Right now the default decompiler is set to the Python version, which currently can't decompile blocks yet.
+
+If you want to use the Shell Script version that has blocks, follow these steps.
+
+  1. Run scratchlang, then press A to enable developer mode
+  2. Press D to change the decompilation script.
+  3. Press 1 to pick one of the included scripts, then press 2 to select Decompiler V2.
 
 Also, I renamed the file extension to .ss1 because I am planning on having multiple formats. <br />
 ss1 Will be it's own language <br />
@@ -102,7 +104,7 @@ Please write down any dependencies I missed.
 This is what people will do.
 
 ### 0K9090
-Program the decompiler
+Program the decompiler in Python
 ### wendiner
 I don't know what they're doing
 ### redstone-scratch
@@ -113,7 +115,7 @@ ScratchLang's language is called ScratchScript.
 ## ScratchScript blocks
 \nscript - (Tells the compiler that it's a new script. Or maybe we could get rid of this and just detect for hat blocks.) <br />
 **\prep - (Everything below this [until the next instance of \nscript] is used for compiling the .json)** <br />
-list=item1,item2,item3,etc - (No spaces, and for an empty list, just add a comma after the equal sign.) <br />
+list=item1,item2,item3,etc - (No spaces [but they are allowed in the Python version: item1, item2, etc], and for an empty list, just add a comma after the equal sign.) <br />
 **{broadcast}=broadcastexample - (Define a broadcast. The brackets tell the program that it is not defining a variable or a list.)** <br />
 # Decompiler V2 Blocks
 ## Vanilla Scratch Blocks
@@ -514,6 +516,8 @@ Your .ss1 file is probably big.
 
 # Devlog
 Format: MM.DD.YY - VERSION
+## 10.27.22 - 0.6.84a
+* Started the Python port.
 ## 10.24.22 - 0.6.83a
 * Using shellcheck, I optimized the scripts to go faster.
 ## 10.19.22 - 0.6.82a

@@ -1,0 +1,8 @@
+.vscode
+projects
+mainscripts/var/devmode
+mainscripts/var/alias
+mainscripts/var/asked
+mainscripts/var/vc
+mainscripts/var/pe
+mainscripts/var/zenity
