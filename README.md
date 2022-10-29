@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.8p**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.81p**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -34,9 +34,7 @@ I'm programming the decompiler. First I'm gonna program it to decompile all the 
 ## Contributing
 I am currently putting comments in my code so people understand it. So for some sections, you will have to guess what the bash does. Sorry.
 # Notice
-Right now the default decompiler is set to the Python version, which currently can't decompile blocks yet.
-
-If you want to use the Shell Script version that has blocks, follow these steps.
+Right now the default decompiler is set to the Python version. If you want to use the Shell Script version, follow these steps.
 
   1. Run scratchlang, then press A to enable developer mode
   2. Press D to change the decompilation script.
@@ -118,11 +116,12 @@ ScratchLang's language is called ScratchScript.
 **\prep - (Everything below this [until the next instance of \nscript] is used for compiling the .json)**<br>
 list=item1, item2, item3, etc - (For an empty list, just add a comma after the equal sign.)<br>
 **{broadcast}=broadcastexample - (Define a broadcast. The brackets tell the program that it is not defining a variable or a list.)**<br>
+var=string - (Define a variable)<br>
 # Decompiler Python V1
 ## Vanilla Scratch Blocks
 ### Added blocks
-25/90 Stage Blocks + Pen | 27.78% Done<br>
-25/141 Every Block + Pen | 17.73% Done<br>
+56/90 Stage Blocks + Pen | 62.62% Done<br>
+56/141 Every Block + Pen | 39.71% Done<br>
 
 Write every block in the order they are defined.<br>
 
@@ -133,31 +132,9 @@ Brackets means that there cannot be a variable in there. It's either a defined o
 ### Buggy Blocks
 None yet.
 ### Stable blocks
-**var=string - (Define [or set] a variable)**<br>
-switch backdrop to ("backdrop") - (Changes backdrop.)<br>
-**switch backdrop to ("backdrop") and wait -  (Changes backdrop and waits.)**<br>
-next backdrop - (Changes backdrop by 1.)<br>
-**change \[EFFECT\] effect by ("num") - (Change an effect by an amount.)**<br>
-set [EFFECT] effect to ("num") - (Sets an effect to an amount.)<br>
-**clear graphic effects - (Clears all effects applied to the stage or sprite.)**<br>
-(backdrop [number/name]) - (Reports the number or name of the backdrop.)<br>
-**play sound ("sound") until done - (Play a sound until done.)**
-start sound ("sound") - (Start a sound.)<br>
-**stop all sounds (Stop all sounds.)**<br>
-change [EFFECT] effect by ("num") (Change an effect by an amount.)<br>
-**set [EFFECT] effect to ("num") - (Sets an effect to an amount.)**<br>
-clear sound effects - (Clear sound effects.)<br>
-**change volume by ("num") - (Change the volume by an amount.)**<br>
-set volume to ("num") % - (Set the volume to an amount.)<br>
-**(volume) - (Reports the volume.)**<br>
-when flag clicked - (When green flag clicked.)<br>
-**when [key] key pressed - (Runs the script when a certain key is pressed.)**<br>
-when stage clicked - (Runs the script when the stage is clicked.)<br>
-**when backdrop switches to [backdrop] - (Runs the script when the stage changes to a certain backdrop.)**<br>
-when [THING] > ("num")<br>
-**when I receive [broadcast] - (Runs the script when a certain message is broadcasted.)**<br>
-broadcast [broadcast] - (Sends a message to any sprite that'll recevie it)<br>
-**broadcast [broadcast] and wait - (Sends a message to any sprite that'll recevie it, then waits for those sprites to finish.)**<br>
+Just decompile the "every-block-+-pen.sb3" which is in the resources folder.<br>
+You will get an unknown block error for blocks that the decompiler can't read yet.<br>
+Every other block is most likely a stable block
 
 # Limitations
 Lots, because It's not finished.
@@ -564,6 +541,8 @@ Your .ss1 file is probably big.
 
 # Devlog
 Format: MM.DD.YY - VERSION
+## 10.29.22 = 0.6.81p
+* Added some more blocks to the python port.
 ## 10.28.22 - 0.6.8p
 * Added some blocks to the python port.
 ## 10.27.22 - 0.6.84a

@@ -1,3 +1,5 @@
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 from asyncore import write
 import sys, os, time, subprocess, msvcrt
 from pathlib import Path
@@ -218,6 +220,13 @@ while True:
             dte(con)
         def addblock(a1):
             global i
+            global nxt
+            global con
+            try:
+                con
+            except NameError:
+                con = ""
+            cnext = ""
             start()
             if a1 == "looks_switchbackdropto":
                 nq(5)
@@ -270,8 +279,7 @@ while True:
             elif a1 == "looks_backdropnumbername":
                 nq(7)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "(backdrop [" + word + "])")
-                print(RED + "Added block: " + NC + "\"(backdrop [" + word + "])\"")
+                con += "(backdrop [" + word + "])"
             elif a1 == "sound_playuntildone":
                 nq(5)
                 word = extdata()
@@ -335,8 +343,7 @@ while True:
                 writetofile(dcd + "/project.ss1", "set volume to (\"" + word + "\") %")
                 print(RED + "Added block: " + NC + "\"set volume to (\"" + word + "\") %\"")
             elif a1 == "sound_volume":
-                writetofile(dcd + "/project.ss1", "(volume)")
-                print(RED + "Added block: " + NC + "\"(volume)\"")
+                con += "(volume)"
             elif a1 == "event_whenflagclicked":
                 writetofile(dcd + "/project.ss1", "when flag clicked")
                 print(RED + "Added block: " + NC + "\"when flag clicked\"")
@@ -381,6 +388,875 @@ while True:
                 word = extdata()
                 writetofile(dcd + "/project.ss1", "broadcast [" + word + "] and wait")
                 print(RED + "Added block: " + NC + "\"broadcast [" + word + "] and wait\"")
+            elif a1 == "control_wait":
+                nq(5)
+                word = extdata()
+                if word == "fields":
+                    word = ""
+                writetofile(dcd + "/project.ss1", "wait (\"" + word + "\") seconds")
+                print(RED + "Added block: " + NC + "\"wait (\"" + word + "\") seconds\"")
+            elif a1 == "control_repeat":
+                cnext = nxt
+                nq(5)
+                word = extdata()
+                if word == "SUBSTACK":
+                    word = ""
+                    writetofile(dcd + "/project.ss1", "repeat (" + word + ") {")
+                    print(RED + "Starting repeat |" + NC + " repeat (" + word + ") {")
+                else:
+                    nq()
+                    writetofile(dcd + "/project.ss1", "repeat (" + word + ") {")
+                    print(RED + "Starting repeat |" + NC + " repeat (" + word + ") {")
+                    word = extdata()
+                if not word == "SUBSTACK":
+                    writetofile(dcd + "/project.ss1", "}")
+                    print("")
+                    print(RED + "Ended repeat |" + NC + " }")
+                else:
+                    nq()
+                    word = extdata()
+                    if not word == "fields":
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                        writetofile(dcd + "/project.ss1", "}")
+                        print(RED + "Ended repeat |" + NC + " }")
+                    else:
+                        writetofile(dcd + "/project.ss1", "}")
+                        print(RED + "Ended repeat |" + NC + " }")
+                    nxt = cnext
+            elif a1 == "control_forever":
+                cnext = nxt
+                nq(3)
+                word = extdata()
+                if word == "SUBSTACK":
+                    nq()
+                    word = extdata()
+                    if word == "fields":
+                        word = ""
+                else:
+                    word = ""
+                writetofile(dcd + "/project.ss1", "forever {")
+                print(RED + "Starting forever |" + NC + " forever {")
+                if not word == "":
+                    i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                    nq(4)
+                    word = extdata()
+                    addblock(word)
+                    writetofile(dcd + "/project.ss1", "}")
+                    print(RED + "Ended forever |" + NC + " }")
+                else:
+                    writetofile(dcd + "/project.ss1", "}")
+                    print(RED + "Ended forever |" + NC + " }")
+                nxt = cnext
+            elif a1 == "control_if":
+                con = ""
+                cnext = nxt
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "CONDITION" or word == "fields":
+                        break
+                if word == "CONDITION":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b == "1":
+                            break
+                    im()
+                    b = 0
+                    b = getchar("-\"")
+                    if b == "1":
+                        i = k
+                        nq()
+                        word = extdata()
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                        writetofile(dcd + "/project.ss1", "if " + con + " {")
+                        print(RED + "Starting if |" + NC + " if " + con + " {")
+                    else:
+                        writetofile(dcd + "/project.ss1", "if <> {")
+                        print(RED + "Starting if |" + NC + " if <> {")
+                else:
+                    writetofile(dcd + "/project.ss1", "if <> {")
+                    print(RED + "Starting if |" + NC + " if <> {")
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "SUBSTACK" or word == "fields":
+                        break
+                if word == "SUBSTACK":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b == "1":
+                            break
+                    im()
+                    b = 0
+                    b = getchar("-\"")
+                    if b == "1":
+                        i = k
+                        nq()
+                        word = extdata()
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                    writetofile(dcd + "/project.ss1", "}")
+                    print(RED + "Ended if |" + NC + " }")
+                else:
+                    writetofile(dcd + "/project.ss1", "}")
+                    print(RED + "Ended if |" + NC + " }")
+                nxt = cnext
+            elif a1 == "control_if_else":
+                con = ""
+                cnext = nxt
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "CONDITION" or word == "fields":
+                        break
+                if word == "CONDITION":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b == "1":
+                            break
+                    im()
+                    b = 0
+                    b = getchar("-\"")
+                    if b == "1":
+                        i = k
+                        nq()
+                        word = extdata()
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                        writetofile(dcd + "/project.ss1", "if " + con + " {")
+                        print(RED + "Starting if/else |" + NC + " if " + con + " {")
+                    else:
+                        writetofile(dcd + "/project.ss1", "if <> {")
+                        print(RED + "Starting if\else |" + NC + " if <> {")
+                else:
+                    writetofile(dcd + "/project.ss1", "if <> {")
+                    print(RED + "Starting if/else |" + NC + " if <> {")
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "SUBSTACK" or word == "fields":
+                        break
+                if word == "SUBSTACK":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b == "1":
+                            break
+                    im()
+                    b = 0
+                    b = getchar("-\"")
+                    if b == "1":
+                        i = k
+                        nq()
+                        word = extdata()
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                    writetofile(dcd + "/project.ss1", "} else {")
+                    print(RED + "else |" + NC + " } else {")
+                else:
+                    writetofile(dcd + "/project.ss1", "} else {")
+                    print(RED + "else |" + NC + " } else {")
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "SUBSTACK2" or word == "fields":
+                        break
+                if word == "SUBSTACK2":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b == "1":
+                            break
+                    im()
+                    b = 0
+                    b = getchar("-\"")
+                    if b == "1":
+                        i = k
+                        nq()
+                        word = extdata()
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                    writetofile(dcd + "/project.ss1", "}")
+                    print(RED + "Ended if/else |" + NC + " }")
+                else:
+                    writetofile(dcd + "/project.ss1", "}")
+                    print(RED + "Ended if/else |" + NC + " }")
+                nxt = cnext
+            elif a1 == "control_wait_until":
+                con = ""
+                cnext = nxt
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "CONDITION" or word == "fields":
+                        break
+                if word == "CONDITION":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b == "1":
+                            break
+                    im()
+                    b = 0
+                    b = getchar("-\"")
+                    if b == "1":
+                        i = k
+                        nq()
+                        word = extdata()
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                        writetofile(dcd + "/project.ss1", "wait until " + con)
+                        print(RED + "Added block: " + NC + "\"wait until " + con + "\"")
+                    else:
+                        writetofile(dcd + "/project.ss1", "wait until <>")
+                        print(RED + "Added block: " + NC + "\"wait until <>")
+                else:
+                    writetofile(dcd + "/project.ss1", "if <> {")
+                    print(RED + "Starting if |" + NC + " if <> {")
+                i = j
+            elif a1 == "control_repeat_until":
+                con = ""
+                cnext = nxt
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "CONDITION" or word == "fields":
+                        break
+                if word == "CONDITION":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b == "1":
+                            break
+                    im()
+                    b = 0
+                    b = getchar("-\"")
+                    if b == "1":
+                        i = k
+                        nq()
+                        word = extdata()
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                        writetofile(dcd + "/project.ss1", "repeat until " + con + " {")
+                        print(RED + "Starting repeat until |" + NC + " repeat until " + con + " {")
+                    else:
+                        writetofile(dcd + "/project.ss1", "repeat until <> {")
+                        print(RED + "Starting repeat until |" + NC + " repeat until <> {")
+                else:
+                    writetofile(dcd + "/project.ss1", "repeat until <> {")
+                    print(RED + "Starting repeat until |" + NC + " repeat until <> {")
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "SUBSTACK" or word == "fields":
+                        break
+                if word == "SUBSTACK":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b == "1":
+                            break
+                    im()
+                    b = 0
+                    b = getchar("-\"")
+                    if b == "1":
+                        i = k
+                        nq()
+                        word = extdata()
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                    writetofile(dcd + "/project.ss1", "}")
+                    print(RED + "Ended repeat until |" + NC + " }")
+                else:
+                    writetofile(dcd + "/project.ss1", "}")
+                    print(RED + "Ended repeat until |" + NC + " }")
+                nxt = cnext
+            elif a1 == "control_while":
+                con = ""
+                cnext = nxt
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "CONDITION" or word == "fields":
+                        break
+                if word == "CONDITION":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b == "1":
+                            break
+                    im()
+                    b = 0
+                    b = getchar("-\"")
+                    if b == "1":
+                        i = k
+                        nq()
+                        word = extdata()
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                        writetofile(dcd + "/project.ss1", "while " + con + " {")
+                        print(RED + "Starting while |" + NC + " while " + con + " {")
+                    else:
+                        writetofile(dcd + "/project.ss1", "while <> {")
+                        print(RED + "while |" + NC + " while <> {")
+                else:
+                    writetofile(dcd + "/project.ss1", "while <> {")
+                    print(RED + "Starting while |" + NC + " while <> {")
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "SUBSTACK" or word == "fields":
+                        break
+                if word == "SUBSTACK":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b == "1":
+                            break
+                    im()
+                    b = 0
+                    b = getchar("-\"")
+                    if b == "1":
+                        i = k
+                        nq()
+                        word = extdata()
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                    writetofile(dcd + "/project.ss1", "}")
+                    print(RED + "Ended while |" + NC + " }")
+                else:
+                    writetofile(dcd + "/project.ss1", "}")
+                    print(RED + "Ended while |" + NC + " }")
+                nxt = cnext
+            elif a1 == "control_create_clone_of":
+                nq(5)
+                word = extdata()
+                i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                nq(18)
+                word = extdata()
+                writetofile(dcd + "/project.ss1", "create a clone of (\"" + word + "\")")
+                print(RED + "Added block: " + NC + "\"create a clone of (\"" + word + "\")\"")
+            elif a1 == "sensing_askandwait":
+                nq(5)
+                word = extdata()
+                writetofile(dcd + "/project.ss1", "ask (\"" + word + "\") and wait")
+                print(RED + "Added block: " + NC + "\"ask (\"" + word + "\") and wait\"")
+            elif a1 == "sensing_answer":
+                con += "(anwser)"
+            elif a1 == "sensing_keypressed":
+                nq(5)
+                word = extdata()
+                i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                nq(18)
+                word = extdata()
+                con += "<key (\"" + word + "\") pressed?>"
+            elif a1 == "sensing_mousedown":
+                con += "<mouse down?>"
+            elif a1 == "sensing_mousex":
+                con += "(mouse x)"
+            elif a1 == "sensing_mousey":
+                con += "(mouse y)"
+            elif a1 == "sensing_loudness":
+                con += "(loudness)"
+            elif a1 == "sensing_timer":
+                con += "(timer)"
+            elif a1 == "sensing_resettimer":
+                writetofile(dcd + "/project.ss1", "reset timer")
+                print(RED + "Added block: " + NC + "\"reset timer\"")
+            elif a1 == "sensing_of":
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "PROPERTY" or word == "shadow":
+                        break
+                if word == "PROPERTY":
+                    nq()
+                    word = extdata()
+                    sofprop = word
+                else:
+                    sofprop = ""
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "OBJECT" or word == "shadow":
+                        break
+                if word == "OBJECT":
+                    nq()
+                    word = extdata()
+                    i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                    nq(18)
+                    word = extdata()
+                    if word == "_stage_":
+                        word = "Stage"
+                else:
+                    word = ""
+                con += "([" + sofprop + "] of (\"" + word + "\")"
+            elif a1 == "sensing_current":
+                nq(7)
+                word = extdata()
+                word = word.lower()
+                con += "(current [" + word + "])"
+            elif a1 == "sensing_dayssince2000":
+                con += "(days since 2000)"
+            elif a1 == "sensing_username":
+                con += "(username)"
+            elif a1 == "operator_add":
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "NUM1" or word == "fields":
+                        break
+                if word == "NUM1":
+                    nq()
+                    op1 = extdata()
+                else:
+                    op1 = ""
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "NUM2" or word == "fields":
+                        break
+                if word == "NUM2":
+                    nq()
+                    op2 = extdata()
+                else:
+                    op2 = ""
+                con += "((\"" + op1 + "\") + (\"" + op2 + "\"))"
+            elif a1 == "operator_subtract":
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "NUM1" or word == "fields":
+                        break
+                if word == "NUM1":
+                    nq()
+                    op1 = extdata()
+                else:
+                    op1 = ""
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "NUM2" or word == "fields":
+                        break
+                if word == "NUM2":
+                    nq()
+                    op2 = extdata()
+                else:
+                    op2 = ""
+                con += "((\"" + op1 + "\") - (\"" + op2 + "\"))"
+            elif a1 == "operator_multiply":
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "NUM1" or word == "fields":
+                        break
+                if word == "NUM1":
+                    nq()
+                    op1 = extdata()
+                else:
+                    op1 = ""
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "NUM2" or word == "fields":
+                        break
+                if word == "NUM2":
+                    nq()
+                    op2 = extdata()
+                else:
+                    op2 = ""
+                con += "((\"" + op1 + "\") * (\"" + op2 + "\"))"
+            elif a1 == "operator_divide":
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "NUM1" or word == "fields":
+                        break
+                if word == "NUM1":
+                    nq()
+                    op1 = extdata()
+                else:
+                    op1 = ""
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "NUM2" or word == "fields":
+                        break
+                if word == "NUM2":
+                    nq()
+                    op2 = extdata()
+                else:
+                    op2 = ""
+                con += "((\"" + op1 + "\") / (\"" + op2 + "\"))"
+            elif a1 == "operator_random":
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "FROM" or word == "fields":
+                        break
+                if word == "FROM":
+                    nq()
+                    op1 = extdata()
+                else:
+                    op1 = ""
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "TO" or word == "fields":
+                        break
+                if word == "TO":
+                    nq()
+                    op2 = extdata()
+                else:
+                    op2 = ""
+                con += "(pick random (\"" + op1 + "\") to (\"" + op2 + "\"))"
+            elif a1 == "operator_equals":
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "OPERAND1" or word == "fields":
+                        break
+                if word == "OPERAND1":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-,")
+                        if b == "1":
+                            break
+                    ip()
+                    b = "0"
+                    b = getchar("-\"")
+                    if b == "1":
+                        word = extdata()
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        con += "<"
+                        addblock(word)
+                        con += " = "
+                    else:
+                        b = "0"
+                        while True:
+                            ip()
+                            b = getchar("-]")
+                            if b == "1":
+                                break
+                        im()
+                        b = 0
+                        b = getchar("-\"")
+                        if b == "1":
+                            i = k
+                            nq()
+                            op1 = extdata()
+                        else:
+                            op1 = ""
+                        con += "<(\"" + op1 + "\") = (\""
+                else:
+                    op1 = ""
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "OPERAND2" or word == "fields":
+                        break
+                if word == "OPERAND2":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-,")
+                        if b == "1":
+                            break
+                    ip()
+                    b = "0"
+                    b = getchar("-\"")
+                    if b == "1":
+                        word = extdata()
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                        con += ">"
+                    else:
+                        b = "0"
+                        while True:
+                            ip()
+                            b = getchar("-]")
+                            if b == "1":
+                                break
+                        im()
+                        b = 0
+                        b = getchar("-\"")
+                        if b == "1":
+                            i = k
+                            nq()
+                            op2 = extdata()
+                        else:
+                            op2 = ""
+                        con += op2 + "\")>"
+                else:
+                    op2 = ""
+                    con += op2 + "\")>"
+            elif a1 == "operator_gt":
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "OPERAND1" or word == "fields":
+                        break
+                if word == "OPERAND1":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b == "1":
+                            break
+                    im()
+                    b = 0
+                    b = getchar("-\"")
+                    if b == "1":
+                        i = k
+                        nq()
+                        op1 = extdata()
+                    else:
+                        op1 = ""
+                else:
+                    op1 = ""
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "OPERAND2" or word == "fields":
+                        break
+                if word == "OPERAND2":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b == "1":
+                            break
+                    im()
+                    b = 0
+                    b = getchar("-\"")
+                    if b == "1":
+                        i = k
+                        nq()
+                        op2 = extdata()
+                    else:
+                        op2 = ""
+                else:
+                    op2 = ""
+                con += "<(\"" + op1 + "\") > (\"" + op2 + "\")>"
+            elif a1 == "operator_lt":
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "OPERAND1" or word == "fields":
+                        break
+                if word == "OPERAND1":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b == "1":
+                            break
+                    im()
+                    b = 0
+                    b = getchar("-\"")
+                    if b == "1":
+                        i = k
+                        nq()
+                        op1 = extdata()
+                    else:
+                        op1 = ""
+                else:
+                    op1 = ""
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "OPERAND2" or word == "fields":
+                        break
+                if word == "OPERAND2":
+                    k = i
+                    b = "0"
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b == "1":
+                            break
+                    im()
+                    b = 0
+                    b = getchar("-\"")
+                    if b == "1":
+                        i = k
+                        nq()
+                        op2 = extdata()
+                    else:
+                        op2 = ""
+                else:
+                    op2 = ""
+                con += "<(\"" + op1 + "\") < (\"" + op2 + "\")>"
+            elif a1 == "operator_and":
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "OPERAND1" or word == "fields":
+                        break
+                if word == "OPERAND1":
+                    nq()
+                    word = extdata()
+                    if not word == "fields" and not word == "OPERAND2":
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        con += "<"
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                        con += " and "
+                    else:
+                        con += "<<> and "
+                else:
+                    con += "<<> and "
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "OPERAND2" or word == "fields":
+                        break
+                if word == "OPERAND2":
+                    nq()
+                    word = extdata()
+                    if not word == "fields" and not word == "OPERAND1":
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                        con += ">"
+                    else:
+                        con += "<>>"
+                else:
+                    con += "<>>"
+            elif a1 == "operator_or":
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "OPERAND1" or word == "fields":
+                        break
+                if word == "OPERAND1":
+                    nq()
+                    word = extdata()
+                    if not word == "fields" and not word == "OPERAND2":
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        con += "<"
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                        con += " or "
+                    else:
+                        con += "<<> or "
+                else:
+                    con += "<<> or "
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "OPERAND2" or word == "fields":
+                        break
+                if word == "OPERAND2":
+                    nq()
+                    word = extdata()
+                    if not word == "fields" and not word == "OPERAND1":
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                        con += ">"
+                    else:
+                        con += "<>>"
+                else:
+                    con += "<>>"
+            elif a1 == "operator_not":
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "OPERAND" or word == "fields":
+                        break
+                if word == "OPERAND":
+                    nq()
+                    word = extdata()
+                    if not word == "fields":
+                        i = jsonfile.find("\"" + word + "\":{\"opcode\":")
+                        con += "<not "
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                        con += ">"
+                    else:
+                        con += "<not <>>"
+                else:
+                        con += "<not <>>"
             else:
                 print(RED + "Unknown block: \"" + a1 + "\" Skipping." + NC)
                 writetofile(dcd + "/project.ss1", "DECOMPERR: Unknown block:  \"" + a1 + "\"")
@@ -591,7 +1467,7 @@ while True:
                     if b == "1":
                         break
                     varname += char
-                writetofile("Stage/project.ss1", "m{broadcast}=" + varname)
+                writetofile("Stage/project.ss1", "{broadcast}=" + varname)
                 print(RED + "Loaded broadcast: " + NC + "\"" + varname + "\"")
                 print("")
                 ip()
@@ -635,6 +1511,32 @@ while True:
                 addblock(word)
             if done == "1":
                 break
+        print("\nFormatting code to make it easier to read (Please wait)...")
+        f = open(dcd + "/project.ss1", "r")
+        spaces = ""
+        i = 0
+        for line in f.readlines():
+            line = line.strip("\n")
+            if "}" in line and "{" in line:
+                i = i - 1
+                spaces = i*"  "
+                i = i + 1
+            elif "{" in line:
+                spaces = i*"  "
+                i = i + 1
+            elif "}" in line:
+                i = i - 1
+                spaces = i*"  "
+            else:
+                spaces = i*"  "
+            writetofile(dcd + "/a.txt", spaces + line)
+        f.close()
+        os.remove(dcd + "/project.ss1")
+        os.rename(dcd + "/a.txt", dcd + "/project.ss1")
+        os.chdir("..")
+        dir = os.getcwd()
+        print("")
+        print(RED + "Your project can be found in " + dir + "/" + name + "." + NC)
         break
     elif input3.lower() == "n":
         print("Install zenity for MSYS2, or this won't work.")
