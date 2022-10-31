@@ -52,7 +52,7 @@ Install dependencies (list below).
 
 Clone the repo with
 ```
-git clone https://github.com/0K9090/ScratchLang.git
+git clone https://github.com/ScratchLang/ScratchLang.git
 cd ScratchLang/mainscripts
 ```
 
