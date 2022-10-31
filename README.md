@@ -11,6 +11,7 @@ Also, a devlog is at the bottom.
 
 # Latest big updates
 Working on a Python version. So far it is WAY faster.
+Also moved to an organization.
 
 # The bug list
 is at the very bottom. Look at that list before posting bugs.
