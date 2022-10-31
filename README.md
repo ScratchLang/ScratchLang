@@ -120,8 +120,8 @@ var=string - (Define a variable)<br>
 # Decompiler Python V1
 ## Vanilla Scratch Blocks
 ### Added blocks
-56/90 Stage Blocks + Pen | 62.62% Done<br>
-56/141 Every Block + Pen | 39.71% Done<br>
+72/82 Stage Blocks + Pen | 87.80% Done<br>
+72/141 Every Block + Pen | 51.06% Done<br>
 
 Write every block in the order they are defined.<br>
 

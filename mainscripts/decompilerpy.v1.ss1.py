@@ -1,8 +1,4 @@
-import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-from asyncore import write
-import sys, os, time, subprocess, msvcrt
-from pathlib import Path
+import os, time, subprocess, msvcrt
 from tkinter import filedialog as fd
 
 def error(text):
@@ -88,7 +84,6 @@ while True:
             subprocess.run("rm -rf " + name, shell=False)
         else:
             exit(0)
-            
         print("")
     print("Decompiling project...\n")
     time.sleep(1)
@@ -1108,9 +1103,9 @@ while True:
             else:
                 op2 = ""
                 con += op2 + "\")>"
-                if dcon == "1":
-                    writetofile(dcd + "/project.ss1", con)
-                    print(RED + "Added block: " + NC + "\"" + con + "\"")
+            if dcon == "1":
+                writetofile(dcd + "/project.ss1", con)
+                print(RED + "Added block: " + NC + "\"" + con + "\"")
         elif a1 == "operator_gt":
             nq(2)
             j = i
@@ -1199,9 +1194,9 @@ while True:
             else:
                 op2 = ""
                 con += op2 + "\")>"
-                if dcon == "1":
-                    writetofile(dcd + "/project.ss1", con)
-                    print(RED + "Added block: " + NC + "\"" + con + "\"")
+            if dcon == "1":
+                writetofile(dcd + "/project.ss1", con)
+                print(RED + "Added block: " + NC + "\"" + con + "\"")
         elif a1 == "operator_lt":
             nq(2)
             j = i
@@ -1290,9 +1285,9 @@ while True:
             else:
                 op2 = ""
                 con += op2 + "\")>"
-                if dcon == "1":
-                    writetofile(dcd + "/project.ss1", con)
-                    print(RED + "Added block: " + NC + "\"" + con + "\"")
+            if dcon == "1":
+                writetofile(dcd + "/project.ss1", con)
+                print(RED + "Added block: " + NC + "\"" + con + "\"")
         elif a1 == "operator_and":
             nq(2)
             j = i
