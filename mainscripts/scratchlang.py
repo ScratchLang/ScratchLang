@@ -72,7 +72,7 @@ def startpy(a1=""):
         args = 1
     except IndexError:
         pass
-    print("\033[8;40;125t")
+    print("\033[8;40;125t\033[3;250;60t")
     subprocess.run("clear", shell=False)
     print(P + """\n      /$$$$$$                                 /$$               /$$       /$$                                    
      /$$__  $$                               | $$              | $$      | $$                                    
@@ -2700,7 +2700,7 @@ def inputloop(ia1: str = ""):
                 subprocess.run("bash " + line)
         else:
             subprocess.run("chmod 755 decompiler.v2.ss1.sh")
-            subprocess.run("./decompiler.v2.ss1.sh")
+            subprocess.run("bash decompiler.v2.ss1.sh")
         exit()
     elif inp == "5":
         os.chdir("..")
