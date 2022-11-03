@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.82p**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.83p**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -10,8 +10,7 @@ Also, a devlog is at the bottom.
 ---
 
 # Latest big updates
-Working on a Python version. So far it is WAY faster.
-Also moved to an organization.
+Transitioned to almost 100% Python. Decompilers are still there, and created `createsl.sh` to make the scratchlang command.
 
 # The bug list
 is at the very bottom. Look at that list before posting bugs.
@@ -20,7 +19,7 @@ is at the very bottom. Look at that list before posting bugs.
 This is an open-source project. Anyone can contribute. If there's anything discouraging you from contributing, let me know and I'll try to fix it.
 
 # The Plan
-This is mainly made in Shell Script and Python, but if you know languages like C, then you can make some stuff in that so people have many options to choose from.
+This is mainly made in Python, but if you know languages like C, then you can make some stuff in that so people have many options to choose from.
 
 Some .sb3 files are included in the resources folder so you can test your comp/decomp scripts.
 
@@ -59,15 +58,14 @@ cd ScratchLang/mainscripts
 
 Start the project with
 ```
-chmod 755 start.sh
-./start.sh
+python3 scratchlang.py
 ```
 If you create a scratchlang command, start the project wtih
 ```
 scratchlang
 ```
 
-If you want to test out the decompiler, run `start.sh -4` and select the .sb3 "decompiler-all-added-blocks.sb3" which is in the resources folder. You get to see it decompile all the blocks added so far.
+If you want to test out the decompiler, run `python3 scratchlang.py -4` and select the .sb3 "every-block-+-pen.sb3" which is in the resources folder. You get to see it decompile all the blocks added so far.
 
 To code, edit the .ss(es) in you favorite glorified text editor like VSC or Atom.
 
@@ -78,11 +76,11 @@ You don't need ScratchLang to program ScratchScript (.ss) files, you can use a t
 # Dependencies
 ## Windows
 You need `zenity` ONLY IF YOU ARE PLANNING TO USE THE VERSION MADE IN SHELLSCRIPT.
-https://github.com/ncruces/zenity/wiki/Zenity-for-WSL%2C-Cygwin%2C-MSYS2 Download here, or you can run ./start.sh and input 7 to install zenity.
+Download [here](https://github.com/ncruces/zenity/wiki/Zenity-for-WSL%2C-Cygwin%2C-MSYS2), or you can go into the old_scripts directory and run ./start.sh and input 7 to install zenity.
 
 You also need these.
 ```
-pacman -S git bc unzip
+pacman -S python git bc unzip
 ```
 ## Linux
 You need the command `zenity` ONLY IF YOU ARE PLANNING TO USE THE VERSION MADE IN SHELLSCRIPT.
@@ -91,6 +89,7 @@ sudo apt-get install -y zenity
 ```
 You also need these.
 ```
+sudo apt-get install -y python
 sudo apt-get install -y git
 sudo apt-get install -y bc
 sudo apt-get install -y unzip
@@ -105,6 +104,8 @@ This is what people will do.
 
 ### 0K9090
 Program the decompiler in Python
+### stan-solov
+Make the docs
 ### wendiner
 I don't know what they're doing
 ### redstone-scratch
@@ -120,9 +121,13 @@ list=item1, item2, item3, etc - (For an empty list, just add a comma after the e
 var=string - (Define a variable)<br>
 # Decompiler Python V1
 ## Vanilla Scratch Blocks
+What I'm counting as Vanilla Scratch Blocks:
+Normal Blocks
+Custom Blocks
+Pen extension
 ### Added blocks
-72/82 Stage Blocks + Pen | 87.80% Done<br>
-72/141 Every Block + Pen | 51.06% Done<br>
+78/80 Stage Blocks + Pen | 90.00% Done<br> # Only Custom Blocks left!
+78/139 Every Block + Pen | 51.80% Done<br>
 
 Write every block in the order they are defined.<br>
 
@@ -537,12 +542,18 @@ Your .ss1 file is probably big.
 ## V2 Decomp Bugs
 * Sometimes (in the project.json) when decompiling a "switch backdrop to" block, the backdrop name is replaced with a number, causing some bugs.
 * Sometimes blocks don't compile at the right place if it's after a c-block.
+## Python V1 Bugs
+* None yet.
 
 ![sl.png](sl.png)
 
 # Devlog
 Format: MM.DD.YY - VERSION
-## 10.29.22 = 0.6.81p
+## 11.3.22 - 0.6.83p
+* ScratchLang is not almost 100% Python.
+## 10.??.22 - 0.6.82p
+* Forgot to make a devlog for this day, so I forgot what I added in this version
+## 10.29.22 - 0.6.81p
 * Added some more blocks to the python port.
 ## 10.28.22 - 0.6.8p
 * Added some blocks to the python port.

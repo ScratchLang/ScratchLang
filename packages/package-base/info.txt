@@ -1,1 +1,0 @@
-This is a base package. Rename the directory from "package-base" to "[YOUR PACKAGE NAME]". Don't take that literally. Also, packages are prioritiezed first. If you set a package to go off in example.sh line 5, it will run the package first, then line 5.

@@ -1,9 +1,9 @@
 #!/bin/bash
-RED='\033[0;31m'                                      #red
-NC='\033[0m'                                          #Reset text color.
-P='\033[0;35m'                                        #Purple
-basedir=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')") #get the base directory of start.sh
-cd "$basedir" || exit                                 #enter the base directory path/ScratchLang/mainscripts
+RED='\033[0;31m'               #red
+NC='\033[0m'                   #Reset text color.
+P='\033[0;35m'                 #Purple
+basedir=$(dirname "${0/\\//}") #get the base directory of start.sh
+cd "$basedir" || exit          #enter the base directory path/ScratchLang/mainscripts
 #start initializing packagess
 if [ -f var/pe ]; then            #if a file called pe exists
   if ! [ "h$1" == "hnope" ]; then #if it is not being ran from another file
@@ -104,7 +104,7 @@ if [ -f var/pe ]; then            #if a file called pe exists
 fi
 cd ../
 ver=$(sed '1!d' version) #get local version
-cd mainscripts
+cd mainscripts || exit
 if ! [ -f var/asked ]; then #this is in place so it only asks the below question once, ever.
   if ! [ -f var/vc ]; then  #I don't know why this is here anymore
     echo "Would you like ScratchLang to check its version every time you start it? [Y/N]"
@@ -121,7 +121,7 @@ if [ -f var/vc ]; then
     if [ -f version ]; then #if the version file already exists, remove it
       rm version
     fi
-    wget -q https://raw.githubusercontent.com/0K9090/ScratchLang/main/version #get the version file from github
+    wget -q https://raw.githubusercontent.com/ScratchLang/ScratchLang/main/version #get the version file from github
     utd=1
     if ! [ "$ver" == "$(sed '1!d' version)" ]; then #if local version doesn't match version from github, then set utd to 0
       utd=0

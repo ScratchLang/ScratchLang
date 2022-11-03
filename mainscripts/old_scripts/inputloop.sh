@@ -126,12 +126,12 @@ if [ h$input == h1 ]; then
   cd ../
   cp resources/cd21514d0531fdffb22204e0ec5ed84a.svg projects/"$name"/Stage/assets #Copy blank background svg to Stage/assets
   cd projects/"$name"/Stage || exit
-  echo >>project.ss1 \#There should be no empty lines. #create .ss file
+  echo >>project.ss1 "# There should be no empty lines." #create .ss file
   echo >>project.ss1 ss
   cd ../
   mkdir Sprite1 #create sprite 1
   cd Sprite1 || exit
-  echo >>project.ss1 \#There should be no empty lines.
+  echo >>project.ss1 "# There should be no empty lines."
   echo >>project.ss1 ss
   mkdir assets
   cd ../
