@@ -104,13 +104,10 @@ This is what people will do.
 
 ### 0K9090
 Program the decompiler in Python
-### stan-solov
-Make the docs
 ### wendiner
 I don't know what they're doing
 ### redstone-scratch
 They quit :/ Goodbye
-
 ### stan-solov
 Develop the Documentation website
 
