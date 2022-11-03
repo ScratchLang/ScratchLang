@@ -111,6 +111,9 @@ I don't know what they're doing
 ### redstone-scratch
 They quit :/ Goodbye
 
+### stan-solov
+Develop the Documentation website
+
 # ScratchLang Language
 ScratchLang's language is called ScratchScript.
 ## ScratchScript blocks
