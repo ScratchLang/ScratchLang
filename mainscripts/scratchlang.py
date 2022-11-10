@@ -1,27 +1,58 @@
+# Imports
+
 import os
+import shutil
 import subprocess
 import sys
 import time
 from tkinter import filedialog as fd
 
+# Set ANSI escape colors
+
 RED = "\033[0;31m"
 NC = "\033[0m"
 P = "\033[0;35m"
 
-os.chdir(os.getcwd())
+# Set the CWD to the parent directory of the Python file
+
+pydir = sys.argv[0].replace("\\", "/")
+h = len(pydir)
+stop = False
+while True:
+    h -= 1
+    try:
+        chars = pydir[h]
+        if chars == "/":
+            break
+    except IndexError:  # If the script gets an IndexError, then it must already be in the correct directory
+        stop = True
+        break
+if not stop:
+    bounded = h
+    h = -1
+    direc = ""
+    while True:
+        h += 1
+        if h == bounded:
+            break
+        chars = pydir[h]
+        direc += chars
+    os.chdir(direc)
 jsonfile = ""
 global corr
 
 
-def error(text):
+def error(text):  # Error prompt
     print(RED + "Error: " + text + NC)
 
 
-def createdir(credir):
+def createdir(
+    credir,
+):  # Created this function because I was too lazy to type out "os.mkdir"
     os.mkdir(credir)
 
 
-def getinput():
+def getinput():  # Gets input from the user
     return (
         subprocess.check_output('bash -c "read -rsn 1 f && echo $f"', shell=False)
         .decode("utf-8")
@@ -29,7 +60,7 @@ def getinput():
     )
 
 
-def writetofile(file, towrite):
+def writetofile(file, towrite):  # Write to a file. If it doesn't exist, then create it.
     if os.path.isfile(file):
         f = open(file, "r")
         fcontents = f.read()
@@ -41,10 +72,10 @@ def writetofile(file, towrite):
         f.close()
 
 
-def startpy(a1=""):
+def startpy(a1=""):  # Main menu.
     os.chdir("..")
     f = open("version", "r")
-    ver = f.readline()
+    ver = f.readline()  # Get ScratchLang's local version
     f.close()
     os.chdir("mainscripts")
     if not os.path.isfile("var/asked"):
@@ -58,13 +89,13 @@ def startpy(a1=""):
             writetofile("var/asked", "Don't remove this file please.")
     if os.path.isfile("var/vc"):
         if not a1 == "nope":
-            print("Checking version...")
+            print("Checking version...")  # Check your version
             if os.path.isfile("version"):
                 os.remove("version")
             subprocess.run(
                 "wget -q https://raw.githubusercontent.com/ScratchLang/ScratchLang/main/version",
                 shell=False,
-            )
+            )  # Get the up-to-date version file from the ScratchLang repo
             utd = "1"
             f = open("version", "r")
             gver = f.readline()
@@ -84,25 +115,41 @@ def startpy(a1=""):
                 exit()
             f.close()
             os.remove("version")
-    args = 0
+    args = False
+    global args2
+    args2 = False
     try:
-        if sys.argv[1] == "--help":
+        if (
+            sys.argv[1] == "--help"
+        ):  # If --help is passed as an arguent, then print the help screen.
             print(
                 "scratchlang (or 'python3 scratchlang.py' if you haven't created the scratchlang command)\n"
             )
-            print("  -1                Create a project")
-            print("  -2                Remove a project")
-            print("  -3                Compile a project")
-            print("  -4                Decompile a project")
-            print("  -5                Export a project")
-            print("  -6                Import a project")
-            print("  --debug [FILE]    Debug a ScratchScript file")
+            print("  -1                Create a project.")
+            print("  -2                Remove a project.")
+            print("  -3                Compile a project.")
+            print("  -4                Decompile a project.")
+            print("  -5                Export a project.")
+            print("  -6                Import a project.")
+            print(
+                "  --debug [FILE]    Debug a ScratchScript file. Currently not available."
+            )
             print("  --help            Display this help message.")
             exit()
-        args = 1
+        args = True  # If the script has at least 1 argument being passed to it, then set args to True
+        try:
+            if sys.argv[2] == "":
+                pass
+            args2 = (
+                True  # If the script has at least 2 arguments, then set args2 to True
+            )
+        except IndexError:
+            pass
     except IndexError:
         pass
-    print("\033[8;40;125t\033[3;250;60t")
+    print(
+        "\033[8;40;125t\033[3;250;60t"
+    )  # Set the terminal size to 40x125, then put it in the middle of the screen
     subprocess.run("clear", shell=False)
     print(
         P
@@ -118,9 +165,9 @@ def startpy(a1=""):
                                                                                                        |  $$$$$$/
                                                                                                         \\______/ """
         + NC
-    )
+    )  # logo
     print("")
-    if not args == 1 or a1 == "nope":
+    if not args or a1 == "nope":
         print(
             "Welcome to ScratchLang "
             + ver
@@ -171,12 +218,46 @@ def decomp():
             + NC
         )
         print("")
-        time.sleep(2)
-        filetypes = (("Scratch SB3", "*.sb3"), ("All files", "*.*"))
-        sb3file = fd.askopenfilename(
-            title="Choose a Scratch project", initialdir="/", filetypes=filetypes
-        )
-        sb3file.replace("\\", "/")
+        if not args2:
+            time.sleep(2)
+            filetypes = (("Scratch SB3", "*.sb3"), ("All files", "*.*"))
+            sb3file = fd.askopenfilename(
+                title="Choose a Scratch project", initialdir="/", filetypes=filetypes
+            )
+            sb3file.replace("\\", "/")
+        else:
+            ppath = os.getcwd()
+            sb3file = sys.argv[2].replace("\\", "/")
+            if not os.path.isfile(sb3file):
+                error("File doesn't exist.")
+                exit()
+            h = len(sb3file)
+            while True:
+                h -= 1
+                chars = sb3file[h]
+                if chars == "/":
+                    break
+            bounded = h
+            h = -1
+            direc = ""
+            while True:
+                h += 1
+                if h == bounded:
+                    break
+                chars = sb3file[h]
+                direc += chars
+            os.chdir(direc)
+            sb3pth = os.getcwd() + "/"
+            h = bounded
+            while True:
+                h += 1
+                try:
+                    chars = sb3file[h]
+                except IndexError:
+                    break
+                sb3pth += chars
+            sb3file = sb3pth
+            os.chdir(ppath)
         if sb3file == "":
             error("Empty path.")
             exit()
@@ -228,7 +309,7 @@ def decomp():
             while True:
                 ip()
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     break
                 word += char
             return word
@@ -237,15 +318,15 @@ def decomp():
             global b
             global char
             char = ""
-            b = ""
+            b = False
             if not "-" + a2 == "-++":
                 char = jsonfile[i]
                 if "-" + char == a1:
-                    b = "1"
+                    b = True
             elif not "-" + char == a1:
                 char = jsonfile[i + 1]
                 if "-" + char == a1:
-                    b = "1"
+                    b = True
                 char = jsonfile[i]
             else:
                 char = ""
@@ -266,7 +347,7 @@ def decomp():
                 while True:
                     ip()
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         break
 
         def start(a1=""):
@@ -275,7 +356,7 @@ def decomp():
             ip(2)
             b = "0"
             b = getchar('-"')
-            if not b == "1":
+            if not b:
                 if "h" + a1 == "h":
                     nxt = "fin"
             else:
@@ -284,7 +365,7 @@ def decomp():
                 while True:
                     ip()
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         break
                     varname += char
                 if "h" + a1 == "h":
@@ -294,7 +375,7 @@ def decomp():
             ip(2)
             b = "0"
             b = getchar('-"')
-            if not b == "1":
+            if not b:
                 if a1 == "":
                     writetofile(dcd + "/project.ss1", "\\nscript")
                     print("")
@@ -304,51 +385,11 @@ def decomp():
                 while True:
                     ip()
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         break
 
                     pname += char
             dte(nxt)
-
-        def start2(a1=""):
-            global con
-            nq(2)
-            ip(2)
-            b = "0"
-            b = getchar('-"')
-            if not b == "1":
-                if "h" + a1 == "h":
-                    con = "fin"
-            else:
-                b = "0"
-                varname = ""
-                while True:
-                    ip()
-                    b = getchar('-"')
-                    if b == "1":
-                        break
-                    varname += char
-                if "h" + a1 == "h":
-                    con = varname
-            nq(2)
-            ip(2)
-            b = "0"
-            b = getchar('-"')
-            if not b == "1":
-                if "h" + a1 == "h":
-                    writetofile(dcd + "project.ss1", "\\nscript")
-                    print("")
-            else:
-                b = "0"
-                pname = ""
-                while True:
-                    ip()
-                    b = getchar('-"')
-                    if b == "1":
-                        break
-
-                    pname += char
-            dte(con)
 
         def addblock(a1, dcon=0):
             global i
@@ -631,12 +672,12 @@ def decomp():
                 word = extdata()
                 if word == "SUBSTACK":
                     word = ""
-                    writetofile(dcd + "/project.ss1", "repeat (" + word + ") {")
-                    print(RED + "Starting repeat |" + NC + " repeat (" + word + ") {")
+                    writetofile(dcd + "/project.ss1", 'repeat ("' + word + '") {')
+                    print(RED + "Starting repeat |" + NC + ' repeat ("' + word + '") {')
                 else:
                     nq()
                     writetofile(dcd + "/project.ss1", "repeat (" + word + ") {")
-                    print(RED + "Starting repeat |" + NC + " repeat (" + word + ") {")
+                    print(RED + "Starting repeat |" + NC + ' repeat ("' + word + '") {')
                     word = extdata()
                 if not word == "SUBSTACK":
                     writetofile(dcd + "/project.ss1", "}")
@@ -695,12 +736,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-]")
-                        if b == "1":
+                        if b:
                             break
                     im()
-                    b = 0
+                    b = False
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         i = k
                         nq()
                         word = extdata()
@@ -727,12 +768,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-]")
-                        if b == "1":
+                        if b:
                             break
                     im()
-                    b = 0
+                    b = False
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         i = k
                         nq()
                         word = extdata()
@@ -761,12 +802,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-]")
-                        if b == "1":
+                        if b:
                             break
                     im()
-                    b = 0
+                    b = False
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         i = k
                         nq()
                         word = extdata()
@@ -793,12 +834,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-]")
-                        if b == "1":
+                        if b:
                             break
                     im()
-                    b = 0
+                    b = False
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         i = k
                         nq()
                         word = extdata()
@@ -822,12 +863,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-]")
-                        if b == "1":
+                        if b:
                             break
                     im()
-                    b = 0
+                    b = False
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         i = k
                         nq()
                         word = extdata()
@@ -856,12 +897,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-]")
-                        if b == "1":
+                        if b:
                             break
                     im()
-                    b = 0
+                    b = False
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         i = k
                         nq()
                         word = extdata()
@@ -893,12 +934,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-]")
-                        if b == "1":
+                        if b:
                             break
                     im()
-                    b = 0
+                    b = False
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         i = k
                         nq()
                         word = extdata()
@@ -934,12 +975,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-]")
-                        if b == "1":
+                        if b:
                             break
                     im()
-                    b = 0
+                    b = False
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         i = k
                         nq()
                         word = extdata()
@@ -968,12 +1009,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-]")
-                        if b == "1":
+                        if b:
                             break
                     im()
-                    b = 0
+                    b = False
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         i = k
                         nq()
                         word = extdata()
@@ -1000,12 +1041,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-]")
-                        if b == "1":
+                        if b:
                             break
                     im()
-                    b = 0
+                    b = False
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         i = k
                         nq()
                         word = extdata()
@@ -1270,12 +1311,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-,")
-                        if b == "1":
+                        if b:
                             break
                     ip()
                     b = "0"
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         word = extdata()
                         i = jsonfile.find('"' + word + '":{"opcode":')
                         nq(4)
@@ -1288,12 +1329,12 @@ def decomp():
                         while True:
                             ip()
                             b = getchar("-]")
-                            if b == "1":
+                            if b:
                                 break
                         im()
-                        b = 0
+                        b = False
                         b = getchar('-"')
-                        if b == "1":
+                        if b:
                             i = k
                             nq()
                             op1 = extdata()
@@ -1313,12 +1354,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-,")
-                        if b == "1":
+                        if b:
                             break
                     ip()
                     b = "0"
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         word = extdata()
                         i = jsonfile.find('"' + word + '":{"opcode":')
                         nq(4)
@@ -1330,12 +1371,12 @@ def decomp():
                         while True:
                             ip()
                             b = getchar("-]")
-                            if b == "1":
+                            if b:
                                 break
                         im()
-                        b = 0
+                        b = False
                         b = getchar('-"')
-                        if b == "1":
+                        if b:
                             i = k
                             nq()
                             op2 = extdata()
@@ -1361,12 +1402,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-,")
-                        if b == "1":
+                        if b:
                             break
                     ip()
                     b = "0"
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         word = extdata()
                         i = jsonfile.find('"' + word + '":{"opcode":')
                         nq(4)
@@ -1379,12 +1420,12 @@ def decomp():
                         while True:
                             ip()
                             b = getchar("-]")
-                            if b == "1":
+                            if b:
                                 break
                         im()
-                        b = 0
+                        b = False
                         b = getchar('-"')
-                        if b == "1":
+                        if b:
                             i = k
                             nq()
                             op1 = extdata()
@@ -1404,12 +1445,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-,")
-                        if b == "1":
+                        if b:
                             break
                     ip()
                     b = "0"
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         word = extdata()
                         i = jsonfile.find('"' + word + '":{"opcode":')
                         nq(4)
@@ -1421,12 +1462,12 @@ def decomp():
                         while True:
                             ip()
                             b = getchar("-]")
-                            if b == "1":
+                            if b:
                                 break
                         im()
-                        b = 0
+                        b = False
                         b = getchar('-"')
-                        if b == "1":
+                        if b:
                             i = k
                             nq()
                             op2 = extdata()
@@ -1452,12 +1493,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-,")
-                        if b == "1":
+                        if b:
                             break
                     ip()
                     b = "0"
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         word = extdata()
                         i = jsonfile.find('"' + word + '":{"opcode":')
                         nq(4)
@@ -1470,12 +1511,12 @@ def decomp():
                         while True:
                             ip()
                             b = getchar("-]")
-                            if b == "1":
+                            if b:
                                 break
                         im()
-                        b = 0
+                        b = False
                         b = getchar('-"')
-                        if b == "1":
+                        if b:
                             i = k
                             nq()
                             op1 = extdata()
@@ -1495,12 +1536,12 @@ def decomp():
                     while True:
                         ip()
                         b = getchar("-,")
-                        if b == "1":
+                        if b:
                             break
                     ip()
                     b = "0"
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         word = extdata()
                         i = jsonfile.find('"' + word + '":{"opcode":')
                         nq(4)
@@ -1512,12 +1553,12 @@ def decomp():
                         while True:
                             ip()
                             b = getchar("-]")
-                            if b == "1":
+                            if b:
                                 break
                         im()
-                        b = 0
+                        b = False
                         b = getchar('-"')
-                        if b == "1":
+                        if b:
                             i = k
                             nq()
                             op2 = extdata()
@@ -1650,12 +1691,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     con += "(join "
@@ -1677,12 +1718,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     nq(4)
@@ -1709,12 +1750,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     con += "(letter "
@@ -1737,12 +1778,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     nq(4)
@@ -1769,12 +1810,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     con += "(length of "
@@ -1802,12 +1843,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     con += "<"
@@ -1830,12 +1871,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     nq(4)
@@ -1862,12 +1903,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     con += "("
@@ -1890,12 +1931,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     nq(4)
@@ -1922,12 +1963,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     con += "(round "
@@ -1963,12 +2004,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     nq(4)
@@ -2004,12 +2045,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     nq(4)
@@ -2043,12 +2084,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     nq(4)
@@ -2102,12 +2143,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     con += "add "
@@ -2143,12 +2184,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     con += "delete "
@@ -2189,12 +2230,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     con += "insert "
@@ -2217,12 +2258,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     nq(4)
@@ -2257,12 +2298,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     con += "replace item "
@@ -2293,12 +2334,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     nq(4)
@@ -2325,12 +2366,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     con += "(item "
@@ -2366,12 +2407,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     con += "(item # of "
@@ -2427,12 +2468,12 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-,")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 b = "0"
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     word = extdata()
                     i = jsonfile.find('"' + word + '":{"opcode":')
                     nq(4)
@@ -2499,15 +2540,15 @@ def decomp():
             nq()
             ip()
             nq()
-            b = 0
+            b = False
             novars = "0"
             while True:
                 ip()
                 b = getchar("-[")
-                if b == "1":
+                if b:
                     break
                 b = getchar("-}")
-                if b == "1":
+                if b:
                     novars = "1"
                     break
             if novars == "0":
@@ -2518,7 +2559,7 @@ def decomp():
                     ip()
                     b = getchar('-"', "++")
                     varname += char
-                    if b == "1":
+                    if b:
                         break
                 ip(2)
                 b = "0"
@@ -2527,7 +2568,7 @@ def decomp():
                     ip()
                     b = getchar("-]", "++")
                     varvalue += char
-                    if b == "1":
+                    if b:
                         break
                 if not os.path.isfile("Stage/project.ss1"):
                     writetofile(
@@ -2543,7 +2584,7 @@ def decomp():
                 ip(2)
                 isub = 2
                 b = getchar("-}")
-                if b == "1":
+                if b:
                     break
                 im(2)
             if novars == "1":
@@ -2558,7 +2599,7 @@ def decomp():
             ip(2)
             b = "0"
             b = getchar("-}")
-            if b == "1":
+            if b:
                 novars = "1"
                 im(2)
             else:
@@ -2571,10 +2612,10 @@ def decomp():
                 while True:
                     ip()
                     b = getchar("-[")
-                    if b == "1":
+                    if b:
                         break
                     b = getchar("-}")
-                    if b == "1":
+                    if b:
                         novars = "1"
                         break
             if novars == "0":
@@ -2585,27 +2626,27 @@ def decomp():
                     ip()
                     b = getchar('-"', "++")
                     listname += char
-                    if b == "1":
+                    if b:
                         break
                 ip(4)
                 b = "0"
                 b = getchar("-]")
-                if not b == "1":
+                if not b:
                     if char == '"':
-                        b = 0
+                        b = False
                         while True:
-                            b = 0
+                            b = False
                             varname = ""
                             while True:
                                 ip()
                                 b = getchar('-"')
-                                if b == "1":
+                                if b:
                                     break
                                 varname += char
                             ip()
-                            b = 0
+                            b = False
                             b = getchar("-]")
-                            if not b == "1":
+                            if not b:
                                 writetofile("st", varname + ",")
                                 ip()
                             else:
@@ -2620,15 +2661,15 @@ def decomp():
                             while True:
                                 ip()
                                 b = getchar("-,")
-                                if b == "1":
+                                if b:
                                     break
                                 b = getchar("-]")
-                                if b == "1":
+                                if b:
                                     break
                                 varname += char
                             b = "0"
                             b = getchar("-]")
-                            if not b == "1":
+                            if not b:
                                 writetofile("st", varname + ",")
                             else:
                                 writetofile("st", varname)
@@ -2654,7 +2695,7 @@ def decomp():
             ip(2)
             b = "0"
             b = getchar("-}")
-            if b == "1":
+            if b:
                 break
         print("Loading broadcasts...")
         print("")
@@ -2664,7 +2705,7 @@ def decomp():
             while True:
                 ip()
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     break
                 word += char
             if word == "broadcasts":
@@ -2674,7 +2715,7 @@ def decomp():
         ip(3)
         b = "0"
         b = getchar("-}")
-        if b == "1":
+        if b:
             novars = "1"
             im(2)
         else:
@@ -2682,10 +2723,10 @@ def decomp():
             while True:
                 ip()
                 b = getchar('-"')
-                if b == "1":
+                if b:
                     break
                 b = getchar("-}")
-                if b == "1":
+                if b:
                     novars = "1"
                     break
             nq()
@@ -2698,7 +2739,7 @@ def decomp():
                 while True:
                     ip()
                     b = getchar('-"')
-                    if b == "1":
+                    if b:
                         break
                     varname += char
                 writetofile("Stage/project.ss1", "{broadcast}=" + varname)
@@ -2707,7 +2748,7 @@ def decomp():
                 ip()
                 b = "0"
                 b = getchar("-}")
-                if b == "1":
+                if b:
                     break
                 ip(2)
                 nq()
@@ -2728,7 +2769,7 @@ def decomp():
                     ip(2)
                     b = "0"
                     b = getchar('-"')
-                    if not b == "1":
+                    if not b:
                         break
                 if word == "comments":
                     done = "1"
@@ -2738,7 +2779,7 @@ def decomp():
                 while True:
                     im()
                     b = getchar("-{")
-                    if b == "1":
+                    if b:
                         break
                 ip()
                 nq(2)
@@ -2747,6 +2788,32 @@ def decomp():
                 addblock(word, 1)
             if done == "1":
                 break
+        print("\nAdding assets...")
+        while True:
+            word = extdata()
+            if word == "costumes":
+                break
+        while True:
+            nq(15)
+            asset_file = extdata()
+            try:
+                shutil.move("./" + asset_file, "Stage/assets/" + asset_file)
+                print(asset_file + " >> Stage/assets/" + asset_file)
+            except FileNotFoundError:
+                pass
+            nq(4)
+            b = "0"
+            while True:
+                ip()
+                b = getchar("-}")
+                if b:
+                    break
+            ip()
+            b = "0"
+            b = getchar("-]")
+            if b:
+                break
+            nq(2)
         print("\nFormatting code to make it easier to read (Please wait)...")
         print("")
         f = open(dcd + "/project.ss1", "r")
@@ -2770,14 +2837,14 @@ def decomp():
             )
             line = line.strip("\n")
             if "}" in line and "{" in line:
-                i = i - 1
+                i -= 1
                 spaces = i * "  "
-                i = i + 1
+                i += 1
             elif "{" in line:
                 spaces = i * "  "
-                i = i + 1
+                i += 1
             elif "}" in line:
-                i = i - 1
+                i -= 1
                 spaces = i * "  "
             else:
                 spaces = i * "  "
@@ -2786,7 +2853,7 @@ def decomp():
         os.remove(dcd + "/project.ss1")
         os.rename(dcd + "/a.txt", dcd + "/project.ss1")
         os.chdir("..")
-        dir = os.getcwd()
+        dir = os.getcwd().replace("\\", "/")
         print("")
         print(RED + "Your project can be found in " + dir + "/" + name + "." + NC)
         break
@@ -2974,7 +3041,7 @@ def inputloop(ia1: str = ""):
             startpy("nope")
         exit()
     elif inp == "8":
-        pdir = os.getcwd()
+        pdir = os.getcwd().replace("\\", "/")
         if not os.path.isfile("var/alias"):
             subprocess.run("chmod 755 shcommand.sh", shell=False)
             subprocess.run("bash -c './shcommand.sh 1 " + pdir + "'", shell=False)

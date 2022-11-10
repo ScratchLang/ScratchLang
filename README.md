@@ -23,7 +23,7 @@ This is mainly made in Python, but if you know languages like C, then you can ma
 
 Some .sb3 files are included in the resources folder so you can test your comp/decomp scripts.
 
-The compiler should read the testcode.ss1, write the project.json, and pack it and every asset into a .sb3, that can be played and edited in Scratch
+The compiler should read the project.ss1, write the project.json, and pack it and every asset into a .sb3, that can be played and edited in Scratch
 
 Each sprite (including Stage) has a asset folder. The costumes and sound will go there. It also has a .ss1 file, which is where the code is.
 
@@ -58,14 +58,24 @@ cd ScratchLang/mainscripts
 
 Start the project with
 ```
+py scratchlang.py
+```
+OR
+```
+python scratchlang.py
+```
+OR
+```
 python3 scratchlang.py
 ```
+Depending on which version of python you install.
+
 If you create a scratchlang command, start the project wtih
 ```
 scratchlang
 ```
 
-If you want to test out the decompiler, run `python3 scratchlang.py -4` and select the .sb3 "every-block-+-pen.sb3" which is in the resources folder. You get to see it decompile all the blocks added so far.
+If you want to test out the decompiler, run `py scratchlang.py -4` and select the .sb3 "every-block-+-pen.sb3" which is in the resources folder. You get to see it decompile all the blocks added so far.
 
 To code, edit the .ss(es) in you favorite glorified text editor like VSC or Atom.
 
@@ -80,8 +90,14 @@ Download [here](https://github.com/ncruces/zenity/wiki/Zenity-for-WSL%2C-Cygwin%
 
 You also need these.
 ```
-pacman -S python git bc unzip
+pacman -S python3 git bc unzip
 ```
+
+Once you've installed those, you'll need to install pip then install the requirements.txt with:
+```
+pip install -r requirements.txt
+```
+
 ## Linux
 You need the command `zenity` ONLY IF YOU ARE PLANNING TO USE THE VERSION MADE IN SHELLSCRIPT.
 ```
@@ -89,10 +105,15 @@ sudo apt-get install -y zenity
 ```
 You also need these.
 ```
-sudo apt-get install -y python
+sudo apt-get install -y python3
 sudo apt-get install -y git
 sudo apt-get install -y bc
 sudo apt-get install -y unzip
+```
+
+Once you've installed those, you'll need to install pip then install the requirements.txt with:
+```
+pip install -r requirements.txt
 ```
 ## Other Linux Distros
 For any other distros, search it up. I'm not gonna list the commands for every distro.
@@ -545,7 +566,15 @@ Your .ss1 file is probably big.
 ## Python V1 Bugs
 * None yet.
 
+-----
+#### ScratchLang Screenshot
+
 ![sl.png](sl.png)
+
+#### W.I.P. Editor
+![wipeditor.png](wipeditor.png)
+
+-----
 
 # Devlog
 Format: MM.DD.YY - VERSION
