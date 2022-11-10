@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.83p**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.84p**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -578,6 +578,8 @@ Your .ss1 file is probably big.
 
 # Devlog
 Format: MM.DD.YY - VERSION
+## 11.10.22 - 0.6.84p
+* Started editor, and other things...
 ## 11.3.22 - 0.6.83p
 * ScratchLang is not almost 100% Python.
 ## 10.??.22 - 0.6.82p
