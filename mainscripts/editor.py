@@ -5,12 +5,14 @@ import subprocess
 import sys
 import threading
 from time import sleep
-import keyboard
 from tkinter import filedialog as fd
 
+import pynput
 
 # https://www.tutorialspoint.com/How-can-I-remove-the-ANSI-escape-sequences-from-a-string-in-python
 # ---
+
+
 def escape_ansi(yee):
     ansi_escape = re.compile(r"(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]")
     return ansi_escape.sub("", yee)
@@ -42,6 +44,9 @@ def increment():
         sleep(0.5)
         cursor_blink = 1
         sleep(0.5)
+        if key == "save":
+            exit()
+    exit()
 
 
 def error(text):
@@ -63,7 +68,11 @@ except IndexError:
     fold = fd.askdirectory(title="Choose a project.", initialdir="../projects")
     fold = fold.replace("\\", "/")
 if not os.path.isfile(fold + "/.maindir"):
-    error("Not a ScratchScript project, or .maindir file was deleted.")
+    error(
+        "Not a ScratchScript project ("
+        + fold
+        + "), or .maindir file was deleted."
+    )
     exit()
 os.chdir(fold + "/Stage")
 editor_lines = []
@@ -87,37 +96,105 @@ for line in f.readlines():
         + "%"
     )
     line = line.strip("\n")
-    editor_lines += [line]
+    editor_lines += [line + " "]
 f.close()
-glc = len(str(len(editor_lines)))
+print("")
+print("Loading settings...")
+print("")
+f = open(cwd + "/var/editor_settings", "r")
+tabsize = 2
+shigh = True
+for line in f.readlines():
+    if "tabsize" in line:
+        tabsize = int(line.replace("tabsize: ", ""))
+    elif "syntax_highlighting" in line:
+        shigh = line.replace("syntax_highlighting: ", "")
+f.close()
 print("")
 print("Building syntax highlighting...")
 print("")
 q = 0
 colors = {
     "c": "\033[0m",
-    "n": "\033[37m\033[7m\033[1m",
+    "p": "\033[48;5;10m",
+    "n": "\033[48;5;10m",
     "0": "\033[37m",
     "1": "\033[35m",
+    "2": "\033[38;5;202m",
+    "3": "\033[38;5;160m",
+    "4": "\033[38;5;220m",
+    "5": "\033[38;5;200m",
+    "6": "\033[38;5;172m",
 }
-bgs = {"c": "", "n": "\033[40;1m", "0": "", "1": ""}
-pthesis = {"0": "", "1": "\033[38;5;94m", "2": "\033[34m", "3": "\033[38;5;196m"}
+bgs = {
+    "c": "",
+    "p": "\033[1;90m",
+    "n": "\033[1;90m",
+    "0": "",
+    "1": "",
+    "2": "",
+    "3": "",
+    "4": "",
+    "5": "",
+    "6": "",
+}
+pthesis = {
+    "0": "",
+    "1": "\033[31m",
+    "2": "\033[38;5;202m",
+    "3": "\033[33m",
+    "4": "\033[32m",
+    "5": "\033[34m",
+    "6": "\033[38;5;135m",
+    "7": "\033[35m",
+    "8": "\033[38;5;206m",
+}
 looks = [
-    "switch backdrop",
-    "next backdrop",
-    "change [color",
-    "change [fish",
-    "change [whirl",
-    "change [pixel",
-    "change [mosa",
-    "change [bright",
-    "change [ghost",
+    "switch ",
+    "next",
+    "change [c",
+    "change [f",
+    "change [w",
+    "change [pix",
+    "change [m",
+    "change [b",
+    "change [g",
     "clear g",
     "(backdrop",
+    "set [c",
+    "set [f",
+    "set [w",
+    "set [pix",
+    "set [m",
+    "set [b",
+    "set [g",
 ]
-pth = ["(", "[", "{"]
-pthends = [")", "]", "}"]
+datavar = ["var:"]
+datalist = ["list:"]
+events = ["broadcast", "when"]
+sounds = [
+    "change [pit",
+    "change [pan",
+    "set [pit",
+    "set [pan",
+    "sound",
+    "volume",
+    "clear s",
+]
+control = [
+    "wait (",
+    "wait u",
+    "repeat",
+    "forever",
+    "if <",
+    "else",
+    "while",
+    "clone",
+]
+pth = ["(", "[", "{", "<"]
+pthends = [")", "]", "}", ">"]
 excludes = ["46;1", "38;5;8", "0", "37", "35", "7", "1"]
+bracks = 0
 
 
 def determine_type(lin):
@@ -126,27 +203,45 @@ def determine_type(lin):
     for i in looks:
         if i in lin:
             syntype = "1"
-    if lin == "\\nscript":
+    for i in datavar:
+        if i in lin:
+            syntype = "2"
+    for i in datalist:
+        if i in lin:
+            syntype = "3"
+    for i in events:
+        if i in lin:
+            syntype = "4"
+    for i in sounds:
+        if i in lin:
+            syntype = "5"
+    for i in control:
+        if i in lin:
+            syntype = "6"
+    if "\\n" in lin:
         syntype = "n"
+    if "\\p" in lin:
+        syntype = "p"
 
 
-def add_syntax(lll):
-    global q, e_lines_w_syn
+def add_syntax(lll, bar=True):
+    global q, e_lines_w_syn, bracks
     synline = lll
     q += 1
     per = q / flen
-    print(
-        "\033[A["
-        + round(proglen * per) * "#"
-        + (proglen - round(proglen * per)) * " "
-        + "] "
-        + str(round(per * 100))
-        + "%"
-    )
+    if bar:
+        print(
+            "\033[A["
+            + round(proglen * per) * "#"
+            + (proglen - round(proglen * per)) * " "
+            + "] "
+            + str(round(per * 100))
+            + "%"
+        )
     determine_type(lll)
     i = -1
     slc1 = ""
-    parenth = 0
+    parenth = bracks
     while True:
         i += 1
         try:
@@ -155,23 +250,45 @@ def add_syntax(lll):
             break
         slc1 += char
         if char in pth:
-            parenth += 1
-            c = 0
-            for z in range(parenth):
-                c += 1
-                if c == 4:
-                    c = 1
-            slc1 = slc1.rstrip(slc1[-1])
-            slc1 += pthesis[str(c)] + char + colors[syntype]
+            if not char == "{":
+                parenth += 1
+                c = 0
+                for z in range(parenth):
+                    c += 1
+                    if c == 9:
+                        c = 1
+                slc1 = slc1.rstrip(slc1[-1])
+                slc1 += pthesis[str(c)] + char + colors[syntype]
+            else:
+                bracks += 1
+                c = 0
+                for z in range(bracks):
+                    c += 1
+                    if c == 9:
+                        c = 1
+                slc1 = slc1.rstrip(slc1[-1])
+                slc1 += pthesis[str(c)] + char + colors[syntype]
         elif char in pthends:
-            c = 0
-            for z in range(parenth):
-                c += 1
-                if c == 4:
-                    c = 1
-            slc1 = slc1.rstrip(slc1[-1])
-            slc1 += pthesis[str(c)] + char + colors[syntype]
-            parenth = parenth - 1
+            if not char == "}":
+                if parenth > 0:
+                    c = 0
+                    for z in range(parenth):
+                        c += 1
+                        if c == 9:
+                            c = 1
+                    slc1 = slc1.rstrip(slc1[-1])
+                    slc1 += pthesis[str(c)] + char + colors[syntype]
+                    parenth -= 1
+            else:
+                if bracks > 0:
+                    c = 0
+                    for z in range(bracks):
+                        c += 1
+                        if c == 9:
+                            c = 1
+                    slc1 = slc1.rstrip(slc1[-1])
+                    slc1 += pthesis[str(c)] + char + colors[syntype]
+                    bracks -= 1
         if char == '"':
             slc1 = slc1.rstrip(slc1[-1])
             slc1 += '\033[38;5;34m"'
@@ -192,7 +309,7 @@ def add_syntax(lll):
     return synbuild
 
 
-e_lines_w_syn = [""]
+e_lines_w_syn = []
 for line in editor_lines:
     e_lines_w_syn.append(add_syntax(line))
 editor_current_line = 1
@@ -200,151 +317,520 @@ editor_char = len(editor_lines[0])
 realline = 1
 li = shutil.get_terminal_size().lines
 co = shutil.get_terminal_size().columns
+quotecomplete = False
+parenthcomplete = 0
+caps = False
+
+
+def on_press(what):
+    global realline, editor_current_line, editor_char, cursor_blink, key, caps
+    global quotecomplete, parenthcomplete
+    if len(str(what)) < 5:
+        key = str(what)[1:-1]
+    else:
+        key = str(what).replace("'", "")
+    if key == "Key.up" and editor_current_line > 1:
+        editor_current_line -= 1
+        if editor_current_line == realline and realline > 1:
+            realline -= 1
+        cursor_blink = 1
+        if editor_char > len(editor_lines[editor_current_line - 1]):
+            editor_char = len(editor_lines[editor_current_line - 1])
+    if key == "Key.down" and editor_current_line < len(editor_lines):
+        editor_current_line += 1
+        if (
+            editor_current_line == realline + li - 3
+            and not editor_current_line == len(editor_lines)
+        ):
+            realline += 1
+        cursor_blink = 1
+        if editor_char > len(editor_lines[editor_current_line - 1]):
+            editor_char = len(editor_lines[editor_current_line - 1])
+    if key == "Key.left":
+        if editor_char > 1:
+            editor_char -= 1
+        elif editor_current_line > 1:
+            editor_char = len(editor_lines[editor_current_line - 2])
+            editor_current_line -= 1
+            if editor_current_line == realline and realline > 1:
+                realline -= 1
+            if editor_char > len(editor_lines[editor_current_line - 1]):
+                editor_char = len(editor_lines[editor_current_line - 1])
+        if quotecomplete:
+            quotecomplete = False
+        cursor_blink = 1
+    if key == "Key.right":
+        if editor_char < len(editor_lines[editor_current_line - 1]):
+            editor_char += 1
+        elif editor_current_line < len(editor_lines):
+            editor_char = 1
+            editor_current_line += 1
+            if (
+                editor_current_line == realline + li - 3
+                and not editor_current_line == len(editor_lines)
+            ):
+                realline += 1
+            if editor_char > len(editor_lines[editor_current_line - 1]):
+                editor_char = len(editor_lines[editor_current_line - 1])
+        if quotecomplete:
+            quotecomplete = False
+        cursor_blink = 1
+    if key == "Key.backspace":
+        if editor_char == 1:
+            if not editor_current_line == 1:
+                editor_char = len(editor_lines[editor_current_line - 2])
+                transfer = (
+                    editor_lines[editor_current_line - 2].rstrip(" ")
+                    + editor_lines[editor_current_line - 1]
+                )
+                editor_lines[editor_current_line - 2] = transfer
+                e_lines_w_syn[editor_current_line - 2] = add_syntax(
+                    transfer, False
+                )
+                del editor_lines[editor_current_line - 1]
+                del e_lines_w_syn[editor_current_line - 1]
+                editor_current_line -= 1
+                if realline > 1:
+                    if editor_current_line == realline and realline > 1:
+                        realline -= 1
+        else:
+            backspace_split = (
+                editor_lines[editor_current_line - 1][: editor_char - 2]
+                + editor_lines[editor_current_line - 1][editor_char - 1 :]
+            )
+            editor_lines[editor_current_line - 1] = backspace_split
+            e_lines_w_syn[editor_current_line - 1] = add_syntax(
+                backspace_split, False
+            )
+            if editor_char > 1:
+                editor_char -= 1
+            editor_char = (
+                len(editor_lines[editor_current_line - 1])
+                if editor_char > len(editor_lines[editor_current_line - 1])
+                else editor_char
+            )
+        cursor_blink = 1
+    if key == "Key.delete":
+        if not editor_char + 1 == len(editor_lines[editor_current_line - 1]):
+            backspace_split = (
+                editor_lines[editor_current_line - 1][:editor_char]
+                + editor_lines[editor_current_line - 1][editor_char + 1 :]
+            )
+            editor_lines[editor_current_line - 1] = backspace_split
+            e_lines_w_syn[editor_current_line - 1] = add_syntax(
+                backspace_split, False
+            )
+        cursor_blink = 1
+    if key == "Key.enter":
+        leadings = len(editor_lines[editor_current_line - 1]) - len(
+            editor_lines[editor_current_line - 1].lstrip(" ")
+        )
+        if editor_char == len(editor_lines[editor_current_line - 1]):
+            if len(editor_lines[editor_current_line - 1]) == len(
+                editor_lines[editor_current_line - 1].lstrip(" ")
+            ):
+                leadings -= 1
+            editor_lines.insert(
+                editor_current_line,
+                (
+                    leadings
+                    + (
+                        2
+                        if leadings == -1
+                        else 1
+                        - (
+                            1
+                            if str.strip(editor_lines[editor_current_line - 1])
+                            == ""
+                            else 0
+                        )
+                    )
+                )
+                * " ",
+            )
+            e_lines_w_syn.insert(
+                editor_current_line,
+                (
+                    leadings
+                    + (
+                        2
+                        if leadings == -1
+                        else 1
+                        - (
+                            1
+                            if str.strip(editor_lines[editor_current_line - 1])
+                            == ""
+                            else 0
+                        )
+                    )
+                )
+                * " ",
+            )
+            editor_char = len(editor_lines[editor_current_line])
+        else:
+            if (
+                editor_lines[editor_current_line - 1][editor_char - 1] == "}"
+                and editor_lines[editor_current_line - 1][editor_char - 2]
+                == "{"
+            ):
+                leadings = len(editor_lines[editor_current_line - 1]) - len(
+                    editor_lines[editor_current_line - 1].lstrip(" ")
+                )
+                ins = (
+                    leadings * " "
+                    + editor_lines[editor_current_line - 1][editor_char - 1 :]
+                )
+                editor_lines[editor_current_line - 1] = (
+                    editor_lines[editor_current_line - 1].rstrip(ins) + " "
+                )
+                e_lines_w_syn[editor_current_line - 1] = add_syntax(
+                    editor_lines[editor_current_line - 1],
+                    False,
+                )
+                editor_lines.insert(
+                    editor_current_line, (leadings + tabsize + 1) * " "
+                )
+                e_lines_w_syn.insert(
+                    editor_current_line, (leadings + tabsize + 1) * " "
+                )
+                editor_lines.insert(editor_current_line + 1, ins)
+                e_lines_w_syn.insert(
+                    editor_current_line + 1, add_syntax(ins, False)
+                )
+                editor_char = leadings + tabsize + 1
+            else:
+                ins = editor_lines[editor_current_line - 1][editor_char - 1 :]
+                editor_lines[editor_current_line - 1] = (
+                    editor_lines[editor_current_line - 1].rstrip(ins) + " "
+                )
+                e_lines_w_syn[editor_current_line - 1] = add_syntax(
+                    editor_lines[editor_current_line - 1],
+                    False,
+                )
+                editor_lines.insert(
+                    editor_current_line,
+                    (leadings + (2 if leadings == -1 else 0)) * " " + ins,
+                )
+                e_lines_w_syn.insert(
+                    editor_current_line,
+                    add_syntax(
+                        (leadings + (2 if leadings == -1 else 0)) * " " + ins,
+                        False,
+                    ),
+                )
+                editor_char = leadings + 1
+        editor_current_line += 1
+        if editor_current_line == realline + li - 3:
+            realline += 1
+        cursor_blink = 1
+    if key == "Key.caps_lock":
+        if caps:
+            caps = False
+        else:
+            caps = True
+    if key == "Key.space":
+        key = " "
+    if key == "\\\\":
+        key = "\\"
+    if key == "\\x13":
+        key = "save"
+        exit()
+    if key == "Key.tab":
+        key = tabsize * " "
+        newline = (
+            editor_lines[editor_current_line - 1][: editor_char - 1]
+            + (key if not caps else key.upper())
+            + editor_lines[editor_current_line - 1][editor_char - 1 :]
+        )
+        editor_lines[editor_current_line - 1] = newline
+        e_lines_w_syn[editor_current_line - 1] = add_syntax(newline, False)
+        editor_char += tabsize
+    if len(str(key)) == 1:
+        if key == '"':
+            if not quotecomplete:
+                newline = (
+                    editor_lines[editor_current_line - 1][: editor_char - 1]
+                    + (key if not caps else key.upper())
+                    + editor_lines[editor_current_line - 1][editor_char - 1 :]
+                )
+                editor_lines[editor_current_line - 1] = newline
+                e_lines_w_syn[editor_current_line - 1] = add_syntax(
+                    newline, False
+                )
+                editor_char += 1
+                cursor_blink = 1
+                quotecomplete = True
+                newline = (
+                    editor_lines[editor_current_line - 1][: editor_char - 1]
+                    + (key if not caps else key.upper())
+                    + editor_lines[editor_current_line - 1][editor_char - 1 :]
+                )
+                editor_lines[editor_current_line - 1] = newline
+                e_lines_w_syn[editor_current_line - 1] = add_syntax(
+                    newline, False
+                )
+            else:
+                editor_char += 1
+                cursor_blink = 1
+                quotecomplete = False
+        elif key in pth:
+            parenthcomplete += 1
+            pkey = key
+            newline = (
+                editor_lines[editor_current_line - 1][: editor_char - 1]
+                + key
+                + editor_lines[editor_current_line - 1][editor_char - 1 :]
+            )
+            editor_lines[editor_current_line - 1] = newline
+            e_lines_w_syn[editor_current_line - 1] = add_syntax(newline, False)
+            editor_char += 1
+            cursor_blink = 1
+            if key == "(":
+                key = ")"
+            if key == "[":
+                key = "]"
+            if key == "{":
+                key = "}"
+            if key == "<":
+                key = ">"
+            newline = (
+                editor_lines[editor_current_line - 1][: editor_char - 1]
+                + key
+                + editor_lines[editor_current_line - 1][editor_char - 1 :]
+            )
+            key = pkey
+            editor_lines[editor_current_line - 1] = newline
+            e_lines_w_syn[editor_current_line - 1] = add_syntax(newline, False)
+        elif key in pthends:
+            if parenthcomplete > 0:
+                parenthcomplete -= 1
+                editor_char += 1
+                cursor_blink = 1
+            else:
+                newline = (
+                    editor_lines[editor_current_line - 1][: editor_char - 1]
+                    + key
+                    + editor_lines[editor_current_line - 1][editor_char - 1 :]
+                )
+                editor_lines[editor_current_line - 1] = newline
+                e_lines_w_syn[editor_current_line - 1] = add_syntax(
+                    newline, False
+                )
+                editor_char += 1
+                cursor_blink = 1
+        else:
+            if caps:
+                newline = (
+                    editor_lines[editor_current_line - 1][: editor_char - 1]
+                    + (key.upper() if key.lower() == key else key.lower())
+                    + editor_lines[editor_current_line - 1][editor_char - 1 :]
+                )
+            else:
+                newline = (
+                    editor_lines[editor_current_line - 1][: editor_char - 1]
+                    + key
+                    + editor_lines[editor_current_line - 1][editor_char - 1 :]
+                )
+            editor_lines[editor_current_line - 1] = newline
+            e_lines_w_syn[editor_current_line - 1] = add_syntax(newline, False)
+            editor_char += 1
+            cursor_blink = 1
+    if editor_char < 1:
+        editor_char = 1
+    if editor_char > len(editor_lines[editor_current_line - 1]):
+        editor_char = len(editor_lines[editor_current_line - 1])
+
+
+def resetkey(release):
+    global key
+    key = ""
 
 
 def inputloop():
-    while ineditor:
-        global realline
-        global editor_current_line
-        global editor_char
-        global cursor_blink
-        global key
-        key = ""
-        key = keyboard.read_key()
-        if key == "up" and editor_current_line > 1:
-            editor_current_line = editor_current_line - 1
-            if editor_current_line == realline - 1:
-                realline -= 1
-            cursor_blink = 1
-            if editor_char > len(editor_lines[editor_current_line - 1]):
-                editor_char = len(editor_lines[editor_current_line - 1])
-        if key == "down" and editor_current_line < len(editor_lines):
-            editor_current_line += 1
-            if editor_current_line == realline + li - 2:
-                realline += 1
-            cursor_blink = 1
-            if editor_char > len(editor_lines[editor_current_line - 1]):
-                editor_char = len(editor_lines[editor_current_line - 1])
-        if key == "left":
-            if editor_char > 1:
-                editor_char -= 1
-            cursor_blink = 1
-        if key == "right":
-            if editor_char < len(editor_lines[editor_current_line - 1]):
-                editor_char += 1
-            cursor_blink = 1
-        sleep(0.1)
+    with pynput.keyboard.Listener(
+        on_press=on_press, on_release=resetkey
+    ) as listener:
+        listener.join()
 
 
 def editor_print(lin):
+    global bracks
+    glc = len(str(len(editor_lines)))
     cwdstr = (
         "\033[46m\033[35;1mCurrent Working Directory: "
         + os.getcwd().replace("\\", "/")
         + "/project.ss1"
     )
-    if 26 + len(os.getcwd().replace("\\", "/") + "/project.ss1") > co:
-        cwdstr = "\033[46m\033[35;1mCurrent Working Directory: ..."
+    if (
+        len("Current Working Directory: ")
+        + len(os.getcwd().replace("\\", "/") + "/project.ss1")
+        > co
+    ):
+        cwdstr = (
+            cwdstr.rstrip(
+                cwdstr[
+                    co
+                    - (
+                        len("Current Working Directory: ")
+                        + len(os.getcwd().replace("\\", "/") + "/project.ss1")
+                    )
+                    - 4 :
+                ]
+            )
+            + "..."
+        )
     editor_buffer = cwdstr + (co - (len(cwdstr) - 12)) * " " + "\033[0m\n"
     q = realline - 1
     for i in range(lin - 2):
         q += 1
-        eb_line = (
-            "\033[38;5;8m"
-            + (glc - len(str(q))) * " "
-            + str(q)
-            + "     "
-            + "\033[0m"
-            + e_lines_w_syn[q]
-            + "\n"
-        )
-        if editor_current_line == q and cursor_blink == 1:
-            ebb = editor_lines[q - 1]
-            determine_type(ebb)
-            find = colors[syntype]
-            parenth = 0
-            j = -1
-            for k in range(len(ebb)):
-                quote = False
-                j += 1
-                if editor_char == j + 1:
-                    find += "\033[46;1m"
-                try:
-                    if ebb[j] == '"':
-                        find += '\033[38;5;34m"'
-                        quote = True
-                    else:
-                        find += ebb[j]
-                except IndexError:
-                    break
-                char = ebb[j]
-                if editor_char == j + 1:
-                    find += "\033[0m" + colors[syntype]
-                if char in pth:
-                    parenth += 1
-                    c = 0
-                    for z in range(parenth):
-                        c += 1
-                        if c == 4:
-                            c = 1
-                    find = find.rstrip(find[-1])
-                    find += (
-                        pthesis[str(c)]
-                        + (char if not editor_char == j + 1 else "")
-                        + colors[syntype]
-                    )
-                elif char in pthends:
-                    c = 0
-                    for z in range(parenth):
-                        c += 1
-                        if c == 4:
-                            c = 1
-                    find = find.rstrip(find[-1])
-                    find += (
-                        pthesis[str(c)]
-                        + (char if not editor_char == j + 1 else "")
-                        + colors[syntype]
-                    )
-                    parenth = parenth - 1
-                if char == '"':
-                    if quote:
-                        find += "\033[38;5;34m"
-                        while True:
-                            j += 1
-                            try:
-                                char = ebb[j]
-                            except IndexError:
-                                break
-                            if editor_char == j + 1:
-                                find += "\033[46;1m"
-                            char = ebb[j]
-                            find += char
-                            if editor_char == j + 1:
-                                find += "\033[0m" + "\033[38;5;34m"
-                            if char == '"':
-                                find += colors[syntype]
-                                break
-                    else:
-                        find = find.rstrip(find[-1])
-                        find += '\033[38;5;34m"'
-                        while True:
-                            j += 1
-                            try:
-                                char = ebb[j]
-                            except IndexError:
-                                break
-                            find += char
-                            if char == '"':
-                                find += colors[syntype]
-                                break
+        try:
+            filler = (
+                co
+                - (len(editor_lines[q - 1]) + len(str(len(editor_lines))) + 5)
+            ) * " "
             eb_line = (
                 "\033[38;5;8m"
-                + (glc - len(str(editor_current_line))) * " "
-                + str(editor_current_line)
+                + (glc - len(str(q))) * " "
+                + ("\033[93m" if editor_current_line == q else "")
+                + str(q)
                 + "     "
                 + "\033[0m"
-                + find
-                + "\033[0m\n"
+                + e_lines_w_syn[q - 1]
+                + filler
+                + "\n"
             )
+            if editor_current_line == q and cursor_blink == 1:
+                ebb = editor_lines[q - 1]
+                determine_type(ebb)
+                find = colors[syntype]
+                parenth = 0
+                bracks = 0
+                j = -1
+                for k in range(len(ebb)):
+                    quote = False
+                    j += 1
+                    if editor_char == j + 1:
+                        find += "\033[46;1m"
+                    try:
+                        if ebb[j] == '"':
+                            find += '\033[38;5;34m"'
+                            quote = True
+                        else:
+                            find += ebb[j]
+                    except IndexError:
+                        break
+                    char = ebb[j]
+                    if editor_char == j + 1:
+                        find += "\033[0m" + colors[syntype]
+                    if char in pth:
+                        if not char == "{":
+                            parenth += 1
+                            c = 0
+                            for z in range(parenth):
+                                c += 1
+                                if c == 9:
+                                    c = 1
+                            find = find.rstrip(find[-1])
+                            find += (
+                                pthesis[str(c)]
+                                + (char if not editor_char == j + 1 else "")
+                                + colors[syntype]
+                            )
+                        else:
+                            bracks += 1
+                            c = 0
+                            for z in range(bracks):
+                                c += 1
+                                if c == 9:
+                                    c = 1
+                            find = find.rstrip(find[-1])
+                            find += (
+                                pthesis[str(c)]
+                                + (char if not editor_char == j + 1 else "")
+                                + colors[syntype]
+                            )
+                    elif char in pthends:
+                        if not char == "}":
+                            if parenth > 0:
+                                c = 0
+                                for z in range(parenth):
+                                    c += 1
+                                    if c == 9:
+                                        c = 1
+                                find = find.rstrip(find[-1])
+                                find += (
+                                    pthesis[str(c)]
+                                    + (
+                                        char
+                                        if not editor_char == j + 1
+                                        else ""
+                                    )
+                                    + colors[syntype]
+                                )
+                                parenth -= 1
+                        else:
+                            if bracks > 0:
+                                c = 0
+                                for z in range(bracks):
+                                    c += 1
+                                    if c == 9:
+                                        c = 1
+                                find = find.rstrip(find[-1])
+                                find += (
+                                    pthesis[str(c)]
+                                    + (
+                                        char
+                                        if not editor_char == j + 1
+                                        else ""
+                                    )
+                                    + colors[syntype]
+                                )
+                                bracks -= 1
+                    if char == '"':
+                        if quote:
+                            find += "\033[38;5;34m"
+                            while True:
+                                j += 1
+                                try:
+                                    char = ebb[j]
+                                except IndexError:
+                                    break
+                                if editor_char == j + 1:
+                                    find += "\033[46;1m"
+                                char = ebb[j]
+                                find += char
+                                if editor_char == j + 1:
+                                    find += "\033[0m" + "\033[38;5;34m"
+                                if char == '"':
+                                    find += colors[syntype]
+                                    break
+                        else:
+                            find = find.rstrip(find[-1])
+                            find += '\033[38;5;34m"'
+                            while True:
+                                j += 1
+                                try:
+                                    char = ebb[j]
+                                except IndexError:
+                                    break
+                                find += char
+                                if char == '"':
+                                    find += colors[syntype]
+                                    break
+                eb_line = (
+                    "\033[38;5;8m"
+                    + (glc - len(str(editor_current_line))) * " "
+                    + "\033[93m"
+                    + str(editor_current_line)
+                    + "     "
+                    + "\033[0m"
+                    + find
+                    + "\033[0m"
+                    + filler
+                    + "\033[0m\n"
+                )
+        except IndexError:
+            eb_line = "\033[38;5;8m~\033[0m     " + (co - 6) * " " + "\n"
         editor_buffer += eb_line
     print("\033[H\033[3J", end="")
     print(editor_buffer + "\033[A")
@@ -394,4 +880,13 @@ while ineditor:
         if not ccurblk == cursor_blink:
             break
         if not key == "":
+            if key == "save":
+                projectdir = os.getcwd().replace("\\", "/") + "/project.ss1"
+                print("Saving to " + projectdir + "...")
+                with open(projectdir, "w") as fp:
+                    for item in editor_lines:
+                        fp.write("%s\n" % item.rstrip(" "))
+                ineditor = False
+                print("Done. Press ctrl+c to exit.")
+                exit()
             break

@@ -137,9 +137,9 @@ ScratchLang's language is called ScratchScript.
 ## ScratchScript blocks
 \nscript - (Tells the compiler that it's a new script. Or maybe we could get rid of this and just detect for hat blocks.)<br>
 **\prep - (Everything below this [until the next instance of \nscript] is used for compiling the .json)**<br>
-list=item1, item2, item3, etc - (For an empty list, just add a comma after the equal sign.)<br>
-**{broadcast}=broadcastexample - (Define a broadcast. The brackets tell the program that it is not defining a variable or a list.)**<br>
-var=string - (Define a variable)<br>
+list: foo=item1, item2, item3, etc - (For an empty list, just add a comma after the equal sign.)<br>
+**broadcast: broadcastexample - (Define a broadcast. The brackets tell the program that it is not defining a variable or a list.)**<br>
+var: foo=string - (Define a variable)<br>
 # Decompiler Python V1
 ## Vanilla Scratch Blocks
 What I'm counting as Vanilla Scratch Blocks:
@@ -579,7 +579,7 @@ Your .ss1 file is probably big.
 # Devlog
 Format: MM.DD.YY - VERSION
 ## 11.10.22 - 0.6.84p
-* Started editor, and other things...
+* Started editor, and other things.
 ## 11.3.22 - 0.6.83p
 * ScratchLang is not almost 100% Python.
 ## 10.??.22 - 0.6.82p
