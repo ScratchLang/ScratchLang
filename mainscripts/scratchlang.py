@@ -17,30 +17,8 @@ NC = "\033[0m"
 P = "\033[0;35m"
 
 # Set the CWD to the parent directory of the Python file
-
-pydir = sys.argv[0].replace("\\", "/")
-h = len(pydir)
-stop = False
-while True:
-    h -= 1
-    try:
-        chars = pydir[h]
-        if chars == "/":
-            break
-    except IndexError:  # If the script gets an IndexError, then it must already be in the correct directory
-        stop = True
-        break
-if not stop:
-    bounded = h
-    h = -1
-    direc = ""
-    while True:
-        h += 1
-        if h == bounded:
-            break
-        chars = pydir[h]
-        direc += chars
-    os.chdir(direc)
+if not os.path.dirname(sys.argv[0]) == "":
+    os.chdir(os.path.dirname(sys.argv[0]))
 jsonfile = ""
 global corr
 
@@ -457,7 +435,7 @@ def decomp():
                 word = word.lower()
                 writetofile(
                     dcd + "/project.ss1",
-                    "change [" + word + '] effect by ("' + amt + '") # looks',
+                    "change [" + word + '] effect by ("' + amt + '") #!looks',
                 )
                 print(
                     RED
@@ -482,7 +460,7 @@ def decomp():
                 word = word.lower()
                 writetofile(
                     dcd + "/project.ss1",
-                    "set [" + word + '] effect to ("' + amt + '") # looks',
+                    "set [" + word + '] effect to ("' + amt + '") #!looks',
                 )
                 print(
                     RED
@@ -555,7 +533,7 @@ def decomp():
                 word = word.lower()
                 writetofile(
                     dcd + "/project.ss1",
-                    "change [" + word + '] effect by ("' + amt + '") # sound',
+                    "change [" + word + '] effect by ("' + amt + '") #!sound',
                 )
                 print(
                     RED
@@ -580,7 +558,7 @@ def decomp():
                 word = word.lower()
                 writetofile(
                     dcd + "/project.ss1",
-                    "set [" + word + '] effect to ("' + amt + '") # sound',
+                    "set [" + word + '] effect to ("' + amt + '") #!sound',
                 )
                 print(
                     RED

@@ -1,5 +1,4 @@
 import os
-import re
 import shutil
 import subprocess
 import sys
@@ -8,18 +7,6 @@ from time import sleep
 from tkinter import filedialog as fd
 
 import pynput
-
-# https://www.tutorialspoint.com/How-can-I-remove-the-ANSI-escape-sequences-from-a-string-in-python
-# ---
-
-
-def escape_ansi(yee):
-    ansi_escape = re.compile(r"(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]")
-    return ansi_escape.sub("", yee)
-
-
-# ---
-
 
 global parenth
 global synbuild
@@ -33,6 +20,8 @@ RED = "\033[0;31m"
 NC = "\033[0m"
 P = "\033[0;35m"
 
+if not os.path.dirname(sys.argv[0]) == "":
+    os.chdir(os.path.dirname(sys.argv[0]))
 cwd = os.getcwd().replace("\\", "/")
 
 
@@ -104,12 +93,37 @@ print("")
 f = open(cwd + "/var/editor_settings", "r")
 tabsize = 2
 shigh = True
+pflen = flen
+flen = len(f.readlines())
+f.close()
+f = open(cwd + "/var/editor_settings", "r")
+proglen = 55
+q = 0
 for line in f.readlines():
+    q += 1
+    per = q / flen
+    print(
+        "\033[A["
+        + round(proglen * per) * "#"
+        + (proglen - round(proglen * per)) * " "
+        + "] "
+        + str(round(per * 100))
+        + "%"
+    )
     if "tabsize" in line:
         tabsize = int(line.replace("tabsize: ", ""))
     elif "syntax_highlighting" in line:
         shigh = line.replace("syntax_highlighting: ", "")
+    elif "show_cwd" in line:
+        es = line.replace("show_cwd: ", "")
+        if es == "True":
+            show_cwd = True
+        elif es == "False":
+            show_cwd = False
+        else:
+            show_cwd = True
 f.close()
+flen = pflen
 print("")
 print("Building syntax highlighting...")
 print("")
@@ -195,11 +209,24 @@ pth = ["(", "[", "{", "<"]
 pthends = [")", "]", "}", ">"]
 excludes = ["46;1", "38;5;8", "0", "37", "35", "7", "1"]
 bracks = 0
+shabang = [
+    "#!looks",
+    "#!var",
+    "#!list",
+    "#!events",
+    "#!sound",
+    "#!control",
+]
 
 
 def determine_type(lin):
     global syntype
     syntype = "0"
+    sbi = 0
+    for i in shabang:
+        sbi += 1
+        if i in lin:
+            syntype = str(sbi)
     for i in looks:
         if i in lin:
             syntype = "1"
@@ -302,6 +329,17 @@ def add_syntax(lll, bar=True):
                 if char == '"':
                     slc1 += colors[syntype]
                     break
+        if char == "#":
+            slc1 = slc1.rstrip(slc1[-1])
+            slc1 += "\033[38;5;8m#"
+            while True:
+                i += 1
+                try:
+                    char = synline[i]
+                except IndexError:
+                    break
+                slc1 += char
+            break
     synline = slc1
     synbuild = bgs[syntype] + colors[syntype] + synline + "\033[0m"
     if synbuild == "":
@@ -591,6 +629,7 @@ def on_press(what):
                 key = "]"
             if key == "{":
                 key = "}"
+                parenthcomplete -= 1
             if key == "<":
                 key = ">"
             newline = (
@@ -656,29 +695,34 @@ def inputloop():
 def editor_print(lin):
     global bracks
     glc = len(str(len(editor_lines)))
-    cwdstr = (
-        "\033[46m\033[35;1mCurrent Working Directory: "
-        + os.getcwd().replace("\\", "/")
-        + "/project.ss1"
-    )
-    if (
-        len("Current Working Directory: ")
-        + len(os.getcwd().replace("\\", "/") + "/project.ss1")
-        > co
-    ):
+    if show_cwd:
         cwdstr = (
-            cwdstr.rstrip(
-                cwdstr[
-                    co
-                    - (
-                        len("Current Working Directory: ")
-                        + len(os.getcwd().replace("\\", "/") + "/project.ss1")
-                    )
-                    - 4 :
-                ]
-            )
-            + "..."
+            "\033[46m\033[35;1mCurrent Working Directory: "
+            + os.getcwd().replace("\\", "/")
+            + "/project.ss1"
         )
+        if (
+            len("Current Working Directory: ")
+            + len(os.getcwd().replace("\\", "/") + "/project.ss1")
+            > co
+        ):
+            cwdstr = (
+                cwdstr.rstrip(
+                    cwdstr[
+                        co
+                        - (
+                            len("Current Working Directory: ")
+                            + len(
+                                os.getcwd().replace("\\", "/") + "/project.ss1"
+                            )
+                        )
+                        - 4 :
+                    ]
+                )
+                + "..."
+            )
+    else:
+        cwdstr = "\033[46m\033[35;1m                           "
     editor_buffer = cwdstr + (co - (len(cwdstr) - 12)) * " " + "\033[0m\n"
     q = realline - 1
     for i in range(lin - 2):
@@ -708,6 +752,7 @@ def editor_print(lin):
                 j = -1
                 for k in range(len(ebb)):
                     quote = False
+                    comment = False
                     j += 1
                     if editor_char == j + 1:
                         find += "\033[46;1m"
@@ -715,6 +760,9 @@ def editor_print(lin):
                         if ebb[j] == '"':
                             find += '\033[38;5;34m"'
                             quote = True
+                        elif ebb[j] == "#":
+                            find += "\033[38;5;8m#"
+                            comment = True
                         else:
                             find += ebb[j]
                     except IndexError:
@@ -817,6 +865,32 @@ def editor_print(lin):
                                 if char == '"':
                                     find += colors[syntype]
                                     break
+                    if char == "#":
+                        if comment:
+                            find += "\033[38;5;8m"
+                            while True:
+                                j += 1
+                                try:
+                                    char = ebb[j]
+                                except IndexError:
+                                    break
+                                if editor_char == j + 1:
+                                    find += "\033[46;1m"
+                                char = ebb[j]
+                                find += char
+                                if editor_char == j + 1:
+                                    find += "\033[0m" + "\033[38;5;8m"
+                        else:
+                            find = find.rstrip(find[-1])
+                            find += "\033[38;5;8m#"
+                            while True:
+                                i += 1
+                                try:
+                                    char = ebb[i]
+                                except IndexError:
+                                    break
+                                find += char
+                            break
                 eb_line = (
                     "\033[38;5;8m"
                     + (glc - len(str(editor_current_line))) * " "

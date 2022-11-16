@@ -1,16 +1,18 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.84p**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.85p**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
 
 This is for people who want to use Scratch like other programming languages.
 
-Also, a devlog is at the bottom.
+Also, a devlog is in the releases. If the version is not in the releases, then it's most likely at the bottom of this readme, at the old devlog.
 
 ---
 
 # Latest big updates
-Transitioned to almost 100% Python. Decompilers are still there, and created `createsl.sh` to make the scratchlang command.
+Transitioned to almost 100% Python. Shell Script Decompilers are still there, and created `createsl.sh` to make the scratchlang command.
+
+Also, I started making the editor.
 
 # The bug list
 is at the very bottom. Look at that list before posting bugs.
@@ -32,7 +34,7 @@ A project.json is also included in the resources folder to help understand and r
 I'm programming the decompiler. First I'm gonna program it to decompile all the global and stage-exclusive blocks, then sprite-exclusive blocks.
 
 ## Contributing
-I am currently putting comments in my code so people understand it. So for some sections, you will have to guess what the bash does. Sorry.
+I am currently putting comments in my code so people understand it. So for some sections, you will have to guess what the code does. Sorry.
 # Notice
 Right now the default decompiler is set to the Python version. If you want to use the Shell Script version, follow these steps.
 
@@ -41,14 +43,15 @@ Right now the default decompiler is set to the Python version. If you want to us
   3. Press 1 to pick one of the included scripts, then press 2 to select Decompiler V2.
 
 Also, I renamed the file extension to .ss1 because I am planning on having multiple formats.<br>
-ss1 Will be it's own language<br>
+ss1 Will be it's own language **# Current**<br>
 ss2 Will be similar to c<br>
-ss3 Python or javascript?<br>
+ss3 Python or javascript? **# These 2 won't be worked on anytime soon**<br> 
 
 # How to use
 Download [MSYS2](https://www.msys2.org) if you're on Windows.<br>
 
 Install dependencies (list below).
+Make sure you have pip installed as well, then install the requirements after cloning the repository. (command below.)
 
 Clone the repo with
 ```
@@ -77,11 +80,32 @@ scratchlang
 
 If you want to test out the decompiler, run `py scratchlang.py -4` and select the .sb3 "every-block-+-pen.sb3" which is in the resources folder. You get to see it decompile all the blocks added so far.
 
-To code, edit the .ss(es) in you favorite glorified text editor like VSC or Atom.
+To code, edit the .ss(es) in you favorite glorified text editor like VSC or Atom.<br>
+**Or, you can use ScratchLang's custom editor :D**
 
 To add assets, put them in the "assets" folder for the chosen sprite (or stage)
+# Editor
+One day I randomly decided to make an editor for ScratchLang. And here it is. It's not finished, but I'd still say it's kinda decent.
 
-You don't need ScratchLang to program ScratchScript (.ss) files, you can use a text editor. You just need ScratchLang to compile your project so it can run in Scratch.
+The editor is made completely in Python.
+## Edit in the custom editor!
+Start the editor with
+```
+py editor.py
+```
+You can even have the path to your project folder as the 1st argument to avoid the folder select screen and go straight to the editor.
+## Editor controls
+- Arrow keys: Move around
+- ctrl+s: save project
+- caps lock: caps lock. Duh!
+- tab: insert a tab.
+## Editor settings
+You can go into the var/ directory and edit the 'editor_settings' file to change your settings.
+
+Settings added so far:
+- tabsize: N - Set the tabsize to N
+- syntax_highlighting: True/False - Turn syntax highlighting on or off. ***Does not work yet.***
+- show_cwd: True/False - Show or hide the current working directory. 
 
 # Dependencies
 ## Windows
@@ -124,7 +148,7 @@ Please write down any dependencies I missed.
 This is what people will do.
 
 ### 0K9090
-Program the decompiler in Python
+Program the decompiler in Python (and work on the editor!)
 ### wendiner
 I don't know what they're doing
 ### redstone-scratch
@@ -132,6 +156,14 @@ They quit :/ Goodbye
 ### stan-solov
 Develop the Documentation website
 
+# ScratchLang Editor
+I am making a text-editor for ScratchLang with syntax highlighting.
+## Added Features so far
+* Syntax Highlighting
+* Scuffed quote and bracket auto-complete
+* Auto-indent
+## Planned features
+* Project folder explorer
 # ScratchLang Language
 ScratchLang's language is called ScratchScript.
 ## ScratchScript blocks
@@ -140,6 +172,15 @@ ScratchLang's language is called ScratchScript.
 list: foo=item1, item2, item3, etc - (For an empty list, just add a comma after the equal sign.)<br>
 **broadcast: broadcastexample - (Define a broadcast. The brackets tell the program that it is not defining a variable or a list.)**<br>
 var: foo=string - (Define a variable)<br>
+**#!\<TYPE\> - (Use sha-bangs after a block to set the block type to the desired one if it's not right. For example, replace \<TYPE\> with 'looks' to make it a looks block. This also changes the syntax highlighting in the editor.)**<br>
+
+## sha-bangs
+* !#looks
+* !#var
+* !#list
+* !#events
+* !#sound
+* !#control
 # Decompiler Python V1
 ## Vanilla Scratch Blocks
 What I'm counting as Vanilla Scratch Blocks:
@@ -147,12 +188,17 @@ Normal Blocks
 Custom Blocks
 Pen extension
 ### Added blocks
-78/80 Stage Blocks + Pen | 90.00% Done<br> # Only Custom Blocks left!
+78/80 Stage Blocks + Pen | 90.00% Done **# Only Custom Blocks left!**<br>
 78/139 Every Block + Pen | 51.80% Done<br>
 
 Write every block in the order they are defined.<br>
 
-Remember, quotes tell the compiler that it is not a variable. If you want to put in a variable, don't put quotation marks.<br>
+Remember, quotes tell the compiler that it is not a variable. If you want to put in a variable, don't put quotation marks. Example:
+```
+switch backdrop to ("i") # 'i' is registered as a string
+
+switch backdrop to (i) # 'i' is registered as a variable
+```
 Also, the compiler can't tell the difference between a string and an input (like a variable) yet. So most inputs have quotation marks.<br>
 
 Brackets means that there cannot be a variable in there. It's either a defined object or an object from a set list.<br>

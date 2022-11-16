@@ -1,2 +1,3 @@
 tabsize: 2
 syntax_highlighting: True
+show_cwd: True
