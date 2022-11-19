@@ -12,7 +12,7 @@ global parenth
 global synbuild
 global syntype
 global e_lines_w_syn
-ineditor = True
+inEditor = True
 key = ""
 cursor_blink = 0
 
@@ -28,7 +28,7 @@ cwd = os.getcwd().replace("\\", "/")
 def increment():
     global cursor_blink
     cursor_blink = 1
-    while ineditor:
+    while inEditor:
         cursor_blink = 0
         sleep(0.5)
         cursor_blink = 1
@@ -43,7 +43,6 @@ def error(text):
 
 
 b = ""
-
 
 print("")
 print("Select your project folder.")
@@ -128,6 +127,7 @@ print("")
 print("Building syntax highlighting...")
 print("")
 q = 0
+# Stuff used for syntax highlighting.
 colors = {
     "c": "\033[0m",
     "p": "\033[48;5;10m",
@@ -139,6 +139,8 @@ colors = {
     "4": "\033[38;5;220m",
     "5": "\033[38;5;200m",
     "6": "\033[38;5;172m",
+    "7": "\033[96m",
+    "8": "\033[38;5;34m",
 }
 bgs = {
     "c": "",
@@ -151,6 +153,8 @@ bgs = {
     "4": "",
     "5": "",
     "6": "",
+    "7": "",
+    "8": "",
 }
 pthesis = {
     "0": "",
@@ -164,8 +168,8 @@ pthesis = {
     "8": "\033[38;5;206m",
 }
 looks = [
-    "switch ",
-    "next",
+    "switch backdrop to (",
+    "next backdrop",
     "change [c",
     "change [f",
     "change [w",
@@ -173,8 +177,8 @@ looks = [
     "change [m",
     "change [b",
     "change [g",
-    "clear g",
-    "(backdrop",
+    "clear graphic effects",
+    "(backdrop [",
     "set [c",
     "set [f",
     "set [w",
@@ -183,39 +187,208 @@ looks = [
     "set [b",
     "set [g",
 ]
-datavar = ["var:"]
-datalist = ["list:"]
-events = ["broadcast", "when"]
+looksFindType = [
+    "le",
+    "eq",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "eq",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+]
+datavar = [
+    "var:",
+    "] to (",
+    "] by (",
+    "show variable [",
+    "hide variable [",
+]
+datavarFindType = [
+    "le",
+    "in",
+    "in",
+    "le",
+    "le",
+]
+datalist = [
+    "list:",
+    ") to [",
+    ") by [",
+    "delete all of [",
+    "delete (",
+    "insert (",
+    "replace item (",
+    "(item (",
+    "(item # of (",
+    "(length of [",
+    "] contains (",
+    "show list [",
+    "hide list [",
+]
+datalistFindType = [
+    "le",
+    "in",
+    "in",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "in",
+    "le",
+    "le",
+]
+events = [
+    "broadcast [",
+    "broadcast:",
+    "when I receive [",
+    "when [",
+    "when flag clicked",
+    "when backdrop switches to [",
+]
+eventsFindType = ["le", "le", "le", "le", "eq", "le"]
 sounds = [
+    "play sound (",
+    "start sound (",
     "change [pit",
     "change [pan",
     "set [pit",
     "set [pan",
-    "sound",
-    "volume",
-    "clear s",
+    "stop all sounds",
+    "(volume)",
+    "clear sound effects",
+    "change volume by (",
+    "set volume to (",
+]
+soundsFindType = [
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "eq",
+    "eq",
+    "eq",
+    "le",
+    "le",
 ]
 control = [
     "wait (",
-    "wait u",
-    "repeat",
-    "forever",
+    "wait until <",
+    "repeat (",
+    "repeat until <",
+    "forever {",
     "if <",
-    "else",
-    "while",
-    "clone",
+    "} else {",
+    "while <",
+    "create a clone of (",
+]
+controlFindType = [
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "eq",
+    "le",
+    "le",
+]
+sensing = [
+    "ask (",
+    "(answer)",
+    "<key (",
+    "<mouse down?>",
+    "(mouse x)",
+    "(mouse y)",
+    "(loudness)",
+    "(timer)",
+    "reset timer",
+    "([",
+    "(current [",
+    "(days since 2000)",
+    "(username)",
+]
+sensingFindType = [
+    "le",
+    "eq",
+    "le",
+    "eq",
+    "eq",
+    "eq",
+    "eq",
+    "eq",
+    "eq",
+    "le",
+    "le",
+    "eq",
+    "eq",
+]
+operators = [
+    ") + (",
+    ") - (",
+    ") / (",
+    ") * (",
+    ") > (",
+    ") < (",
+    "(pick random (",
+    ") = (",
+    "> and <",
+    "> or <",
+    "<not <",
+    "(join (",
+    "(letter (",
+    "(length of (",
+    ") contains (",
+    ") mod (",
+    "(round (",
+]
+operatorsFindType = [
+    "in",
+    "in",
+    "in",
+    "in",
+    "in",
+    "in",
+    "le",
+    "in",
+    "in",
+    "in",
+    "le",
+    "le",
+    "le",
+    "le",
+    "in",
+    "in",
+    "le",
 ]
 pth = ["(", "[", "{", "<"]
 pthends = [")", "]", "}", ">"]
 excludes = ["46;1", "38;5;8", "0", "37", "35", "7", "1"]
 bracks = 0
 shabang = [
-    "#!looks",
-    "#!var",
-    "#!list",
-    "#!events",
-    "#!sound",
-    "#!control",
+    "//!looks",
+    "//!var",
+    "//!list",
+    "//!events",
+    "//!sound",
+    "//!control",
+    "//!sensing",
+    "//!operators",
 ]
 
 
@@ -223,31 +396,109 @@ def determine_type(lin):
     global syntype
     syntype = "0"
     sbi = 0
+    q = -1
+    for i in operators:
+        q += 1
+        if operatorsFindType[q] == "le":
+            if i == lin.lstrip(" ")[: len(i)]:
+                syntype = "8"
+        elif operatorsFindType[q] == "eq":
+            if i == lin.lstrip(" ").rstrip(" "):
+                syntype = "8"
+        elif operatorsFindType[q] == "in":
+            if i in lin.lstrip(" "):
+                syntype = "8"
+    q = -1
+    for i in looks:
+        q += 1
+        if looksFindType[q] == "le":
+            if i == lin.lstrip(" ")[: len(i)]:
+                syntype = "1"
+        elif looksFindType[q] == "eq":
+            if i == lin.lstrip(" ").rstrip(" "):
+                syntype = "1"
+        elif looksFindType[q] == "in":
+            if i in lin.lstrip(" "):
+                syntype = "1"
+    q = -1
+    for i in datavar:
+        q += 1
+        if datavarFindType[q] == "le":
+            if i == lin.lstrip(" ")[: len(i)]:
+                syntype = "2"
+        elif datavarFindType[q] == "eq":
+            if i == lin.lstrip(" ").rstrip(" "):
+                syntype = "2"
+        elif datavarFindType[q] == "in":
+            if i in lin.lstrip(" "):
+                syntype = "2"
+    q = -1
+    for i in datalist:
+        q += 1
+        if datalistFindType[q] == "le":
+            if i == lin.lstrip(" ")[: len(i)]:
+                syntype = "3"
+        elif datalistFindType[q] == "eq":
+            if i == lin.lstrip(" ").rstrip(" "):
+                syntype = "3"
+        elif datalistFindType[q] == "in":
+            if i in lin.lstrip(" "):
+                syntype = "3"
+    q = -1
+    for i in events:
+        q += 1
+        if eventsFindType[q] == "le":
+            if i == lin.lstrip(" ")[: len(i)]:
+                syntype = "4"
+        elif eventsFindType[q] == "eq":
+            if i == lin.lstrip(" ").rstrip(" "):
+                syntype = "4"
+        elif eventsFindType[q] == "in":
+            if i in lin.lstrip(" "):
+                syntype = "4"
+    q = -1
+    for i in sounds:
+        q += 1
+        if soundsFindType[q] == "le":
+            if i == lin.lstrip(" ")[: len(i)]:
+                syntype = "5"
+        elif soundsFindType[q] == "eq":
+            if i == lin.lstrip(" ").rstrip(" "):
+                syntype = "5"
+        elif soundsFindType[q] == "in":
+            if i in lin.lstrip(" "):
+                syntype = "5"
+    q = -1
+    for i in sensing:
+        q += 1
+        if sensingFindType[q] == "le":
+            if i == lin.lstrip(" ")[: len(i)]:
+                syntype = "7"
+        elif sensingFindType[q] == "eq":
+            if i == lin.lstrip(" ").rstrip(" "):
+                syntype = "7"
+        elif sensingFindType[q] == "in":
+            if i in lin.lstrip(" "):
+                syntype = "7"
+    q = -1
+    for i in control:
+        q += 1
+        if controlFindType[q] == "le":
+            if i == lin.lstrip(" ")[: len(i)]:
+                syntype = "6"
+        elif controlFindType[q] == "eq":
+            if i == lin.lstrip(" ").rstrip(" "):
+                syntype = "6"
+        elif controlFindType[q] == "in":
+            if i in lin.lstrip(" "):
+                syntype = "6"
     for i in shabang:
         sbi += 1
-        if i in lin:
+        if i in lin.lstrip(" "):
             syntype = str(sbi)
-    for i in looks:
-        if i in lin:
-            syntype = "1"
-    for i in datavar:
-        if i in lin:
-            syntype = "2"
-    for i in datalist:
-        if i in lin:
-            syntype = "3"
-    for i in events:
-        if i in lin:
-            syntype = "4"
-    for i in sounds:
-        if i in lin:
-            syntype = "5"
-    for i in control:
-        if i in lin:
-            syntype = "6"
-    if "\\n" in lin:
+    if "\\n" in lin.lstrip(" "):
         syntype = "n"
-    if "\\p" in lin:
+    if "\\p" in lin.lstrip(" "):
         syntype = "p"
 
 
@@ -329,9 +580,9 @@ def add_syntax(lll, bar=True):
                 if char == '"':
                     slc1 += colors[syntype]
                     break
-        if char == "#":
+        if char == "'":
             slc1 = slc1.rstrip(slc1[-1])
-            slc1 += "\033[38;5;8m#"
+            slc1 += "\033[38;5;34m'"
             while True:
                 i += 1
                 try:
@@ -339,7 +590,25 @@ def add_syntax(lll, bar=True):
                 except IndexError:
                     break
                 slc1 += char
-            break
+                if char == "'":
+                    slc1 += colors[syntype]
+                    break
+        if char == "/":
+            i -= 1
+            if synline[i] == "/":
+                i += 1
+                slc1 = slc1.rstrip("//")
+                slc1 += "\033[38;5;8m//"
+                while True:
+                    i += 1
+                    try:
+                        char = synline[i]
+                    except IndexError:
+                        break
+                    slc1 += char
+                break
+            else:
+                i += 1
     synline = slc1
     synbuild = bgs[syntype] + colors[syntype] + synline + "\033[0m"
     if synbuild == "":
@@ -362,11 +631,14 @@ caps = False
 
 def on_press(what):
     global realline, editor_current_line, editor_char, cursor_blink, key, caps
-    global quotecomplete, parenthcomplete
+    global quotecomplete, parenthcomplete, inEditor, state
     if len(str(what)) < 5:
         key = str(what)[1:-1]
     else:
         key = str(what).replace("'", "")
+    if key == "Key.f1":
+        inEditor = False
+        state = "tree"
     if key == "Key.up" and editor_current_line > 1:
         editor_current_line -= 1
         if editor_current_line == realline and realline > 1:
@@ -584,7 +856,7 @@ def on_press(what):
         e_lines_w_syn[editor_current_line - 1] = add_syntax(newline, False)
         editor_char += tabsize
     if len(str(key)) == 1:
-        if key == '"':
+        if key == '"' or key == "'":
             if not quotecomplete:
                 newline = (
                     editor_lines[editor_current_line - 1][: editor_char - 1]
@@ -760,9 +1032,22 @@ def editor_print(lin):
                         if ebb[j] == '"':
                             find += '\033[38;5;34m"'
                             quote = True
-                        elif ebb[j] == "#":
-                            find += "\033[38;5;8m#"
-                            comment = True
+                        elif ebb[j] == "'":
+                            find += "\033[38;5;34m'"
+                            quote = True
+                        elif ebb[j] == "/":
+                            j -= 1
+                            if ebb[j] == "/":
+                                j += 1
+                                if editor_char == j:
+                                    find += "\033[46;1m\033[38;5;8m/\033[0m\033[38;5;8m/"
+                                elif editor_char == j + 1:
+                                    find += "\033[0m\033[38;5;8m/\033[46;1m/\033[0m"
+                                else:
+                                    find += "\033[38;5;8m//"
+                                comment = True
+                            else:
+                                j += 1
                         else:
                             find += ebb[j]
                     except IndexError:
@@ -865,9 +1150,9 @@ def editor_print(lin):
                                 if char == '"':
                                     find += colors[syntype]
                                     break
-                    if char == "#":
-                        if comment:
-                            find += "\033[38;5;8m"
+                    if char == "'":
+                        if quote:
+                            find += "\033[38;5;34m"
                             while True:
                                 j += 1
                                 try:
@@ -879,18 +1164,64 @@ def editor_print(lin):
                                 char = ebb[j]
                                 find += char
                                 if editor_char == j + 1:
-                                    find += "\033[0m" + "\033[38;5;8m"
+                                    find += "\033[0m" + "\033[38;5;34m"
+                                if char == "'":
+                                    find += colors[syntype]
+                                    break
                         else:
                             find = find.rstrip(find[-1])
-                            find += "\033[38;5;8m#"
+                            find += "\033[38;5;34m'"
                             while True:
-                                i += 1
+                                j += 1
                                 try:
-                                    char = ebb[i]
+                                    char = ebb[j]
                                 except IndexError:
                                     break
                                 find += char
-                            break
+                                if char == "'":
+                                    find += colors[syntype]
+                                    break
+                    if char == "/":
+                        j -= 1
+                        if ebb[j] == "/":
+                            j += 1
+                            if comment:
+                                find += "\033[38;5;8m"
+                                while True:
+                                    j += 1
+                                    try:
+                                        char = ebb[j]
+                                    except IndexError:
+                                        break
+                                    if editor_char == j + 1:
+                                        find += "\033[46;1m"
+                                    char = ebb[j]
+                                    find += char
+                                    if editor_char == j + 1:
+                                        find += "\033[0m" + "\033[38;5;8m"
+                            else:
+                                find = find.rstrip("//")
+                                if editor_char == j:
+                                    find += "\033[46;1m\033[38;5;8m/\033[0m\033[38;5;8m/"
+                                elif editor_char == j + 1:
+                                    find += "\033[38;5;8m/\033[46;1m/\033[0m"
+                                else:
+                                    find += "\033[38;5;8m//"
+                                while True:
+                                    j += 1
+                                    try:
+                                        char = ebb[j]
+                                    except IndexError:
+                                        break
+                                    find += char
+                                break
+                        else:
+                            j += 1
+                            if not ebb[j + 1] == "/":
+                                if editor_char == j + 1:
+                                    find += "\033[46;1m/\033[0m"
+                                else:
+                                    find += char
                 eb_line = (
                     "\033[38;5;8m"
                     + (glc - len(str(editor_current_line))) * " "
@@ -941,26 +1272,95 @@ class InputLoop(threading.Thread):
 iloop = CursorBlink(inputloop)
 iloop.start()
 
-# ---
 
-subprocess.run("bash -c clear", shell=False)
-editor_print(li)
-while ineditor:
-    li = shutil.get_terminal_size().lines
-    co = shutil.get_terminal_size().columns
+# ---
+def editor():
+    global li, co, inEditor, cursor_blink, key
+    subprocess.run("bash -c clear", shell=False)
     editor_print(li)
-    ccurblk = cursor_blink
-    while True:
-        if not ccurblk == cursor_blink:
-            break
-        if not key == "":
-            if key == "save":
-                projectdir = os.getcwd().replace("\\", "/") + "/project.ss1"
-                print("Saving to " + projectdir + "...")
-                with open(projectdir, "w") as fp:
-                    for item in editor_lines:
-                        fp.write("%s\n" % item.rstrip(" "))
-                ineditor = False
-                print("Done. Press ctrl+c to exit.")
-                exit()
-            break
+    while inEditor:
+        li = shutil.get_terminal_size().lines
+        co = shutil.get_terminal_size().columns
+        editor_print(li)
+        ccurblk = cursor_blink
+        while True:
+            if not ccurblk == cursor_blink:
+                break
+            if not key == "":
+                if key == "save":
+                    projectdir = (
+                        os.getcwd().replace("\\", "/") + "/project.ss1"
+                    )
+                    print("Saving to " + projectdir + "...")
+                    with open(projectdir, "w") as fp:
+                        for item in editor_lines:
+                            fp.write("%s\n" % item.rstrip(" "))
+                    inEditor = False
+                    print("Done. Press ctrl+c to exit.")
+                    exit()
+                break
+
+
+tree_buffer = []
+tree_num = 0
+
+
+def listdirs(dircwd=""):
+    global tree_buffer, tree_num
+    if not dircwd == "":
+        os.chdir(dircwd)
+    file_list = os.listdir()
+    for i in file_list:
+        tree_buffer += (
+            tree_num * "|  " + i + ("/" if os.path.isdir(i) else "") + "\n"
+        )
+        if os.path.isdir(i):
+            tree_num += 1
+            listdirs(i)
+            tree_num -= 1
+    if not dircwd == "":
+        os.chdir("..")
+
+
+def filetree():
+    global tree_buffer
+    subprocess.run("bash -c clear", shell=False)
+    os.chdir(os.path.dirname(os.getcwd()))
+    os.chdir("../..")
+    if show_cwd:
+        cwdstr = (
+            "\033[46m\033[35;1mCurrent Working Directory: "
+            + os.getcwd().replace("\\", "/")
+        )
+        if (
+            len("Current Working Directory: ")
+            + len(os.getcwd().replace("\\", "/"))
+            > co
+        ):
+            cwdstr = (
+                cwdstr.rstrip(
+                    cwdstr[
+                        co
+                        - (
+                            len("Current Working Directory: ")
+                            + len(os.getcwd().replace("\\", "/"))
+                        )
+                        - 4 :
+                    ]
+                )
+                + "..."
+            )
+    else:
+        cwdstr = "\033[46m\033[35;1m                           "
+    tree_buffer = cwdstr + (co - (len(cwdstr) - 12)) * " " + "\033[0m\n"
+    listdirs()
+    print(tree_buffer)
+    exit()
+
+
+state = "edit"
+while True:
+    if state == "edit":
+        editor()
+    elif state == "tree":
+        filetree()

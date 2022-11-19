@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.85p**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.856p**
 
 ###### Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 [link to discussion forum](https://scratch.mit.edu/discuss/topic/629954/)
@@ -18,20 +18,20 @@ Also, I started making the editor.
 is at the very bottom. Look at that list before posting bugs.
 
 # Open-Source
-This is an open-source project. Anyone can contribute. If there's anything discouraging you from contributing, let me know and I'll try to fix it.
+This is an open-source project. Anyone can contribute. If there's anything discouraging you from contributing, let me know, and I'll try to fix it.
 
 # The Plan
 This is mainly made in Python, but if you know languages like C, then you can make some stuff in that so people have many options to choose from.
 
-Some .sb3 files are included in the resources folder so you can test your comp/decomp scripts.
+Some .sb3 files are included in the resources folder, so you can test your comp/decomp scripts.
 
 The compiler should read the project.ss1, write the project.json, and pack it and every asset into a .sb3, that can be played and edited in Scratch
 
-Each sprite (including Stage) has a asset folder. The costumes and sound will go there. It also has a .ss1 file, which is where the code is.
+Each sprite (including Stage) has an asset folder. The costumes and sound will go there. It also has a .ss1 file, which is where the code is.
 
 A project.json is also included in the resources folder to help understand and reverse engineer how it's made. Although, there is pretty much nothing in it, so I recommend getting your own project.json
 
-I'm programming the decompiler. First I'm gonna program it to decompile all the global and stage-exclusive blocks, then sprite-exclusive blocks.
+I'm programming the decompiler. First I'm going to program it to decompile all the global and stage-exclusive blocks, then sprite-exclusive blocks.
 
 ## Contributing
 I am currently putting comments in my code so people understand it. So for some sections, you will have to guess what the code does. Sorry.
@@ -43,7 +43,7 @@ Right now the default decompiler is set to the Python version. If you want to us
   3. Press 1 to pick one of the included scripts, then press 2 to select Decompiler V2.
 
 Also, I renamed the file extension to .ss1 because I am planning on having multiple formats.<br>
-ss1 Will be it's own language **# Current**<br>
+ss1 Will be its own language **# Current**<br>
 ss2 Will be similar to c<br>
 ss3 Python or javascript? **# These 2 won't be worked on anytime soon**<br> 
 
@@ -140,7 +140,7 @@ Once you've installed those, you'll need to install pip then install the require
 pip install -r requirements.txt
 ```
 ## Other Linux Distros
-For any other distros, search it up. I'm not gonna list the commands for every distro.
+For any other distros, search it up. I'm not going to list the commands for every distro.
 
 Please write down any dependencies I missed.
 
@@ -172,15 +172,15 @@ ScratchLang's language is called ScratchScript.
 list: foo=item1, item2, item3, etc - (For an empty list, just add a comma after the equal sign.)<br>
 **broadcast: broadcastexample - (Define a broadcast. The brackets tell the program that it is not defining a variable or a list.)**<br>
 var: foo=string - (Define a variable)<br>
-**#!\<TYPE\> - (Use sha-bangs after a block to set the block type to the desired one if it's not right. For example, replace \<TYPE\> with 'looks' to make it a looks block. This also changes the syntax highlighting in the editor.)**<br>
+**//!\<TYPE\> - (Use sha-bangs after a block to set the block type to the desired one if it's not right. For example, replace \<TYPE\> with 'looks' to make it a looks block. This also changes the syntax highlighting in the editor.)**<br>
 
 ## sha-bangs
-* !#looks
-* !#var
-* !#list
-* !#events
-* !#sound
-* !#control
+* //!looks
+* //!var
+* //!list
+* //!events
+* //!sound
+* //!control
 # Decompiler Python V1
 ## Vanilla Scratch Blocks
 What I'm counting as Vanilla Scratch Blocks:
@@ -201,7 +201,7 @@ switch backdrop to (i) # 'i' is registered as a variable
 ```
 Also, the compiler can't tell the difference between a string and an input (like a variable) yet. So most inputs have quotation marks.<br>
 
-Brackets means that there cannot be a variable in there. It's either a defined object or an object from a set list.<br>
+When a block has brackets '[ ]' it means that there cannot be a variable in there. It's either a defined object or an object from a set list.<br>
 ### Buggy Blocks
 None yet.
 ### Stable blocks
@@ -231,7 +231,7 @@ Brackets means that there cannot be a variable in there. It's either a defined o
 None yet.
 ### Stable blocks
 var=string - (Define [or set] a variable)<br>
-**list=item1,item2,item3,etc - (Overwrites anything in a list to the items listed. No spaces, and for an empty list, just add a comma after the equal sign.)**<br>
+**list=item1,item2,item3,etc - (Overwrites anything in a list to the items listed. No spaces and for an empty list, just add a comma after the equal sign.)**<br>
 move ("num") steps (Move an amount of steps.)<br>
 **wait ("num") seconds - (Wait for an amount of seconds.)**<br>
 switch backdrop to ("backdrop") - (Changes backdrop.)<br>
@@ -605,12 +605,12 @@ The decompiler is not complete yet, which means stuff like that may happen.
 Your .ss1 file is probably big.
 # Bugs
 ## V1 Decomp Bugs (This version is deprecated.)
-* Loads broadcasts even if there are none. (Try decompiling decompilertest.sb3 which is in the resources folder.)
+* Load broadcasts even if there are none. (Try decompiling decompilertest.sb3 which is in the resources folder.)
 ## V2 Decomp Bugs
 * Sometimes (in the project.json) when decompiling a "switch backdrop to" block, the backdrop name is replaced with a number, causing some bugs.
 * Sometimes blocks don't compile at the right place if it's after a c-block.
 ## Python V1 Bugs
-* None yet.
+* No known bugs yet.
 
 -----
 #### ScratchLang Screenshot
@@ -623,6 +623,7 @@ Your .ss1 file is probably big.
 -----
 
 # Devlog
+The devlog will be in the Releases section from now on.
 Format: MM.DD.YY - VERSION
 ## 11.10.22 - 0.6.84p
 * Started editor, and other things.

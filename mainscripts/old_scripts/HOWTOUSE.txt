@@ -1,0 +1,1 @@
+Move all these scripts from the 'old_scripts' directory to the 'mainscripts' directory to use.

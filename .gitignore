@@ -7,4 +7,5 @@ mainscripts/var/vc
 mainscripts/var/pe
 mainscripts/var/zenity
 .idea
-sl-env
+CMakeLists.txt
+cmake-build-debug
