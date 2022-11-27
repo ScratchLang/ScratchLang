@@ -11,25 +11,30 @@ std::string RED = "\033[0;31m";
 std::string NC = "\033[0m";
 std::string P = "\033[0;35m";
 
-int increment() {
+int increment()
+{
     cursor_blink = 1;
-    while (inEditor) {
+    while (inEditor)
+    {
         cursor_blink = 0;
         sleep(0.5);
         cursor_blink = 1;
         sleep(0.5);
-        if (key == "save") {
+        if (key == "save")
+        {
             exit(0);
         }
     }
     exit(0);
 }
 
-void eeee(std::string text) {
-    std::cout << RED << "Error: " << text << NC << endl;
+void eeee(std::string text)
+{
+    std::cout << RED << "Error: " << text << NC << std::endl;
 }
 
-int main() {
+int main()
+{
     std::string b = "";
     std::cout << "\nSelect your project folder.\n";
     sleep(2);

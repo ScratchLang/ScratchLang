@@ -68,7 +68,7 @@ if [ h$input3 == hY ] || [ h$input3 == hy ]; then
   file=$(zenity -directory -file-selection)
   cd "$file" || exit
   if [ -f .maindir ]; then
-   cd Stage || exit
+    cd Stage || exit
     ls -1 >>.dirs
     json="{\"targets\":[{\"isStage\":true,\"name\":\"Stage\",\"variables\":" #Start of the json
     for ((i = 1; i <= $(sed -n '$=' .dirs); i++)); do

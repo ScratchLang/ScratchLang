@@ -7,7 +7,6 @@ import sys
 import time
 from tkinter import filedialog as fd
 
-import keyboard
 import runpy
 
 # Set ANSI escape colors
@@ -19,7 +18,9 @@ P = "\033[0;35m"
 # Set the CWD to the parent directory of the Python file
 if not os.path.dirname(sys.argv[0]) == "":
     os.chdir(os.path.dirname(sys.argv[0]))
+cwd = os.getcwd().replace("\\", "/")
 jsonfile = ""
+removeJson = False
 global corr
 
 
@@ -34,10 +35,16 @@ def createdir(
 
 
 def getinput():  # Gets input from the user
-    return str(keyboard.read_key())
+    return (
+        subprocess.check_output("bash -c 'read -rsn 1 x && echo $x'")
+        .decode("utf-8")
+        .strip()
+    )
 
 
-def writetofile(file, towrite):  # Write to a file. If it doesn't exist, then create it.
+def writetofile(
+    file, towrite
+):  # Write to a file. If it doesn't exist, then create it.
     if os.path.isfile(file):
         f = open(file, "r")
         fcontents = f.read()
@@ -117,9 +124,7 @@ def startpy(a1=""):  # Main menu.
         try:
             if sys.argv[2] == "":
                 pass
-            args2 = (
-                True  # If the script has at least 2 arguments, then set args2 to True
-            )
+            args2 = True  # If the script has at least 2 arguments, then set args2 to True
         except IndexError:
             pass
     except IndexError:
@@ -182,11 +187,15 @@ def decomp():
             print("")
             print(RED + "Todo list:" + NC)
             print("Higher Priorities go first.")
-            print("-------------------------------------------------------------------")
+            print(
+                "-------------------------------------------------------------------"
+            )
             print(RED + "* " + NC + "Make custom blocks")
             print("")
             print("Order of items may change.")
-            print("-------------------------------------------------------------------")
+            print(
+                "-------------------------------------------------------------------"
+            )
         print("")
         print(
             "Select the .sb3 you want to decompile. "
@@ -281,9 +290,10 @@ def decomp():
         file.close()
         global i
         i = 55
+        kv = -1
 
         def extdata():
-            b = "0"
+            b = False
             word = ""
             while True:
                 ip()
@@ -322,7 +332,7 @@ def decomp():
         def nq(num=1):
             for k in range(num):
                 global b
-                b = "0"
+                b = False
                 while True:
                     ip()
                     b = getchar('-"')
@@ -333,13 +343,13 @@ def decomp():
             global nxt
             nq(2)
             ip(2)
-            b = "0"
+            b = False
             b = getchar('-"')
             if not b:
                 if "h" + a1 == "h":
                     nxt = "fin"
             else:
-                b = "0"
+                b = False
                 varname = ""
                 while True:
                     ip()
@@ -352,14 +362,14 @@ def decomp():
                     dte("next: " + nxt + ", " + varname)
             nq(2)
             ip(2)
-            b = "0"
+            b = False
             b = getchar('-"')
             if not b:
                 if a1 == "":
                     writetofile(dcd + "/project.ss1", "\\nscript")
                     print("")
             else:
-                b = "0"
+                b = False
                 pname = ""
                 while True:
                     ip()
@@ -368,7 +378,7 @@ def decomp():
                         break
 
                     pname += char
-            dte(nxt)
+            dte(nxt + "|")
 
         def addblock(a1, dcon=0):
             global i
@@ -380,15 +390,23 @@ def decomp():
                 con = ""
             cnext = ""
             start()
+            # Global Blocks
             if a1 == "looks_switchbackdropto":
                 nq(5)
                 word = extdata()
                 i = jsonfile.find('"' + word + '":{"opcode":')
                 nq(18)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", 'switch backdrop to ("' + word + '")')
+                writetofile(
+                    dcd + "/project.ss1", 'switch backdrop to ("' + word + '")'
+                )
                 print(
-                    RED + "Added block: " + NC + '"switch backdrop to ("' + word + '")"'
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"switch backdrop to ("'
+                    + word
+                    + '")"'
                 )
             elif a1 == "looks_switchbackdroptoandwait":
                 nq(5)
@@ -424,7 +442,7 @@ def decomp():
                 word = word.lower()
                 writetofile(
                     dcd + "/project.ss1",
-                    "change [" + word + '] effect by ("' + amt + '") //!looks',
+                    "change [" + word + '] effect by ("' + amt + '")',
                 )
                 print(
                     RED
@@ -449,7 +467,7 @@ def decomp():
                 word = word.lower()
                 writetofile(
                     dcd + "/project.ss1",
-                    "set [" + word + '] effect to ("' + amt + '") //!looks',
+                    "set [" + word + '] effect to ("' + amt + '")',
                 )
                 print(
                     RED
@@ -461,7 +479,7 @@ def decomp():
                     + amt
                     + '")"'
                 )
-            elif a1 == "looks_graphiceffects":
+            elif a1 == "looks_cleargraphiceffects":
                 writetofile(dcd + "/project.ss1", "clear graphic effects")
                 print(RED + "Added block: " + NC + '"clear graphic effects"')
             elif a1 == "looks_backdropnumbername":
@@ -495,8 +513,17 @@ def decomp():
                 i = jsonfile.find('"' + word + '":{"opcode":')
                 nq(18)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", 'start sound ("' + word + '")')
-                print(RED + "Added block: " + NC + '"start sound ("' + word + '")"')
+                writetofile(
+                    dcd + "/project.ss1", 'start sound ("' + word + '")'
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"start sound ("'
+                    + word
+                    + '")"'
+                )
             elif a1 == "sound_stopallsounds":
                 writetofile(dcd + "/project.ss1", "stop all sounds")
                 print(RED + "Added block: " + NC + '"stop all sounds"')
@@ -513,7 +540,7 @@ def decomp():
                 word = word.lower()
                 writetofile(
                     dcd + "/project.ss1",
-                    "change [" + word + '] effect by ("' + amt + '") //!sound',
+                    "change [" + word + '] effect by ("' + amt + '")',
                 )
                 print(
                     RED
@@ -538,7 +565,7 @@ def decomp():
                 word = word.lower()
                 writetofile(
                     dcd + "/project.ss1",
-                    "set [" + word + '] effect to ("' + amt + '") //!sound',
+                    "set [" + word + '] effect to ("' + amt + '")',
                 )
                 print(
                     RED
@@ -558,17 +585,33 @@ def decomp():
                 word = extdata()
                 if word == "fields":
                     word = ""
-                writetofile(dcd + "/project.ss1", 'change volume by ("' + word + '")')
+                writetofile(
+                    dcd + "/project.ss1", 'change volume by ("' + word + '")'
+                )
                 print(
-                    RED + "Added block: " + NC + '"change volume by ("' + word + '")"'
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"change volume by ("'
+                    + word
+                    + '")"'
                 )
             elif a1 == "sound_setvolumeto":
                 nq(5)
                 word = extdata()
                 if word == "fields":
                     word = ""
-                writetofile(dcd + "/project.ss1", 'set volume to ("' + word + '") %')
-                print(RED + "Added block: " + NC + '"set volume to ("' + word + '") %"')
+                writetofile(
+                    dcd + "/project.ss1", 'set volume to ("' + word + '") %'
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"set volume to ("'
+                    + word
+                    + '") %"'
+                )
             elif a1 == "sound_volume":
                 con += "(volume)"
                 if dcon == 1:
@@ -580,8 +623,17 @@ def decomp():
             elif a1 == "event_whenkeypressed":
                 nq(7)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "when [" + word + "] key pressed")
-                print(RED + "Added block: " + NC + '"when [' + word + '] key pressed"')
+                writetofile(
+                    dcd + "/project.ss1", "when [" + word + "] key pressed"
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"when ['
+                    + word
+                    + '] key pressed"'
+                )
             elif a1 == "event_whenstageclicked":
                 writetofile(dcd + "/project.ss1", "when flag clicked")
                 print(RED + "Added block: " + NC + '"when flag clicked"')
@@ -628,39 +680,84 @@ def decomp():
             elif a1 == "event_whenbroadcastreceived":
                 nq(7)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "when I receive [" + word + "]")
-                print(RED + "Added block: " + NC + '"when I receive [' + word + ']"')
+                writetofile(
+                    dcd + "/project.ss1", "when I receive [" + word + "]"
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"when I receive ['
+                    + word
+                    + ']"'
+                )
             elif a1 == "event_broadcast":
                 nq(5)
                 word = extdata()
                 writetofile(dcd + "/project.ss1", "broadcast [" + word + "]")
-                print(RED + "Added block: " + NC + '"broadcast [' + word + ']"')
+                print(
+                    RED + "Added block: " + NC + '"broadcast [' + word + ']"'
+                )
             elif a1 == "event_broadcastandwait":
                 nq(5)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "broadcast [" + word + "] and wait")
+                writetofile(
+                    dcd + "/project.ss1", "broadcast [" + word + "] and wait"
+                )
                 print(
-                    RED + "Added block: " + NC + '"broadcast [' + word + '] and wait"'
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"broadcast ['
+                    + word
+                    + '] and wait"'
                 )
             elif a1 == "control_wait":
                 nq(5)
                 word = extdata()
                 if word == "fields":
                     word = ""
-                writetofile(dcd + "/project.ss1", 'wait ("' + word + '") seconds')
-                print(RED + "Added block: " + NC + '"wait ("' + word + '") seconds"')
+                writetofile(
+                    dcd + "/project.ss1", 'wait ("' + word + '") seconds'
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"wait ("'
+                    + word
+                    + '") seconds"'
+                )
             elif a1 == "control_repeat":
                 cnext = nxt
                 nq(5)
                 word = extdata()
                 if word == "SUBSTACK":
                     word = ""
-                    writetofile(dcd + "/project.ss1", 'repeat ("' + word + '") {')
-                    print(RED + "Starting repeat |" + NC + ' repeat ("' + word + '") {')
+                    writetofile(
+                        dcd + "/project.ss1", 'repeat ("' + word + '") {'
+                    )
+                    print(
+                        RED
+                        + "Starting repeat |"
+                        + NC
+                        + ' repeat ("'
+                        + word
+                        + '") {'
+                    )
                 else:
                     nq()
-                    writetofile(dcd + "/project.ss1", "repeat (" + word + ") {")
-                    print(RED + "Starting repeat |" + NC + ' repeat ("' + word + '") {')
+                    writetofile(
+                        dcd + "/project.ss1", "repeat (" + word + ") {"
+                    )
+                    print(
+                        RED
+                        + "Starting repeat |"
+                        + NC
+                        + ' repeat ("'
+                        + word
+                        + '") {'
+                    )
                     word = extdata()
                 if not word == "SUBSTACK":
                     writetofile(dcd + "/project.ss1", "}")
@@ -715,7 +812,7 @@ def decomp():
                         break
                 if word == "CONDITION":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-]")
@@ -747,7 +844,7 @@ def decomp():
                         break
                 if word == "SUBSTACK":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-]")
@@ -781,7 +878,7 @@ def decomp():
                         break
                 if word == "CONDITION":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-]")
@@ -799,7 +896,14 @@ def decomp():
                         word = extdata()
                         addblock(word)
                         writetofile(dcd + "/project.ss1", "if " + con + " {")
-                        print(RED + "Starting if/else |" + NC + " if " + con + " {")
+                        print(
+                            RED
+                            + "Starting if/else |"
+                            + NC
+                            + " if "
+                            + con
+                            + " {"
+                        )
                     else:
                         writetofile(dcd + "/project.ss1", "if <> {")
                         print(RED + "Starting if/else |" + NC + " if <> {")
@@ -813,7 +917,7 @@ def decomp():
                         break
                 if word == "SUBSTACK":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-]")
@@ -842,7 +946,7 @@ def decomp():
                         break
                 if word == "SUBSTACK2":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-]")
@@ -876,7 +980,7 @@ def decomp():
                         break
                 if word == "CONDITION":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-]")
@@ -897,7 +1001,14 @@ def decomp():
                             dcd + "/project.ss1",
                             "wait until " + con + "<>" if con == "" else "",
                         )
-                        print(RED + "Added block: " + NC + '"wait until ' + con + '"')
+                        print(
+                            RED
+                            + "Added block: "
+                            + NC
+                            + '"wait until '
+                            + con
+                            + '"'
+                        )
                     else:
                         writetofile(dcd + "/project.ss1", "wait until <>")
                         print(RED + "Added block: " + NC + '"wait until <>')
@@ -907,8 +1018,16 @@ def decomp():
                         print(RED + "Added block: " + NC + '"wait until <>"')
                     else:
                         writetofile(dcd + "/project.ss1", "wait until " + con)
-                        print(RED + "Added block: " + NC + '"wait until ' + con + '"')
+                        print(
+                            RED
+                            + "Added block: "
+                            + NC
+                            + '"wait until '
+                            + con
+                            + '"'
+                        )
                 i = j
+                nxt = cnext
             elif a1 == "control_repeat_until":
                 con = ""
                 cnext = nxt
@@ -920,7 +1039,7 @@ def decomp():
                         break
                 if word == "CONDITION":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-]")
@@ -937,7 +1056,9 @@ def decomp():
                         nq(4)
                         word = extdata()
                         addblock(word)
-                        writetofile(dcd + "/project.ss1", "repeat until " + con + " {")
+                        writetofile(
+                            dcd + "/project.ss1", "repeat until " + con + " {"
+                        )
                         print(
                             RED
                             + "Starting repeat until |"
@@ -949,11 +1070,19 @@ def decomp():
                     else:
                         writetofile(dcd + "/project.ss1", "repeat until <> {")
                         print(
-                            RED + "Starting repeat until |" + NC + " repeat until <> {"
+                            RED
+                            + "Starting repeat until |"
+                            + NC
+                            + " repeat until <> {"
                         )
                 else:
                     writetofile(dcd + "/project.ss1", "repeat until <> {")
-                    print(RED + "Starting repeat until |" + NC + " repeat until <> {")
+                    print(
+                        RED
+                        + "Starting repeat until |"
+                        + NC
+                        + " repeat until <> {"
+                    )
                 i = j
                 while True:
                     word = extdata()
@@ -961,7 +1090,7 @@ def decomp():
                         break
                 if word == "SUBSTACK":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-]")
@@ -995,7 +1124,7 @@ def decomp():
                         break
                 if word == "CONDITION":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-]")
@@ -1012,8 +1141,17 @@ def decomp():
                         nq(4)
                         word = extdata()
                         addblock(word)
-                        writetofile(dcd + "/project.ss1", "while " + con + " {")
-                        print(RED + "Starting while |" + NC + " while " + con + " {")
+                        writetofile(
+                            dcd + "/project.ss1", "while " + con + " {"
+                        )
+                        print(
+                            RED
+                            + "Starting while |"
+                            + NC
+                            + " while "
+                            + con
+                            + " {"
+                        )
                     else:
                         writetofile(dcd + "/project.ss1", "while <> {")
                         print(RED + "while |" + NC + " while <> {")
@@ -1027,7 +1165,7 @@ def decomp():
                         break
                 if word == "SUBSTACK":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-]")
@@ -1050,21 +1188,103 @@ def decomp():
                     writetofile(dcd + "/project.ss1", "}")
                     print(RED + "Ended while |" + NC + " }")
                 nxt = cnext
+            elif a1 == "control_for_each":
+                cnext = nxt
+                nq(2)
+                j = i
+                while True:
+                    word = extdata()
+                    if word == "VALUE":
+                        break
+                nq()
+                value = extdata()
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "VARIABLE":
+                        break
+                nq()
+                var = extdata()
+                writetofile(
+                    dcd + "/project.ss1",
+                    "for [" + var + '] in ("' + value + '") {',
+                )
+                print(
+                    RED
+                    + "Starting for |"
+                    + NC
+                    + " for ["
+                    + var
+                    + '] in ("'
+                    + value
+                    + '") {'
+                )
+                i = j
+                while True:
+                    word = extdata()
+                    if word == "SUBSTACK" or word == "shadow":
+                        break
+                if word == "SUBSTACK":
+                    k = i
+                    b = False
+                    while True:
+                        ip()
+                        b = getchar("-]")
+                        if b:
+                            break
+                    im()
+                    b = False
+                    b = getchar('-"')
+                    if b:
+                        i = k
+                        nq()
+                        word = extdata()
+                        i = jsonfile.find('"' + word + '":{"opcode":')
+                        nq(4)
+                        word = extdata()
+                        addblock(word)
+                    writetofile(dcd + "/project.ss1", "}")
+                    print(RED + "Ended for |" + NC + " }")
+                else:
+                    writetofile(dcd + "/project.ss1", "}")
+                    print(RED + "Ended for |" + NC + " }")
+                nxt = cnext
             elif a1 == "control_create_clone_of":
                 nq(5)
                 word = extdata()
                 i = jsonfile.find('"' + word + '":{"opcode":')
                 nq(18)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", 'create a clone of ("' + word + '")')
-                print(
-                    RED + "Added block: " + NC + '"create a clone of ("' + word + '")"'
+                writetofile(
+                    dcd + "/project.ss1", 'create a clone of ("' + word + '")'
                 )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"create a clone of ("'
+                    + word
+                    + '")"'
+                )
+            elif a1 == "control_stop":
+                nq(7)
+                word = extdata()
+                writetofile(dcd + "/project.ss1", "stop [" + word + "]")
+                print(RED + "Added block: " + NC + '"stop [' + word + ']"')
             elif a1 == "sensing_askandwait":
                 nq(5)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", 'ask ("' + word + '") and wait')
-                print(RED + "Added block: " + NC + '"ask ("' + word + '") and wait"')
+                writetofile(
+                    dcd + "/project.ss1", 'ask ("' + word + '") and wait'
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"ask ("'
+                    + word
+                    + '") and wait"'
+                )
             elif a1 == "sensing_answer":
                 con += "(answer)"  # fixed 'anwser' typo!
                 if dcon == 1:
@@ -1138,7 +1358,7 @@ def decomp():
                     word = ""
                 con += "([" + sofprop + '] of ("' + word + '"))'
                 if dcon == 1:
-                    writetofile(dcd + "/project.ss1", con + " //!sensing")
+                    writetofile(dcd + "/project.ss1", con)
                     print(RED + "Added block: " + NC + '"' + con + '"')
             elif a1 == "sensing_current":
                 nq(7)
@@ -1297,14 +1517,14 @@ def decomp():
                         break
                 if word == "OPERAND1":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-,")
                         if b:
                             break
                     ip()
-                    b = "0"
+                    b = False
                     b = getchar('-"')
                     if b:
                         word = extdata()
@@ -1315,7 +1535,7 @@ def decomp():
                         addblock(word)
                         con += " = "
                     else:
-                        b = "0"
+                        b = False
                         while True:
                             ip()
                             b = getchar("-]")
@@ -1340,14 +1560,14 @@ def decomp():
                         break
                 if word == "OPERAND2":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-,")
                         if b:
                             break
                     ip()
-                    b = "0"
+                    b = False
                     b = getchar('-"')
                     if b:
                         word = extdata()
@@ -1357,7 +1577,7 @@ def decomp():
                         addblock(word)
                         con += ">"
                     else:
-                        b = "0"
+                        b = False
                         while True:
                             ip()
                             b = getchar("-]")
@@ -1388,14 +1608,14 @@ def decomp():
                         break
                 if word == "OPERAND1":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-,")
                         if b:
                             break
                     ip()
-                    b = "0"
+                    b = False
                     b = getchar('-"')
                     if b:
                         word = extdata()
@@ -1406,7 +1626,7 @@ def decomp():
                         addblock(word)
                         con += " > "
                     else:
-                        b = "0"
+                        b = False
                         while True:
                             ip()
                             b = getchar("-]")
@@ -1431,14 +1651,14 @@ def decomp():
                         break
                 if word == "OPERAND2":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-,")
                         if b:
                             break
                     ip()
-                    b = "0"
+                    b = False
                     b = getchar('-"')
                     if b:
                         word = extdata()
@@ -1448,7 +1668,7 @@ def decomp():
                         addblock(word)
                         con += ">"
                     else:
-                        b = "0"
+                        b = False
                         while True:
                             ip()
                             b = getchar("-]")
@@ -1479,14 +1699,14 @@ def decomp():
                         break
                 if word == "OPERAND1":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-,")
                         if b:
                             break
                     ip()
-                    b = "0"
+                    b = False
                     b = getchar('-"')
                     if b:
                         word = extdata()
@@ -1497,7 +1717,7 @@ def decomp():
                         addblock(word)
                         con += " <"
                     else:
-                        b = "0"
+                        b = False
                         while True:
                             ip()
                             b = getchar("-]")
@@ -1522,14 +1742,14 @@ def decomp():
                         break
                 if word == "OPERAND2":
                     k = i
-                    b = "0"
+                    b = False
                     while True:
                         ip()
                         b = getchar("-,")
                         if b:
                             break
                     ip()
-                    b = "0"
+                    b = False
                     b = getchar('-"')
                     if b:
                         word = extdata()
@@ -1539,7 +1759,7 @@ def decomp():
                         addblock(word)
                         con += ">"
                     else:
-                        b = "0"
+                        b = False
                         while True:
                             ip()
                             b = getchar("-]")
@@ -1676,7 +1896,7 @@ def decomp():
                     word = extdata()
                     if word == "STRING1":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -1684,7 +1904,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -1703,7 +1923,7 @@ def decomp():
                     word = extdata()
                     if word == "STRING2":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -1711,7 +1931,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -1735,7 +1955,7 @@ def decomp():
                     word = extdata()
                     if word == "LETTER":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -1743,7 +1963,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -1763,7 +1983,7 @@ def decomp():
                     word = extdata()
                     if word == "STRING":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -1771,7 +1991,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -1795,7 +2015,7 @@ def decomp():
                     word = extdata()
                     if word == "STRING":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -1803,7 +2023,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -1828,7 +2048,7 @@ def decomp():
                     word = extdata()
                     if word == "STRING1":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -1836,7 +2056,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -1856,7 +2076,7 @@ def decomp():
                     word = extdata()
                     if word == "STRING2":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -1864,7 +2084,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -1888,7 +2108,7 @@ def decomp():
                     word = extdata()
                     if word == "NUM1":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -1896,7 +2116,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -1916,7 +2136,7 @@ def decomp():
                     word = extdata()
                     if word == "NUM2":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -1924,7 +2144,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -1948,7 +2168,7 @@ def decomp():
                     word = extdata()
                     if word == "NUM":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -1956,7 +2176,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -1989,7 +2209,7 @@ def decomp():
                     word = extdata()
                     if word == "NUM":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -1997,7 +2217,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -2030,7 +2250,7 @@ def decomp():
                     word = extdata()
                     if word == "VALUE":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -2038,7 +2258,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -2069,7 +2289,7 @@ def decomp():
                     word = extdata()
                     if word == "VALUE":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -2077,7 +2297,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -2095,7 +2315,9 @@ def decomp():
             elif a1 == "data_showvariable":
                 nq(7)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "show variable [" + word + "]")
+                writetofile(
+                    dcd + "/project.ss1", "show variable [" + word + "]"
+                )
                 print(
                     RED
                     + "Added block: "
@@ -2109,7 +2331,9 @@ def decomp():
             elif a1 == "data_hidevariable":
                 nq(7)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "hide variable [" + word + "]")
+                writetofile(
+                    dcd + "/project.ss1", "hide variable [" + word + "]"
+                )
                 print(
                     RED
                     + "Added block: "
@@ -2128,7 +2352,7 @@ def decomp():
                     word = extdata()
                     if word == "ITEM":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -2136,7 +2360,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -2169,7 +2393,7 @@ def decomp():
                     word = extdata()
                     if word == "INDEX":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -2177,7 +2401,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -2205,8 +2429,17 @@ def decomp():
             elif a1 == "data_deletealloflist":
                 nq(7)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "delete all of [" + word + "]")
-                print(RED + "Added block: " + NC + '"delete all of [' + word + ']"')
+                writetofile(
+                    dcd + "/project.ss1", "delete all of [" + word + "]"
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"delete all of ['
+                    + word
+                    + ']"'
+                )
             elif a1 == "data_insertatlist":
                 con = ""
                 nq(2)
@@ -2215,7 +2448,7 @@ def decomp():
                     word = extdata()
                     if word == "ITEM":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -2223,7 +2456,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -2243,7 +2476,7 @@ def decomp():
                     word = extdata()
                     if word == "INDEX":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -2251,7 +2484,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -2283,7 +2516,7 @@ def decomp():
                     word = extdata()
                     if word == "INDEX":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -2291,7 +2524,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -2319,7 +2552,7 @@ def decomp():
                     word = extdata()
                     if word == "ITEM":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -2327,7 +2560,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -2351,7 +2584,7 @@ def decomp():
                     word = extdata()
                     if word == "INDEX":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -2359,7 +2592,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -2392,7 +2625,7 @@ def decomp():
                     word = extdata()
                     if word == "ITEM":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -2400,7 +2633,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -2453,7 +2686,7 @@ def decomp():
                     word = extdata()
                     if word == "ITEM":
                         break
-                b = "0"
+                b = False
                 k = i
                 while True:
                     ip()
@@ -2461,7 +2694,7 @@ def decomp():
                     if b:
                         break
                 ip()
-                b = "0"
+                b = False
                 b = getchar('-"')
                 if b:
                     word = extdata()
@@ -2501,7 +2734,10 @@ def decomp():
                 con += "hide list [" + word + "]"
                 writetofile(dcd + "/project.ss1", con)
                 print(RED + "Added block: " + NC + '"' + con + '"')
-            elif a1 == "procedures_definition":
+            elif a1 == "pen_clear":
+                writetofile(dcd + "/project.ss1", "erase all")
+                print(RED + "Added block: " + NC + '"erase all"')
+            elif a1 == "procedures_definition":  # Very hard to code :(
                 nq(5)
                 word = extdata()
                 i = jsonfile.find('"' + word + '":{"opcode":')
@@ -2515,6 +2751,130 @@ def decomp():
                     dcd + "/project.ss1",
                     'DECOMPERR: Unknown block:  "' + "a1" + '"',
                 )
+            elif a1 == "motion_movesteps":  # Sprite exclusive blocks
+                nq(5)
+                word = extdata()
+                writetofile(
+                    dcd + "/project.ss1", 'move ("' + word + '") steps'
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"move ("'
+                    + word
+                    + '") steps"'
+                )
+            elif a1 == "motion_turnright":  # Sprite exclusive blocks
+                nq(5)
+                word = extdata()
+                writetofile(
+                    dcd + "/project.ss1", 'turn cw ("' + word + '") degrees'
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"turn cw ("'
+                    + word
+                    + '") degrees"'
+                )
+            elif a1 == "motion_turnleft":  # Sprite exclusive blocks
+                nq(5)
+                word = extdata()
+                writetofile(
+                    dcd + "/project.ss1", 'turn ccw ("' + word + '") degrees'
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"turn ccw ("'
+                    + word
+                    + '") degrees"'
+                )
+            elif a1 == "motion_goto":
+                nq(5)
+                word = extdata()
+                i = jsonfile.find('"' + word + '":{"opcode":')
+                nq(18)
+                word = extdata()
+                if word == "_random_":
+                    word = "random position"
+                writetofile(dcd + "/project.ss1", 'go to ("' + word + '")')
+                print(RED + "Added block: " + NC + '"go to ("' + word + '")"')
+            elif a1 == "motion_gotoxy":
+                nq(5)
+                x = extdata()
+                nq(3)
+                y = extdata()
+                writetofile(
+                    dcd + "/project.ss1",
+                    'go to x: ("' + x + '") y: ("' + y + '")',
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"go to x: ("'
+                    + x
+                    + '") y: ("'
+                    + y
+                    + '")"'
+                )
+            elif a1 == "motion_glideto":
+                nq(5)
+                secs = extdata()
+                nq(3)
+                word = extdata()
+                i = jsonfile.find('"' + word + '":{"opcode":')
+                nq(18)
+                word = extdata()
+                if word == "_random_":
+                    word = "random position"
+                writetofile(
+                    dcd + "/project.ss1",
+                    'glide ("' + secs + '") secs to ("' + word + '")',
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"glide ("'
+                    + secs
+                    + '") secs to ("'
+                    + word
+                    + '")"'
+                )
+            elif a1 == "motion_glidesecstoxy":
+                nq(5)
+                secs = extdata()
+                nq(3)
+                x = extdata()
+                nq(3)
+                y = extdata()
+                writetofile(
+                    dcd + "/project.ss1",
+                    'glide ("'
+                    + secs
+                    + '") secs to x: ("'
+                    + x
+                    + '") y: ("'
+                    + y
+                    + '")',
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"glide ("'
+                    + secs
+                    + '") secs to x: ("'
+                    + x
+                    + '") y: ("'
+                    + y
+                    + '")"'
+                )
             else:
                 print(RED + 'Unknown block: "' + a1 + '" Skipping.' + NC)
                 writetofile(
@@ -2527,327 +2887,423 @@ def decomp():
                 word = extdata()
                 addblock(word, 1)
 
-        print("Defining variables...\n")
         while True:
+            print("Defining variables...\n")
+            di = i
             nq()
-            ip()
-            nq()
-            b = False
-            novars = "0"
+            word = extdata()
+            i = di
+            if not word == "lists":
+                while True:
+                    nq()
+                    ip()
+                    nq()
+                    b = False
+                    novars = "0"
+                    while True:
+                        ip()
+                        b = getchar("-[")
+                        if b:
+                            break
+                        b = getchar("-}")
+                        if b:
+                            novars = "1"
+                            break
+                    if novars == "0":
+                        ip()
+                        b = False
+                        varname = ""
+                        while True:
+                            ip()
+                            b = getchar('-"', "++")
+                            varname += char
+                            if b:
+                                break
+                        ip(2)
+                        b = False
+                        varvalue = ""
+                        while True:
+                            ip()
+                            b = getchar("-]", "++")
+                            varvalue += char
+                            if b:
+                                break
+                        if not os.path.isfile("Stage/project.ss1"):
+                            writetofile(
+                                "Stage/project.ss1",
+                                "// There should be no empty lines.\nss1\n\\prep",
+                            )
+                        writetofile(
+                            "Stage/project.ss1",
+                            "var: " + varname + "=" + varvalue,
+                        )
+                        print(
+                            RED
+                            + "Added variable: "
+                            + NC
+                            + '"'
+                            + varname
+                            + '".'
+                        )
+                        print(RED + "Value: " + NC + varvalue)
+                        print("")
+                        b = False
+                        varname = ""
+                        ip(2)
+                        b = getchar("-}")
+                        if b:
+                            break
+                        im(2)
+                    if novars == "1":
+                        writetofile(
+                            "Stage/project.ss1",
+                            "// There should be no empty lines.\nss1\n\\prep",
+                        )
+                        break
+            print("Building lists...")
+            print("")
+            i = di
             while True:
-                ip()
-                b = getchar("-[")
-                if b:
+                word = extdata()
+                if word == "lists":
                     break
+            ip(1)
+            while True:
+                ip(2)
+                b = False
                 b = getchar("-}")
                 if b:
                     novars = "1"
+                    im(2)
+                else:
+                    im(2)
+                    nq()
+                    ip()
+                    nq()
+                    b = False
+                    novars = "0"
+                    while True:
+                        ip()
+                        b = getchar("-[")
+                        if b:
+                            break
+                        b = getchar("-}")
+                        if b:
+                            novars = "1"
+                            break
+                if novars == "0":
+                    ip()
+                    b = False
+                    listname = ""
+                    while True:
+                        ip()
+                        b = getchar('-"', "++")
+                        listname += char
+                        if b:
+                            break
+                    ip(4)
+                    b = False
+                    b = getchar("-]")
+                    if not b:
+                        if char == '"':
+                            b = False
+                            while True:
+                                b = False
+                                varname = ""
+                                while True:
+                                    ip()
+                                    b = getchar('-"')
+                                    if b:
+                                        break
+                                    varname += char
+                                ip()
+                                b = False
+                                b = getchar("-]")
+                                if not b:
+                                    writetofile("st", varname + ",")
+                                    ip()
+                                else:
+                                    writetofile("st", varname)
+                                    break
+                        else:
+                            im()
+                            b = False
+                            while True:
+                                b = False
+                                varname = ""
+                                while True:
+                                    ip()
+                                    b = getchar("-,")
+                                    if b:
+                                        break
+                                    b = getchar("-]")
+                                    if b:
+                                        break
+                                    varname += char
+                                b = False
+                                b = getchar("-]")
+                                if not b:
+                                    writetofile("st", varname + ",")
+                                else:
+                                    writetofile("st", varname)
+                                    break
+                        f = open("st", "r")
+                        list = ""
+                        for k in f:
+                            list += f.readline().replace("\n", "")
+                        f.close()
+                        writetofile(
+                            "Stage/project.ss1",
+                            "list: " + listname + "=" + list,
+                        )
+                        print(
+                            RED + "Added list: " + NC + '"' + listname + '".'
+                        )
+                        print(RED + "Contents: " + NC + list)
+                        print("")
+                    else:
+                        writetofile(
+                            "Stage/project.ss1", "list: " + listname + "=,"
+                        )
+                        print(
+                            RED + "Added list: " + NC + '"' + listname + '".'
+                        )
+                        print(RED + "Contents: " + NC + "Nothing.")
+                        print("")
+                        if novars == "1":
+                            break
+                if novars == "1":
                     break
-            if novars == "0":
-                ip()
-                b = "0"
-                varname = ""
-                while True:
-                    ip()
-                    b = getchar('-"', "++")
-                    varname += char
-                    if b:
-                        break
                 ip(2)
-                b = "0"
-                varvalue = ""
-                while True:
-                    ip()
-                    b = getchar("-]", "++")
-                    varvalue += char
-                    if b:
-                        break
-                if not os.path.isfile("Stage/project.ss1"):
-                    writetofile(
-                        "Stage/project.ss1",
-                        "// There should be no empty lines.\nss1\n\\prep",
-                    )
-                writetofile("Stage/project.ss1", "var: " + varname + "=" + varvalue)
-                print(RED + "Added variable: " + NC + '"' + varname + '".')
-                print(RED + "Value: " + NC + varvalue)
-                print("")
-                b = "0"
-                varname = ""
-                ip(2)
+                b = False
                 b = getchar("-}")
                 if b:
                     break
-                im(2)
-            if novars == "1":
-                writetofile(
-                    "Stage/project.ss1",
-                    "// There should be no empty lines.\nss1\n\\prep",
-                )
-                break
-        print("Building lists...")
-        print("")
-        ip(9)
-        while True:
-            ip(2)
-            b = "0"
+            print("Loading broadcasts...")
+            print("")
+            while True:
+                b = False
+                word = ""
+                while True:
+                    ip()
+                    b = getchar('-"')
+                    if b:
+                        break
+                    word += char
+                if word == "broadcasts":
+                    break
+            b = False
+            novars = "0"
+            ip(3)
+            b = False
             b = getchar("-}")
             if b:
                 novars = "1"
                 im(2)
             else:
                 im(2)
-                nq()
-                ip()
-                nq()
-                b = "0"
-                novars = "0"
                 while True:
                     ip()
-                    b = getchar("-[")
+                    b = getchar('-"')
                     if b:
                         break
                     b = getchar("-}")
                     if b:
                         novars = "1"
                         break
+                nq()
             if novars == "0":
-                ip()
-                b = "0"
-                listname = ""
                 while True:
                     ip()
-                    b = getchar('-"', "++")
-                    listname += char
-                    if b:
-                        break
-                ip(4)
-                b = "0"
-                b = getchar("-]")
-                if not b:
-                    if char == '"':
-                        b = False
-                        while True:
-                            b = False
-                            varname = ""
-                            while True:
-                                ip()
-                                b = getchar('-"')
-                                if b:
-                                    break
-                                varname += char
-                            ip()
-                            b = False
-                            b = getchar("-]")
-                            if not b:
-                                writetofile("st", varname + ",")
-                                ip()
-                            else:
-                                writetofile("st", varname)
-                                break
-                    else:
-                        im()
-                        b = "0"
-                        while True:
-                            b = "0"
-                            varname = ""
-                            while True:
-                                ip()
-                                b = getchar("-,")
-                                if b:
-                                    break
-                                b = getchar("-]")
-                                if b:
-                                    break
-                                varname += char
-                            b = "0"
-                            b = getchar("-]")
-                            if not b:
-                                writetofile("st", varname + ",")
-                            else:
-                                writetofile("st", varname)
-                                break
-                    f = open("st", "r")
-                    list = ""
-                    for k in f:
-                        list += f.readline().replace("\n", "")
-                    f.close()
-                    writetofile("Stage/project.ss1", "list: " + listname + "=" + list)
-                    print(RED + "Added list: " + NC + '"' + listname + '".')
-                    print(RED + "Contents: " + NC + list)
+                    nq()
+                    b = False
+                    varname = ""
+                    while True:
+                        ip()
+                        b = getchar('-"')
+                        if b:
+                            break
+                        varname += char
+                    writetofile("Stage/project.ss1", "broadcast: " + varname)
+                    print(
+                        RED + "Loaded broadcast: " + NC + '"' + varname + '"'
+                    )
                     print("")
-                else:
-                    writetofile("Stage/project.ss1", "list: " + listname + "=,")
-                    print(RED + "Added list: " + NC + '"' + listname + '".')
-                    print(RED + "Contents: " + NC + "Nothing.")
-                    print("")
-                    if novars == "1":
-                        break
-            if novars == "1":
-                break
-            ip(2)
-            b = "0"
-            b = getchar("-}")
-            if b:
-                break
-        print("Loading broadcasts...")
-        print("")
-        while True:
-            b = "0"
-            word = ""
-            while True:
-                ip()
-                b = getchar('-"')
-                if b:
-                    break
-                word += char
-            if word == "broadcasts":
-                break
-        b = "0"
-        novars = "0"
-        ip(3)
-        b = "0"
-        b = getchar("-}")
-        if b:
-            novars = "1"
-            im(2)
-        else:
-            im(2)
-            while True:
-                ip()
-                b = getchar('-"')
-                if b:
-                    break
-                b = getchar("-}")
-                if b:
-                    novars = "1"
-                    break
-            nq()
-        if novars == "0":
-            while True:
-                ip()
-                nq()
-                b = "0"
-                varname = ""
-                while True:
                     ip()
-                    b = getchar('-"')
+                    b = False
+                    b = getchar("-}")
                     if b:
                         break
-                    varname += char
-                writetofile("Stage/project.ss1", "broadcast: " + varname)
-                print(RED + "Loaded broadcast: " + NC + '"' + varname + '"')
-                print("")
-                ip()
-                b = "0"
-                b = getchar("-}")
-                if b:
-                    break
-                ip(2)
-                nq()
-        global rep
-        rep = 0
-        print("Making blocks...")
-        print("")
-        dcd = "Stage"
-        k = -1
-        done = "0"
-        global con
-        while True:
-            i = k
-            while True:
-                word = extdata()
-                if word == "parent":
-                    k = i
                     ip(2)
-                    b = "0"
-                    b = getchar('-"')
-                    if not b:
-                        break
-                if word == "comments":
-                    done = "1"
-                    break
-            if done == "0":
-                b = "0"
-                while True:
-                    im()
-                    b = getchar("-{")
-                    if b:
-                        break
-                ip()
-                nq(2)
-                word = extdata()
-                con = ""
-                addblock(word, 1)
-            if done == "1":
-                break
-        print("\nAdding assets...")
-        while True:
-            word = extdata()
-            if word == "costumes":
-                break
-        while True:
-            nq(15)
-            asset_file = extdata()
-            try:
-                shutil.move("./" + asset_file, "Stage/assets/" + asset_file)
-                print(asset_file + " >> Stage/assets/" + asset_file)
-            except FileNotFoundError:
-                pass
-            nq(4)
-            b = "0"
+                    nq()
+            global rep
+            rep = 0
+            print("Making blocks...")
+            print("")
+            k = kv
+            done = "0"
+            global con
             while True:
-                ip()
-                b = getchar("-}")
-                if b:
+                i = k
+                while True:
+                    word = extdata()
+                    if word == "parent":
+                        k = i
+                        ip(2)
+                        b = False
+                        b = getchar('-"')
+                        if not b:
+                            break
+                    if word == "comments":
+                        done = "1"
+                        break
+                if done == "0":
+                    b = False
+                    while True:
+                        im()
+                        b = getchar("-{")
+                        if b:
+                            break
+                    ip()
+                    nq(2)
+                    word = extdata()
+                    con = ""
+                    addblock(word, 1)
+                if done == "1":
                     break
-            ip()
-            b = "0"
-            b = getchar("-]")
-            if b:
-                break
-            nq(2)
-        print("\nFormatting code to make it easier to read (Please wait)...")
-        print("")
-        f = open(dcd + "/project.ss1", "r")
-        spaces = ""
-        i = 0
-        q = 0
-        flen = len(f.readlines())
-        f.close()
-        f = open(dcd + "/project.ss1", "r")
-        proglen = 55
-        for line in f.readlines():
-            q = q + 1
-            per = q / flen
+            di = i
+            print("\nAdding assets...")
+            while True:
+                word = extdata()
+                if word == "costumes":
+                    break
+            while True:
+                while True:
+                    word = extdata()
+                    if word == "md5ext" or word == "sounds":
+                        break
+                if word == "sounds":
+                    break
+                nq()
+                asset_file = extdata()
+                try:
+                    shutil.move(
+                        "./" + asset_file, dcd + "/assets/" + asset_file
+                    )
+                    print(asset_file + " >> " + dcd + "/assets/" + asset_file)
+                except FileNotFoundError:
+                    pass
+            if not word == "sounds":
+                while True:
+                    word = extdata()
+                    if word == "sounds":
+                        break
+            while True:
+                while True:
+                    word = extdata()
+                    if word == "md5ext" or word == "volume":
+                        break
+                if word == "volume":
+                    break
+                nq()
+                asset_file = extdata()
+                try:
+                    shutil.move(
+                        "./" + asset_file, dcd + "/assets/" + asset_file
+                    )
+                    print(asset_file + " >> " + dcd + "/assets/" + asset_file)
+                except FileNotFoundError:
+                    pass
             print(
-                "\033[A["
-                + round(proglen * per) * "#"
-                + (proglen - round(proglen * per)) * " "
-                + "] "
-                + str(round(per * 100))
-                + "%"
+                "\nFormatting code to make it easier to read (Please wait)..."
             )
-            line = line.strip("\n")
-            if "}" in line and "{" in line:
-                i -= 1
-                spaces = i * "  "
-                i += 1
-            elif "{" in line:
-                spaces = i * "  "
-                i += 1
-            elif "}" in line:
-                i -= 1
-                spaces = i * "  "
-            else:
-                spaces = i * "  "
-            writetofile(dcd + "/a.txt", spaces + line)
-        f.close()
-        os.remove(dcd + "/project.ss1")
-        os.rename(dcd + "/a.txt", dcd + "/project.ss1")
+            print("")
+            try:
+                f = open(dcd + "/project.ss1", "r")
+            except FileNotFoundError:
+                writetofile(
+                    dcd + "/project.ss1",
+                    "// There should be no empty lines.\nss1",
+                )
+                f = open(dcd + "/project.ss1", "r")
+            spaces = ""
+            i = 0
+            q = 0
+            flen = len(f.readlines())
+            f.close()
+            f = open(dcd + "/project.ss1", "r")
+            proglen = 55
+            tabSize = 2
+            g = open(cwd + "/var/editor_settings")
+            for line in g.readlines():
+                if "tabSize: " in line:
+                    tabSize = int(line.lstrip("tabSize: "))
+                    break
+            for line in f.readlines():
+                q = q + 1
+                per = q / flen
+                print(
+                    "\033[A["
+                    + round(proglen * per) * "#"
+                    + (proglen - round(proglen * per)) * " "
+                    + "] "
+                    + str(round(per * 100))
+                    + "%"
+                )
+                line = line.strip("\n")
+                if "}" in line and "{" in line:
+                    im()
+                    spaces = i * (tabSize * " ")
+                    ip()
+                elif "{" in line:
+                    spaces = i * (tabSize * " ")
+                    ip()
+                elif "}" in line:
+                    im()
+                    spaces = i * (tabSize * " ")
+                else:
+                    spaces = i * (tabSize * " ")
+                if not line.strip() == "":
+                    writetofile(dcd + "/a.txt", spaces + line)
+            f.close()
+            os.remove(dcd + "/project.ss1")
+            os.rename(dcd + "/a.txt", dcd + "/project.ss1")
+            i = di
+            while True:
+                word = extdata()
+                if word == "isStage" or word == "agent":
+                    break
+            if word == "agent":
+                break
+            kv = i
+            nq(3)
+            dcd = (
+                extdata()
+                .replace(" ", "-")
+                .replace("/", "")
+                .replace("\\", "")
+                .replace("<", "")
+                .replace(">", "")
+                .replace(":", "")
+                .replace('"', "")
+                .replace("|", "")
+                .replace("?", "")
+                .replace("*", "")
+            )  # Make sure sprite name is valid; remove all invalid characters. (And replace spaces with hyphens.)
+            createdir(dcd)
+            os.chdir(dcd)
+            createdir("assets")
+            os.chdir("..")
+            nq(2)
+            ip(2)
+            print("Now entering: " + dcd)
         os.chdir("..")
         dir = os.getcwd().replace("\\", "/")
-        print("")
-        print(RED + "Your project can be found in " + dir + "/" + name + "." + NC)
+        if removeJson:
+            os.remove(dir + "/" + name + "/project.json")
+        print(
+            RED + "Your project can be found in " + dir + "/" + name + "." + NC
+        )
         print("Open in ScratchLang editor? [Y/N]")
         os.chdir("../mainscripts")
         openInEditor = getinput()
@@ -2873,7 +3329,9 @@ def inputloop(ia1: str = ""):
         print("4. Decompile a .sb3 file.")
         print("5. Export project.")
         print("6. Import project.")
-        print("7. Are options 3 and 4 not working? Input 7 to install dependencies.")
+        print(
+            "7. Are options 3 and 4 not working? Input 7 to install dependencies."
+        )
         print("8. Create scratchlang command.")
         print("9. Remove scratchlang command.")
         if not os.path.isfile("var/devmode"):
@@ -2969,7 +3427,9 @@ def inputloop(ia1: str = ""):
         print("")
         subprocess.run("ls -1", shell=False)
         print("")
-        pgrd = input("Choose a project to get rid of, or input nothing to cancel.\n")
+        pgrd = input(
+            "Choose a project to get rid of, or input nothing to cancel.\n"
+        )
         if not pgrd == "":
             if os.path.isdir(pgrd):
                 subprocess.run("rm -rf " + pgrd)
@@ -3002,7 +3462,9 @@ def inputloop(ia1: str = ""):
         print("")
         subprocess.run("ls -1", shell=False)
         print("")
-        pgrd = input("Choose a project to export, or input nothing to cancel.\n")
+        pgrd = input(
+            "Choose a project to export, or input nothing to cancel.\n"
+        )
         if not pgrd == "":
             if os.path.isdir(pgrd):
                 subprocess.run("tar -cf " + pgrd + ".ssa " + pgrd)
@@ -3010,7 +3472,9 @@ def inputloop(ia1: str = ""):
                 subprocess.run("cp projects/" + pgrd + ".ssa exports")
                 os.remove("projects/" + pgrd + ".ssa")
                 print(
-                    "Your project " + pgrd + ".ssa can be found in the exports folder."
+                    "Your project "
+                    + pgrd
+                    + ".ssa can be found in the exports folder."
                 )
             else:
                 error("directory " + pgrd + " does not exist.")
@@ -3046,7 +3510,9 @@ def inputloop(ia1: str = ""):
         pdir = os.getcwd().replace("\\", "/")
         if not os.path.isfile("var/alias"):
             subprocess.run("chmod 755 shcommand.sh", shell=False)
-            subprocess.run("bash -c './shcommand.sh 1 " + pdir + "'", shell=False)
+            subprocess.run(
+                "bash -c './shcommand.sh 1 " + pdir + "'", shell=False
+            )
             writetofile(
                 "var/alias",
                 "This file tells the program that the command is already created. Please don't touch this.",
