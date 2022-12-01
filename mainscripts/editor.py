@@ -1012,7 +1012,9 @@ def on_press(keypressed):
             realLine = 1
         editorCurrentLine = realLine
     if len(str(key)) == 1:
-        if key == '"' or key == "'":
+        if (
+            key == '"' or key == "'"
+        ):  # Bug when you press the (') key. nothing happenes. The cause of the bug is unknown, as this was working before.
             if not quoteComplete:
                 newLine = (
                     editorLines[editorCurrentLine - 1][: editorChar - 1]

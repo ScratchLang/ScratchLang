@@ -2765,7 +2765,7 @@ def decomp():
                     + word
                     + '") steps"'
                 )
-            elif a1 == "motion_turnright":  # Sprite exclusive blocks
+            elif a1 == "motion_turnright":
                 nq(5)
                 word = extdata()
                 writetofile(
@@ -2779,7 +2779,7 @@ def decomp():
                     + word
                     + '") degrees"'
                 )
-            elif a1 == "motion_turnleft":  # Sprite exclusive blocks
+            elif a1 == "motion_turnleft":
                 nq(5)
                 word = extdata()
                 writetofile(
