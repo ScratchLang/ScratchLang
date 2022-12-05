@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <iostream>
 #include <string>
+#include <windows.h>
+#include <shobjidl.h>
 
 using namespace std;
 
