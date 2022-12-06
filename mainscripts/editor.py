@@ -14,8 +14,14 @@ from tkinter import filedialog as fd
 import pynput
 import yaml
 
+
+def exitLamb():
+    subprocess.run("bash -c 'echo -e \033[0m && clear'", shell=False)
+    sys.exit(0)
+
+
 signal.signal(
-    signal.SIGINT, lambda x, y: sys.exit(0)
+    signal.SIGINT, lambda x, y: exitLamb()
 )  # Don't print traceback if pressing ctrl+c
 global syntaxType
 inEditor = True  # Define the 'inEditor' variable. When this variable is true, then you're in the editor. If false, then you're not.
@@ -146,6 +152,7 @@ try:
     themeRed = editorSettings["tr"]
     themeGreen = editorSettings["tg"]
     themeBlue = editorSettings["tb"]
+    cwdType = editorSettings["cwd_type"]
 except KeyError:
     error("Invalid settings. Please fix.")
     exit()
@@ -1011,7 +1018,7 @@ def on_press(keypressed):
             newLine = key + editorLines[editorCurrentLine - 1]
             editorChar += 3
         else:
-            newLine = editorLines[editorCurrentLine - 1].lstrip("// ")
+            newLine = editorLines[editorCurrentLine - 1][3:]
             editorChar -= 3
         editorLines[editorCurrentLine - 1] = newLine
         editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
@@ -1162,8 +1169,9 @@ def editor_print(line):
     if showCwd:
         currentWorkingDirectoryString = (
             "\033[46m\033[35;1mCurrent Working Directory: "
-            + folder
-            + "/project.ss1"
+            + folder.replace("/", "\\")
+            if cwdType == "Windows"
+            else folder.replace("C:", "/c") + "/project.ss1"
         )
         if (
             len("Current Working Directory: ") + len(folder + "/project.ss1")
@@ -1205,7 +1213,7 @@ def editor_print(line):
                 + (getLineCount - len(str(q))) * " "
                 + ("\033[93m" if editorCurrentLine == q else "")
                 + str(q)
-                + "     "
+                + "\033[1;38;5;8m  |  "
                 + "\033[0m"
                 + themeAnsi
                 + editorLinesWithSyntax[q - 1]
@@ -1497,7 +1505,7 @@ def editor_print(line):
                     + (getLineCount - len(str(editorCurrentLine))) * " "
                     + "\033[93m"
                     + str(editorCurrentLine)
-                    + "     "
+                    + "\033[1;38;5;8m  |  "
                     + "\033[0m"
                     + themeAnsi
                     + find
@@ -1583,6 +1591,7 @@ def editor():
 
 
 state = "edit"
+print("\033[?25l", end="")
 while True:
     if state == "edit":
         editor()
