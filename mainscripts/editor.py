@@ -12,6 +12,7 @@ from time import sleep
 from tkinter import filedialog as fd
 
 import pynput
+import yaml
 
 signal.signal(
     signal.SIGINT, lambda x, y: sys.exit(0)
@@ -22,7 +23,6 @@ key = ""  # Define the 'key' variable.
 cursorBlink = 0  # Define the 'cursorBlink' variable.
 # Color constants
 RED = "\033[0;31m"
-NC = "\033[0m" + "\033[48;2;33;38;41m"
 P = "\033[0;35m"
 
 if (
@@ -125,38 +125,52 @@ fileOpened.close()
 print("")
 print("Loading settings...")
 print("")
-fileOpened = open(currentWorkingDirectory + "/var/editor_settings", "r")
+with open(currentWorkingDirectory + "/var/editor_settings.yaml", "r") as file:
+    editorSettings = yaml.safe_load(file)
+fileOpened = open(currentWorkingDirectory + "/var/editor_settings.yaml", "r")
 tabSize = 2
 syntaxHighlightingEnabled = True
 previousFileOpenedLength = fileOpenedLength
 fileOpenedLength = len(fileOpened.readlines())
 fileOpened.close()
-fileOpened = open(currentWorkingDirectory + "/var/editor_settings", "r")
+fileOpened = open(currentWorkingDirectory + "/var/editor_settings.yaml", "r")
 progressBarLength = 55
 q = 0
-for line in fileOpened.readlines():
-    q += 1
-    percent = q / fileOpenedLength
-    print(
-        "\033[A["
-        + round(progressBarLength * percent) * "#"
-        + (progressBarLength - round(progressBarLength * percent)) * " "
-        + "] "
-        + str(round(percent * 100))
-        + "%"
+themeRed, themeBlue, themeGreen = "0", "0", "0"
+themeConfig = "Light"
+try:
+    tabSize = editorSettings["tabsize"]
+    syntaxHighlightingEnabled = editorSettings["syntax_highlighting"]
+    showCwd = editorSettings["show_cwd"]
+    themeConfig = editorSettings["theme"]
+    themeRed = editorSettings["tr"]
+    themeGreen = editorSettings["tg"]
+    themeBlue = editorSettings["tb"]
+except KeyError:
+    error("Invalid settings. Please fix.")
+    exit()
+themeAnsi = (
+    "\033[48;2;"
+    + str(themeRed)
+    + ";"
+    + str(themeGreen)
+    + ";"
+    + str(themeBlue)
+    + "m"
+)
+if themeConfig == "Dark":
+    themeAnsi = "\033[48;2;33;38;41m"
+elif themeConfig == "Light":
+    themeAnsi = "\033[0;107m"
+elif themeConfig == "Black":
+    themeAnsi = ""
+elif themeConfig == "RGB":
+    pass
+else:
+    error(
+        "Invalid theme configuration. Please set the theme to a valid option in the 'editor_settings.yaml'"
     )
-    if "tabsize" in line:
-        tabSize = int(line.replace("tabsize: ", ""))
-    elif "syntax_highlighting" in line:
-        syntaxHighlightingEnabled = line.replace("syntax_highlighting: ", "")
-    elif "show_cwd" in line:
-        isTrue = line.replace("show_cwd: ", "")
-        if isTrue == "True":
-            showCwd = True
-        elif isTrue == "False":
-            showCwd = False
-        else:
-            showCwd = True
+NC = "\033[0m" + themeAnsi
 fileOpened.close()
 fileOpenedLength = previousFileOpenedLength
 print("")
@@ -165,7 +179,7 @@ print("")
 q = 0
 # Stuff used for syntax highlighting.
 colors = {
-    "c": "\033[0m" + "\033[48;2;33;38;41m",
+    "c": "\033[0m" + themeAnsi,
     "p": "\033[48;5;10m",
     "n": "\033[48;5;10m",
     "0": "\033[37m",
@@ -734,7 +748,7 @@ def add_syntax(line, progressBarEnabled=True):
         + colors[syntaxType]
         + syntaxLine
         + "\033[0m"
-        + "\033[48;2;33;38;41m"
+        + themeAnsi
     )
     if syntaxBuild == "":
         syntaxBuild = line
@@ -1176,7 +1190,7 @@ def editor_print(line):
         currentWorkingDirectoryString
         + (terminalWidth - (len(currentWorkingDirectoryString) - 12)) * " "
         + "\033[0m\n"
-        + "\033[48;2;33;38;41m"
+        + themeAnsi
     )
     q = realLine - 1
     for i in range(line - 2):
@@ -1193,7 +1207,7 @@ def editor_print(line):
                 + str(q)
                 + "     "
                 + "\033[0m"
-                + "\033[48;2;33;38;41m"
+                + themeAnsi
                 + editorLinesWithSyntax[q - 1]
                 + filler
                 + "\n"
@@ -1223,9 +1237,17 @@ def editor_print(line):
                             if editorBufferBuffer[j] == "/":
                                 j += 1
                                 if editorChar == j:
-                                    find += "\033[46;1m\033[38;5;8m/\033[0m\033[38;5;8m\033[48;2;33;38;41m/"
+                                    find += (
+                                        "\033[46;1m\033[38;5;8m/\033[0m\033[38;5;8m"
+                                        + themeAnsi
+                                        + "/"
+                                    )
                                 elif editorChar == j + 1:
-                                    find += "\033[0m\033[48;2;33;38;41m\033[38;5;8m/\033[46;1m/\033[0m"
+                                    find += (
+                                        "\033[0m"
+                                        + themeAnsi
+                                        + "\033[38;5;8m/\033[46;1m/\033[0m"
+                                    )
                                 else:
                                     find += "\033[38;5;8m//"
                                 comment = True
@@ -1237,11 +1259,7 @@ def editor_print(line):
                         break
                     character = editorBufferBuffer[j]
                     if editorChar == j + 1:
-                        find += (
-                            "\033[0m"
-                            + "\033[48;2;33;38;41m"
-                            + colors[syntaxType]
-                        )
+                        find += "\033[0m" + themeAnsi + colors[syntaxType]
                     if character in startParenthesis:
                         if not character == "{":
                             if character == "<":
@@ -1374,9 +1392,7 @@ def editor_print(line):
                                 find += character
                                 if editorChar == j + 1:
                                     find += (
-                                        "\033[0m"
-                                        + "\033[48;2;33;38;41m"
-                                        + "\033[38;5;34m"
+                                        "\033[0m" + themeAnsi + "\033[38;5;34m"
                                     )
                                 if character == '"':
                                     find += colors[syntaxType]
@@ -1409,9 +1425,7 @@ def editor_print(line):
                                 find += character
                                 if editorChar == j + 1:
                                     find += (
-                                        "\033[0m"
-                                        + "\033[48;2;33;38;41m"
-                                        + "\033[38;5;34m"
+                                        "\033[0m" + themeAnsi + "\033[38;5;34m"
                                     )
                                 if character == "'":
                                     find += colors[syntaxType]
@@ -1434,7 +1448,7 @@ def editor_print(line):
                         if editorBufferBuffer[j] == "/":
                             j += 1
                             if comment:
-                                find += "\033[48;2;33;38;41m\033[38;5;8m"
+                                find += themeAnsi + "\033[38;5;8m"
                                 while True:
                                     j += 1
                                     try:
@@ -1448,13 +1462,17 @@ def editor_print(line):
                                     if editorChar == j + 1:
                                         find += (
                                             "\033[0m"
-                                            + "\033[48;2;33;38;41m"
+                                            + themeAnsi
                                             + "\033[38;5;8m"
                                         )
                             else:
                                 find = find.rstrip("//")
                                 if editorChar == j:
-                                    find += "\033[46;1m\033[38;5;8m/\033[0m\033[38;5;8m\033[48;2;33;38;41m/"
+                                    find += (
+                                        "\033[46;1m\033[38;5;8m/\033[0m\033[38;5;8m"
+                                        + themeAnsi
+                                        + "/"
+                                    )
                                 elif editorChar == j + 1:
                                     find += "\033[38;5;8m/\033[46;1m/\033[0m"
                                 else:
@@ -1481,16 +1499,20 @@ def editor_print(line):
                     + str(editorCurrentLine)
                     + "     "
                     + "\033[0m"
-                    + "\033[48;2;33;38;41m"
+                    + themeAnsi
                     + find
                     + "\033[0m"
-                    + "\033[48;2;33;38;41m"
+                    + themeAnsi
                     + filler
-                    + "\033[0m\033[48;2;33;38;41m\n"
+                    + "\033[0m"
+                    + themeAnsi
+                    + "\n"
                 )
         except IndexError:
             editorBufferLine = (
-                "\033[38;5;8m~\033[0m\033[48;2;33;38;41m     "
+                "\033[38;5;8m~\033[0m"
+                + themeAnsi
+                + "     "
                 + (terminalWidth - 6) * " "
                 + "\n"
             )

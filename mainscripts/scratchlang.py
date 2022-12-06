@@ -8,6 +8,7 @@ import time
 from tkinter import filedialog as fd
 
 import runpy
+import yaml
 
 # Set ANSI escape colors
 
@@ -3313,11 +3314,12 @@ def decomp():
             f = open(dcd + "/project.ss1", "r")
             proglen = 55
             tabSize = 2
-            g = open(cwd + "/var/editor_settings")
-            for line in g.readlines():
-                if "tabSize: " in line:
-                    tabSize = int(line.lstrip("tabSize: "))
-                    break
+            with open(cwd + "/var/editor_settings.yaml") as file:
+                tabs = yaml.safe_load(file)
+            try:
+                tabSize = tabs["tabsize"]
+            except KeyError:
+                pass
             for line in f.readlines():
                 q = q + 1
                 per = q / flen
