@@ -129,9 +129,7 @@ def startpy(a1=""):  # Main menu.
             pass
     except IndexError:
         pass
-    print(
-        "\033[8;40;125t\033[3;250;60t"
-    )  # Set the terminal size to 40x125, then put it in the middle of the screen
+    print("\033[8;40;125t")  # Set the terminal size to 40x125
     subprocess.run("clear", shell=False)
     print(
         P
@@ -2801,6 +2799,8 @@ def decomp():
                 word = extdata()
                 if word == "_random_":
                     word = "random position"
+                if word == "_mouse_":
+                    word = "mouse position"
                 writetofile(dcd + "/project.ss1", 'go to ("' + word + '")')
                 print(RED + "Added block: " + NC + '"go to ("' + word + '")"')
             elif a1 == "motion_gotoxy":
@@ -2832,6 +2832,8 @@ def decomp():
                 word = extdata()
                 if word == "_random_":
                     word = "random position"
+                if word == "_mouse_":
+                    word = "mouse position"
                 writetofile(
                     dcd + "/project.ss1",
                     'glide ("' + secs + '") secs to ("' + word + '")',
@@ -2874,6 +2876,83 @@ def decomp():
                     + '") y: ("'
                     + y
                     + '")"'
+                )
+            elif a1 == "motion_pointindirection":
+                nq(5)
+                word = extdata()
+                writetofile(
+                    dcd + "/project.ss1",
+                    'point in direction ("' + word + '")',
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"point in direction ("'
+                    + word
+                    + '")"'
+                )
+            elif a1 == "motion_pointtowards":
+                nq(5)
+                word = extdata()
+                i = jsonfile.find('"' + word + '":{"opcode":')
+                nq(18)
+                word = extdata()
+                if word == "_random_":
+                    word = "random position"
+                if word == "_mouse_":
+                    word = "mouse position"
+                writetofile(
+                    dcd + "/project.ss1",
+                    'point towards ("' + word + '")',
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"point towards ("'
+                    + word
+                    + '")"'
+                )
+            elif a1 == "motion_changexby":
+                nq(5)
+                word = extdata()
+                writetofile(
+                    dcd + "/project.ss1",
+                    'change x by ("' + word + '")',
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"change x by ("'
+                    + word
+                    + '")"'
+                )
+            elif a1 == "motion_setx":
+                nq(5)
+                word = extdata()
+                writetofile(
+                    dcd + "/project.ss1",
+                    'set x to ("' + word + '")',
+                )
+                print(
+                    RED + "Added block: " + NC + '"set x to ("' + word + '")"'
+                )
+            elif a1 == "motion_setrotationstyle":
+                nq(7)
+                word = extdata()
+                writetofile(
+                    dcd + "/project.ss1",
+                    "set rotation style [" + word + "]",
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"set rotation style ['
+                    + word
+                    + ']"'
                 )
             else:
                 print(RED + 'Unknown block: "' + a1 + '" Skipping.' + NC)
@@ -3509,10 +3588,39 @@ def inputloop(ia1: str = ""):
     elif inp == "8":
         pdir = os.getcwd().replace("\\", "/")
         if not os.path.isfile("var/alias"):
-            subprocess.run("chmod 755 shcommand.sh", shell=False)
-            subprocess.run(
-                "bash -c './shcommand.sh 1 " + pdir + "'", shell=False
+            print(
+                "Which version of the Python command to use?\n\n1. python\n\n2. python3\n\n3. py"
             )
+            f = getinput()
+            if not (f == "1" or f == "2" or f == "3"):
+                error(f + " is not an input.")
+                exit()
+            subprocess.run("chmod 755 shcommand.sh", shell=False)
+            try:
+                subprocess.check_output(
+                    "bash -c './shcommand.sh 1 " + pdir + " " + f + "'",
+                    shell=False,
+                ).decode("utf-8").strip()
+            except subprocess.CalledProcessError:
+                error("Command failed. Please run:")
+                if f == "1":
+                    print(
+                        'echo >>/usr/bin/scratchlang "cd '
+                        + pdir
+                        + ' && python scratchlang.py $*"'
+                    )
+                elif f == "2":
+                    print(
+                        'echo >>/usr/bin/scratchlang "cd '
+                        + pdir
+                        + ' && python3 scratchlang.py $*"'
+                    )
+                else:
+                    print(
+                        'echo >>/usr/bin/scratchlang "cd '
+                        + pdir
+                        + ' && py scratchlang.py $*"'
+                    )
             writetofile(
                 "var/alias",
                 "This file tells the program that the command is already created. Please don't touch this.",

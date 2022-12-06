@@ -4,6 +4,7 @@
 import os
 import runpy
 import shutil
+import signal
 import subprocess
 import sys
 import threading
@@ -12,16 +13,16 @@ from tkinter import filedialog as fd
 
 import pynput
 
-global parenthesisCount
-global syntaxBuild
+signal.signal(
+    signal.SIGINT, lambda x, y: sys.exit(0)
+)  # Don't print traceback if pressing ctrl+c
 global syntaxType
-global editorLinesWithSyntax
 inEditor = True  # Define the 'inEditor' variable. When this variable is true, then you're in the editor. If false, then you're not.
 key = ""  # Define the 'key' variable.
 cursorBlink = 0  # Define the 'cursorBlink' variable.
 # Color constants
 RED = "\033[0;31m"
-NC = "\033[0m"
+NC = "\033[0m" + "\033[48;2;33;38;41m"
 P = "\033[0;35m"
 
 if (
@@ -30,7 +31,7 @@ if (
     os.chdir(os.path.dirname(sys.argv[0]))
 currentWorkingDirectory = os.getcwd().replace("\\", "/")
 terminalHeight = (
-    shutil.get_terminal_size().lines
+    shutil.get_terminal_size().lines + 1
 )  # Set 'terminalHeight' to the terminal height
 terminalWidth = (
     shutil.get_terminal_size().columns
@@ -164,7 +165,7 @@ print("")
 q = 0
 # Stuff used for syntax highlighting.
 colors = {
-    "c": "\033[0m",
+    "c": "\033[0m" + "\033[48;2;33;38;41m",
     "p": "\033[48;5;10m",
     "n": "\033[48;5;10m",
     "0": "\033[37m",
@@ -733,6 +734,7 @@ def add_syntax(line, progressBarEnabled=True):
         + colors[syntaxType]
         + syntaxLine
         + "\033[0m"
+        + "\033[48;2;33;38;41m"
     )
     if syntaxBuild == "":
         syntaxBuild = line
@@ -745,15 +747,12 @@ for line in editorLines:
     if len(line) > terminalWidth:
         lineWrapWarning = True
     editorLinesWithSyntax.append(add_syntax(line))
-print(
-    "This editor is only useful if you'd like syntax highlighting when you're editng. If you don't care, try using Notepad, VSCode, or any of your favorite text editors."
-)
 if lineWrapWarning:
     print("")
     print(
         "WARNING: Line wrap may occur and will make the editor glitch out. Instead of using this, you should use something like Notepad or VSCode to edit the ScratchScript file, as it's much better than this editor."
     )
-sleep(2)
+    sleep(2)
 editorCurrentLine = 1
 editorChar = len(editorLines[0])
 realLine = 1
@@ -777,7 +776,7 @@ def on_press(keypressed):
         state = "new"
     if key == "Key.up" and editorCurrentLine > 1:
         editorCurrentLine -= 1
-        if editorCurrentLine == realLine - 1 and realLine > 1:
+        if editorCurrentLine == realLine and realLine > 1:
             realLine -= 1
         cursorBlink = 1
         if editorChar > len(editorLines[editorCurrentLine - 1]):
@@ -989,11 +988,26 @@ def on_press(keypressed):
     if key == "\\x13":
         key = "save"
         exit()
+    if key == "191":
+        if (
+            not editorLines[editorCurrentLine - 1][: editorChar - 1][:3]
+            == "// "
+        ):
+            key = "// "
+            newLine = key + editorLines[editorCurrentLine - 1]
+            editorChar += 3
+        else:
+            newLine = editorLines[editorCurrentLine - 1].lstrip("// ")
+            editorChar -= 3
+        editorLines[editorCurrentLine - 1] = newLine
+        editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
+            newLine, False
+        )
     if key == "Key.tab":
         key = tabSize * " "
         newLine = (
             editorLines[editorCurrentLine - 1][: editorChar - 1]
-            + (key if not capsLock else key.upper())
+            + key
             + editorLines[editorCurrentLine - 1][editorChar - 1 :]
         )
         editorLines[editorCurrentLine - 1] = newLine
@@ -1162,6 +1176,7 @@ def editor_print(line):
         currentWorkingDirectoryString
         + (terminalWidth - (len(currentWorkingDirectoryString) - 12)) * " "
         + "\033[0m\n"
+        + "\033[48;2;33;38;41m"
     )
     q = realLine - 1
     for i in range(line - 2):
@@ -1178,6 +1193,7 @@ def editor_print(line):
                 + str(q)
                 + "     "
                 + "\033[0m"
+                + "\033[48;2;33;38;41m"
                 + editorLinesWithSyntax[q - 1]
                 + filler
                 + "\n"
@@ -1207,9 +1223,9 @@ def editor_print(line):
                             if editorBufferBuffer[j] == "/":
                                 j += 1
                                 if editorChar == j:
-                                    find += "\033[46;1m\033[38;5;8m/\033[0m\033[38;5;8m/"
+                                    find += "\033[46;1m\033[38;5;8m/\033[0m\033[38;5;8m\033[48;2;33;38;41m/"
                                 elif editorChar == j + 1:
-                                    find += "\033[0m\033[38;5;8m/\033[46;1m/\033[0m"
+                                    find += "\033[0m\033[48;2;33;38;41m\033[38;5;8m/\033[46;1m/\033[0m"
                                 else:
                                     find += "\033[38;5;8m//"
                                 comment = True
@@ -1221,7 +1237,11 @@ def editor_print(line):
                         break
                     character = editorBufferBuffer[j]
                     if editorChar == j + 1:
-                        find += "\033[0m" + colors[syntaxType]
+                        find += (
+                            "\033[0m"
+                            + "\033[48;2;33;38;41m"
+                            + colors[syntaxType]
+                        )
                     if character in startParenthesis:
                         if not character == "{":
                             if character == "<":
@@ -1353,7 +1373,11 @@ def editor_print(line):
                                 character = editorBufferBuffer[j]
                                 find += character
                                 if editorChar == j + 1:
-                                    find += "\033[0m" + "\033[38;5;34m"
+                                    find += (
+                                        "\033[0m"
+                                        + "\033[48;2;33;38;41m"
+                                        + "\033[38;5;34m"
+                                    )
                                 if character == '"':
                                     find += colors[syntaxType]
                                     break
@@ -1384,7 +1408,11 @@ def editor_print(line):
                                 character = editorBufferBuffer[j]
                                 find += character
                                 if editorChar == j + 1:
-                                    find += "\033[0m" + "\033[38;5;34m"
+                                    find += (
+                                        "\033[0m"
+                                        + "\033[48;2;33;38;41m"
+                                        + "\033[38;5;34m"
+                                    )
                                 if character == "'":
                                     find += colors[syntaxType]
                                     break
@@ -1406,7 +1434,7 @@ def editor_print(line):
                         if editorBufferBuffer[j] == "/":
                             j += 1
                             if comment:
-                                find += "\033[38;5;8m"
+                                find += "\033[48;2;33;38;41m\033[38;5;8m"
                                 while True:
                                     j += 1
                                     try:
@@ -1418,11 +1446,15 @@ def editor_print(line):
                                     character = editorBufferBuffer[j]
                                     find += character
                                     if editorChar == j + 1:
-                                        find += "\033[0m" + "\033[38;5;8m"
+                                        find += (
+                                            "\033[0m"
+                                            + "\033[48;2;33;38;41m"
+                                            + "\033[38;5;8m"
+                                        )
                             else:
                                 find = find.rstrip("//")
                                 if editorChar == j:
-                                    find += "\033[46;1m\033[38;5;8m/\033[0m\033[38;5;8m/"
+                                    find += "\033[46;1m\033[38;5;8m/\033[0m\033[38;5;8m\033[48;2;33;38;41m/"
                                 elif editorChar == j + 1:
                                     find += "\033[38;5;8m/\033[46;1m/\033[0m"
                                 else:
@@ -1449,18 +1481,22 @@ def editor_print(line):
                     + str(editorCurrentLine)
                     + "     "
                     + "\033[0m"
+                    + "\033[48;2;33;38;41m"
                     + find
                     + "\033[0m"
+                    + "\033[48;2;33;38;41m"
                     + filler
-                    + "\033[0m\n"
+                    + "\033[0m\033[48;2;33;38;41m\n"
                 )
         except IndexError:
             editorBufferLine = (
-                "\033[38;5;8m~\033[0m     " + (terminalWidth - 6) * " " + "\n"
+                "\033[38;5;8m~\033[0m\033[48;2;33;38;41m     "
+                + (terminalWidth - 6) * " "
+                + "\n"
             )
         editorBuffer += editorBufferLine
     print("\033[H\033[3J", end="")
-    print(editorBuffer + "\033[A")
+    print(editorBuffer.rstrip("\n") + "\033[A", end="")
 
 
 # https://stackoverflow.com/questions/7168508/background-function-in-python
@@ -1501,7 +1537,7 @@ def editor():
     subprocess.run("bash -c clear", shell=False)
     editor_print(terminalHeight)
     while inEditor:
-        terminalHeight = shutil.get_terminal_size().lines
+        terminalHeight = shutil.get_terminal_size().lines + 1
         terminalWidth = shutil.get_terminal_size().columns
         editor_print(terminalHeight)
         cursorBlinkPrevious = cursorBlink
@@ -1519,7 +1555,8 @@ def editor():
                             fp.write("%s\n" % item.rstrip(" "))
                     inEditor = False
                     print("Done. Press ctrl+c to exit.")
-                    exit()
+                    while True:
+                        pass
                 break
 
 

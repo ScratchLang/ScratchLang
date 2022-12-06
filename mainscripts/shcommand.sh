@@ -3,7 +3,13 @@ if [ "$1" == "1" ]; then
   if [ "$2" == "HHHHFFFFFFSDFSHDFSKDFGDSILGFSDIIMPOSSIBLEPATHOTESFEE" ]; then
     rm /usr/bin/scratchlang
   else
-    echo >>/usr/bin/scratchlang "cd $2 && python3 scratchlang.py \$1 \$2 \$3"
+    if [ "$3" == "1" ]; then
+      echo >>/usr/bin/scratchlang "cd $2 && python scratchlang.py \$*"
+    elif [ "$3" == "2" ]; then
+      echo >>/usr/bin/scratchlang "cd $2 && python3 scratchlang.py \$*"
+    else
+      echo >>/usr/bin/scratchlang "cd $2 && py scratchlang.py \$*"
+    fi
   fi
 elif [ "$1" == 2 ]; then # This script is not needed anymore, but I don't want to remove it for some reason...
   # https://stackoverflow.com/questions/10679188/casing-arrow-keys-in-bash
@@ -29,5 +35,4 @@ elif [ "$1" == 2 ]; then # This script is not needed anymore, but I don't want t
     echo "$mode"
     ;;
   esac
-
 fi
