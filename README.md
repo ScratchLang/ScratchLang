@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.87p**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.88p**
 
 Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 
@@ -120,6 +120,7 @@ You can even have the path to your project folder as the 1st argument to avoid t
 
 - Arrow keys: Move around
 - ctrl+s: Save project
+- ctrl+/: Toggle line comment
 - caps lock: Caps lock. Duh!
 - tab: Insert a tab.
 - Page Up and Page Down: Quickly navigate through your code
@@ -128,20 +129,24 @@ You can even have the path to your project folder as the 1st argument to avoid t
 
 ### Editor settings
 
-You can go into the var/ directory and edit the 'editor_settings' file to change your settings.
+You can go into the var/ directory and edit the 'editor_settings.yaml' file to change your settings.
 
 Settings added so far:
 
 - tabsize: N - Set the tabsize to N
 - syntax_highlighting: True/False - Turn syntax highlighting on or off. **_Does not work yet._**
 - show_cwd: True/False - Show or hide the current working directory.
+- theme: Dark/Light/Black/RGB - Theme can be dark, light, black, or you can customize the theme with tr, tg, and tb with RGB colors (listed below)
+- tr: N - Set RED to N
+- tg: N - Set GREEN to N
+- tb: N - Set BLUE to N
 
 ### Added Features so far
 
 - Syntax Highlighting
-
 - Scuffed quote and bracket auto-complete
 - Auto-indent
+- Dark, Light, and custom RGB themes
 
 ### Planned features
 
