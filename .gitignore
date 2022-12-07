@@ -9,3 +9,4 @@ mainscripts/var/zenity
 .idea
 CMakeLists.txt
 cmake-build-debug
+__pycache__
