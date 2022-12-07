@@ -43,7 +43,9 @@ def getinput():  # Gets input from the user
     )
 
 
-def writetofile(file, towrite):  # Write to a file. If it doesn't exist, then create it.
+def writetofile(
+    file, towrite
+):  # Write to a file. If it doesn't exist, then create it.
     if os.path.isfile(file):
         f = open(file, "r")
         fcontents = f.read()
@@ -123,9 +125,7 @@ def startpy(a1=""):  # Main menu.
         try:
             if sys.argv[2] == "":
                 pass
-            args2 = (
-                True  # If the script has at least 2 arguments, then set args2 to True
-            )
+            args2 = True  # If the script has at least 2 arguments, then set args2 to True
         except IndexError:
             pass
     except IndexError:
@@ -186,11 +186,15 @@ def decomp():
             print("")
             print(RED + "Todo list:" + NC)
             print("Higher Priorities go first.")
-            print("-------------------------------------------------------------------")
+            print(
+                "-------------------------------------------------------------------"
+            )
             print(RED + "* " + NC + "Make custom blocks")
             print("")
             print("Order of items may change.")
-            print("-------------------------------------------------------------------")
+            print(
+                "-------------------------------------------------------------------"
+            )
         print("")
         print(
             "Select the .sb3 you want to decompile. "
@@ -244,6 +248,7 @@ def decomp():
         if sb3file == "":
             error("Empty path.")
             exit()
+        sb3file = sb3file.replace("/", "\\")
         name = input(
             "Name of project? "
             + RED
@@ -392,9 +397,16 @@ def decomp():
                 i = jsonfile.find('"' + word + '":{"opcode":')
                 nq(18)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", 'switch backdrop to ("' + word + '")')
+                writetofile(
+                    dcd + "/project.ss1", 'switch backdrop to ("' + word + '")'
+                )
                 print(
-                    RED + "Added block: " + NC + '"switch backdrop to ("' + word + '")"'
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"switch backdrop to ("'
+                    + word
+                    + '")"'
                 )
             elif a1 == "looks_switchbackdroptoandwait":
                 nq(5)
@@ -501,8 +513,17 @@ def decomp():
                 i = jsonfile.find('"' + word + '":{"opcode":')
                 nq(18)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", 'start sound ("' + word + '")')
-                print(RED + "Added block: " + NC + '"start sound ("' + word + '")"')
+                writetofile(
+                    dcd + "/project.ss1", 'start sound ("' + word + '")'
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"start sound ("'
+                    + word
+                    + '")"'
+                )
             elif a1 == "sound_stopallsounds":
                 writetofile(dcd + "/project.ss1", "stop all sounds")
                 print(RED + "Added block: " + NC + '"stop all sounds"')
@@ -564,17 +585,33 @@ def decomp():
                 word = extdata()
                 if word == "fields":
                     word = ""
-                writetofile(dcd + "/project.ss1", 'change volume by ("' + word + '")')
+                writetofile(
+                    dcd + "/project.ss1", 'change volume by ("' + word + '")'
+                )
                 print(
-                    RED + "Added block: " + NC + '"change volume by ("' + word + '")"'
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"change volume by ("'
+                    + word
+                    + '")"'
                 )
             elif a1 == "sound_setvolumeto":
                 nq(5)
                 word = extdata()
                 if word == "fields":
                     word = ""
-                writetofile(dcd + "/project.ss1", 'set volume to ("' + word + '") %')
-                print(RED + "Added block: " + NC + '"set volume to ("' + word + '") %"')
+                writetofile(
+                    dcd + "/project.ss1", 'set volume to ("' + word + '") %'
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"set volume to ("'
+                    + word
+                    + '") %"'
+                )
             elif a1 == "sound_volume":
                 con += "(volume)"
                 if dcon == 1:
@@ -586,8 +623,17 @@ def decomp():
             elif a1 == "event_whenkeypressed":
                 nq(7)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "when [" + word + "] key pressed")
-                print(RED + "Added block: " + NC + '"when [' + word + '] key pressed"')
+                writetofile(
+                    dcd + "/project.ss1", "when [" + word + "] key pressed"
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"when ['
+                    + word
+                    + '] key pressed"'
+                )
             elif a1 == "event_whenstageclicked":
                 writetofile(dcd + "/project.ss1", "when flag clicked")
                 print(RED + "Added block: " + NC + '"when flag clicked"')
@@ -634,39 +680,84 @@ def decomp():
             elif a1 == "event_whenbroadcastreceived":
                 nq(7)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "when I receive [" + word + "]")
-                print(RED + "Added block: " + NC + '"when I receive [' + word + ']"')
+                writetofile(
+                    dcd + "/project.ss1", "when I receive [" + word + "]"
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"when I receive ['
+                    + word
+                    + ']"'
+                )
             elif a1 == "event_broadcast":
                 nq(5)
                 word = extdata()
                 writetofile(dcd + "/project.ss1", "broadcast [" + word + "]")
-                print(RED + "Added block: " + NC + '"broadcast [' + word + ']"')
+                print(
+                    RED + "Added block: " + NC + '"broadcast [' + word + ']"'
+                )
             elif a1 == "event_broadcastandwait":
                 nq(5)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "broadcast [" + word + "] and wait")
+                writetofile(
+                    dcd + "/project.ss1", "broadcast [" + word + "] and wait"
+                )
                 print(
-                    RED + "Added block: " + NC + '"broadcast [' + word + '] and wait"'
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"broadcast ['
+                    + word
+                    + '] and wait"'
                 )
             elif a1 == "control_wait":
                 nq(5)
                 word = extdata()
                 if word == "fields":
                     word = ""
-                writetofile(dcd + "/project.ss1", 'wait ("' + word + '") seconds')
-                print(RED + "Added block: " + NC + '"wait ("' + word + '") seconds"')
+                writetofile(
+                    dcd + "/project.ss1", 'wait ("' + word + '") seconds'
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"wait ("'
+                    + word
+                    + '") seconds"'
+                )
             elif a1 == "control_repeat":
                 cnext = nxt
                 nq(5)
                 word = extdata()
                 if word == "SUBSTACK":
                     word = ""
-                    writetofile(dcd + "/project.ss1", 'repeat ("' + word + '") {')
-                    print(RED + "Starting repeat |" + NC + ' repeat ("' + word + '") {')
+                    writetofile(
+                        dcd + "/project.ss1", 'repeat ("' + word + '") {'
+                    )
+                    print(
+                        RED
+                        + "Starting repeat |"
+                        + NC
+                        + ' repeat ("'
+                        + word
+                        + '") {'
+                    )
                 else:
                     nq()
-                    writetofile(dcd + "/project.ss1", "repeat (" + word + ") {")
-                    print(RED + "Starting repeat |" + NC + ' repeat ("' + word + '") {')
+                    writetofile(
+                        dcd + "/project.ss1", "repeat (" + word + ") {"
+                    )
+                    print(
+                        RED
+                        + "Starting repeat |"
+                        + NC
+                        + ' repeat ("'
+                        + word
+                        + '") {'
+                    )
                     word = extdata()
                 if not word == "SUBSTACK":
                     writetofile(dcd + "/project.ss1", "}")
@@ -805,7 +896,14 @@ def decomp():
                         word = extdata()
                         addblock(word)
                         writetofile(dcd + "/project.ss1", "if " + con + " {")
-                        print(RED + "Starting if/else |" + NC + " if " + con + " {")
+                        print(
+                            RED
+                            + "Starting if/else |"
+                            + NC
+                            + " if "
+                            + con
+                            + " {"
+                        )
                     else:
                         writetofile(dcd + "/project.ss1", "if <> {")
                         print(RED + "Starting if/else |" + NC + " if <> {")
@@ -903,7 +1001,14 @@ def decomp():
                             dcd + "/project.ss1",
                             "wait until " + con + "<>" if con == "" else "",
                         )
-                        print(RED + "Added block: " + NC + '"wait until ' + con + '"')
+                        print(
+                            RED
+                            + "Added block: "
+                            + NC
+                            + '"wait until '
+                            + con
+                            + '"'
+                        )
                     else:
                         writetofile(dcd + "/project.ss1", "wait until <>")
                         print(RED + "Added block: " + NC + '"wait until <>')
@@ -913,7 +1018,14 @@ def decomp():
                         print(RED + "Added block: " + NC + '"wait until <>"')
                     else:
                         writetofile(dcd + "/project.ss1", "wait until " + con)
-                        print(RED + "Added block: " + NC + '"wait until ' + con + '"')
+                        print(
+                            RED
+                            + "Added block: "
+                            + NC
+                            + '"wait until '
+                            + con
+                            + '"'
+                        )
                 i = j
                 nxt = cnext
             elif a1 == "control_repeat_until":
@@ -944,7 +1056,9 @@ def decomp():
                         nq(4)
                         word = extdata()
                         addblock(word)
-                        writetofile(dcd + "/project.ss1", "repeat until " + con + " {")
+                        writetofile(
+                            dcd + "/project.ss1", "repeat until " + con + " {"
+                        )
                         print(
                             RED
                             + "Starting repeat until |"
@@ -956,11 +1070,19 @@ def decomp():
                     else:
                         writetofile(dcd + "/project.ss1", "repeat until <> {")
                         print(
-                            RED + "Starting repeat until |" + NC + " repeat until <> {"
+                            RED
+                            + "Starting repeat until |"
+                            + NC
+                            + " repeat until <> {"
                         )
                 else:
                     writetofile(dcd + "/project.ss1", "repeat until <> {")
-                    print(RED + "Starting repeat until |" + NC + " repeat until <> {")
+                    print(
+                        RED
+                        + "Starting repeat until |"
+                        + NC
+                        + " repeat until <> {"
+                    )
                 i = j
                 while True:
                     word = extdata()
@@ -1019,8 +1141,17 @@ def decomp():
                         nq(4)
                         word = extdata()
                         addblock(word)
-                        writetofile(dcd + "/project.ss1", "while " + con + " {")
-                        print(RED + "Starting while |" + NC + " while " + con + " {")
+                        writetofile(
+                            dcd + "/project.ss1", "while " + con + " {"
+                        )
+                        print(
+                            RED
+                            + "Starting while |"
+                            + NC
+                            + " while "
+                            + con
+                            + " {"
+                        )
                     else:
                         writetofile(dcd + "/project.ss1", "while <> {")
                         print(RED + "while |" + NC + " while <> {")
@@ -1124,9 +1255,16 @@ def decomp():
                 i = jsonfile.find('"' + word + '":{"opcode":')
                 nq(18)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", 'create a clone of ("' + word + '")')
+                writetofile(
+                    dcd + "/project.ss1", 'create a clone of ("' + word + '")'
+                )
                 print(
-                    RED + "Added block: " + NC + '"create a clone of ("' + word + '")"'
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"create a clone of ("'
+                    + word
+                    + '")"'
                 )
             elif a1 == "control_stop":
                 nq(7)
@@ -1136,8 +1274,17 @@ def decomp():
             elif a1 == "sensing_askandwait":
                 nq(5)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", 'ask ("' + word + '") and wait')
-                print(RED + "Added block: " + NC + '"ask ("' + word + '") and wait"')
+                writetofile(
+                    dcd + "/project.ss1", 'ask ("' + word + '") and wait'
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"ask ("'
+                    + word
+                    + '") and wait"'
+                )
             elif a1 == "sensing_answer":
                 con += "(answer)"  # fixed 'anwser' typo!
                 if dcon == 1:
@@ -2168,7 +2315,9 @@ def decomp():
             elif a1 == "data_showvariable":
                 nq(7)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "show variable [" + word + "]")
+                writetofile(
+                    dcd + "/project.ss1", "show variable [" + word + "]"
+                )
                 print(
                     RED
                     + "Added block: "
@@ -2182,7 +2331,9 @@ def decomp():
             elif a1 == "data_hidevariable":
                 nq(7)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "hide variable [" + word + "]")
+                writetofile(
+                    dcd + "/project.ss1", "hide variable [" + word + "]"
+                )
                 print(
                     RED
                     + "Added block: "
@@ -2278,8 +2429,17 @@ def decomp():
             elif a1 == "data_deletealloflist":
                 nq(7)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "delete all of [" + word + "]")
-                print(RED + "Added block: " + NC + '"delete all of [' + word + ']"')
+                writetofile(
+                    dcd + "/project.ss1", "delete all of [" + word + "]"
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"delete all of ['
+                    + word
+                    + ']"'
+                )
             elif a1 == "data_insertatlist":
                 con = ""
                 nq(2)
@@ -2594,19 +2754,44 @@ def decomp():
             elif a1 == "motion_movesteps":  # Sprite exclusive blocks
                 nq(5)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", 'move ("' + word + '") steps')
-                print(RED + "Added block: " + NC + '"move ("' + word + '") steps"')
+                writetofile(
+                    dcd + "/project.ss1", 'move ("' + word + '") steps'
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"move ("'
+                    + word
+                    + '") steps"'
+                )
             elif a1 == "motion_turnright":
                 nq(5)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", 'turn cw ("' + word + '") degrees')
-                print(RED + "Added block: " + NC + '"turn cw ("' + word + '") degrees"')
+                writetofile(
+                    dcd + "/project.ss1", 'turn cw ("' + word + '") degrees'
+                )
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"turn cw ("'
+                    + word
+                    + '") degrees"'
+                )
             elif a1 == "motion_turnleft":
                 nq(5)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", 'turn ccw ("' + word + '") degrees')
+                writetofile(
+                    dcd + "/project.ss1", 'turn ccw ("' + word + '") degrees'
+                )
                 print(
-                    RED + "Added block: " + NC + '"turn ccw ("' + word + '") degrees"'
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"turn ccw ("'
+                    + word
+                    + '") degrees"'
                 )
             elif a1 == "motion_goto":
                 nq(5)
@@ -2674,7 +2859,13 @@ def decomp():
                 y = extdata()
                 writetofile(
                     dcd + "/project.ss1",
-                    'glide ("' + secs + '") secs to x: ("' + x + '") y: ("' + y + '")',
+                    'glide ("'
+                    + secs
+                    + '") secs to x: ("'
+                    + x
+                    + '") y: ("'
+                    + y
+                    + '")',
                 )
                 print(
                     RED
@@ -2696,7 +2887,12 @@ def decomp():
                     'point in direction ("' + word + '")',
                 )
                 print(
-                    RED + "Added block: " + NC + '"point in direction ("' + word + '")"'
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"point in direction ("'
+                    + word
+                    + '")"'
                 )
             elif a1 == "motion_pointtowards":
                 nq(5)
@@ -2712,7 +2908,14 @@ def decomp():
                     dcd + "/project.ss1",
                     'point towards ("' + word + '")',
                 )
-                print(RED + "Added block: " + NC + '"point towards ("' + word + '")"')
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"point towards ("'
+                    + word
+                    + '")"'
+                )
             elif a1 == "motion_changexby":
                 nq(5)
                 word = extdata()
@@ -2720,7 +2923,14 @@ def decomp():
                     dcd + "/project.ss1",
                     'change x by ("' + word + '")',
                 )
-                print(RED + "Added block: " + NC + '"change x by ("' + word + '")"')
+                print(
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"change x by ("'
+                    + word
+                    + '")"'
+                )
             elif a1 == "motion_setx":
                 nq(5)
                 word = extdata()
@@ -2728,7 +2938,9 @@ def decomp():
                     dcd + "/project.ss1",
                     'set x to ("' + word + '")',
                 )
-                print(RED + "Added block: " + NC + '"set x to ("' + word + '")"')
+                print(
+                    RED + "Added block: " + NC + '"set x to ("' + word + '")"'
+                )
             elif a1 == "motion_setrotationstyle":
                 nq(7)
                 word = extdata()
@@ -2737,7 +2949,12 @@ def decomp():
                     "set rotation style [" + word + "]",
                 )
                 print(
-                    RED + "Added block: " + NC + '"set rotation style [' + word + ']"'
+                    RED
+                    + "Added block: "
+                    + NC
+                    + '"set rotation style ['
+                    + word
+                    + ']"'
                 )
             else:
                 print(RED + 'Unknown block: "' + a1 + '" Skipping.' + NC)
@@ -2801,7 +3018,14 @@ def decomp():
                             "Stage/project.ss1",
                             "var: " + varname + "=" + varvalue,
                         )
-                        print(RED + "Added variable: " + NC + '"' + varname + '".')
+                        print(
+                            RED
+                            + "Added variable: "
+                            + NC
+                            + '"'
+                            + varname
+                            + '".'
+                        )
                         print(RED + "Value: " + NC + varvalue)
                         print("")
                         b = False
@@ -2913,12 +3137,18 @@ def decomp():
                             "Stage/project.ss1",
                             "list: " + listname + "=" + list,
                         )
-                        print(RED + "Added list: " + NC + '"' + listname + '".')
+                        print(
+                            RED + "Added list: " + NC + '"' + listname + '".'
+                        )
                         print(RED + "Contents: " + NC + list)
                         print("")
                     else:
-                        writetofile("Stage/project.ss1", "list: " + listname + "=,")
-                        print(RED + "Added list: " + NC + '"' + listname + '".')
+                        writetofile(
+                            "Stage/project.ss1", "list: " + listname + "=,"
+                        )
+                        print(
+                            RED + "Added list: " + NC + '"' + listname + '".'
+                        )
                         print(RED + "Contents: " + NC + "Nothing.")
                         print("")
                         if novars == "1":
@@ -2976,7 +3206,9 @@ def decomp():
                             break
                         varname += char
                     writetofile("Stage/project.ss1", "broadcast: " + varname)
-                    print(RED + "Loaded broadcast: " + NC + '"' + varname + '"')
+                    print(
+                        RED + "Loaded broadcast: " + NC + '"' + varname + '"'
+                    )
                     print("")
                     ip()
                     b = False
@@ -3036,7 +3268,9 @@ def decomp():
                 nq()
                 asset_file = extdata()
                 try:
-                    shutil.move("./" + asset_file, dcd + "/assets/" + asset_file)
+                    shutil.move(
+                        "./" + asset_file, dcd + "/assets/" + asset_file
+                    )
                     print(asset_file + " >> " + dcd + "/assets/" + asset_file)
                 except FileNotFoundError:
                     pass
@@ -3055,11 +3289,15 @@ def decomp():
                 nq()
                 asset_file = extdata()
                 try:
-                    shutil.move("./" + asset_file, dcd + "/assets/" + asset_file)
+                    shutil.move(
+                        "./" + asset_file, dcd + "/assets/" + asset_file
+                    )
                     print(asset_file + " >> " + dcd + "/assets/" + asset_file)
                 except FileNotFoundError:
                     pass
-            print("\nFormatting code to make it easier to read (Please wait)...")
+            print(
+                "\nFormatting code to make it easier to read (Please wait)..."
+            )
             print("")
             try:
                 f = open(dcd + "/project.ss1", "r")
@@ -3145,7 +3383,9 @@ def decomp():
         dir = os.getcwd().replace("\\", "/")
         if removeJson:
             os.remove(dir + "/" + name + "/project.json")
-        print(RED + "Your project can be found in " + dir + "/" + name + "." + NC)
+        print(
+            RED + "Your project can be found in " + dir + "/" + name + "." + NC
+        )
         print("Open in ScratchLang editor? [Y/N]")
         os.chdir("../mainscripts")
         openInEditor = getinput()
@@ -3171,7 +3411,9 @@ def inputloop(ia1: str = ""):
         print("4. Decompile a .sb3 file.")
         print("5. Export project.")
         print("6. Import project.")
-        print("7. Are options 3 and 4 not working? Input 7 to install dependencies.")
+        print(
+            "7. Are options 3 and 4 not working? Input 7 to install dependencies."
+        )
         print("8. Create scratchlang command.")
         print("9. Remove scratchlang command.")
         if not os.path.isfile("var/devmode"):
@@ -3267,7 +3509,9 @@ def inputloop(ia1: str = ""):
         print("")
         subprocess.run("ls -1", shell=False)
         print("")
-        pgrd = input("Choose a project to get rid of, or input nothing to cancel.\n")
+        pgrd = input(
+            "Choose a project to get rid of, or input nothing to cancel.\n"
+        )
         if not pgrd == "":
             if os.path.isdir(pgrd):
                 subprocess.run("rm -rf " + pgrd)
@@ -3300,7 +3544,9 @@ def inputloop(ia1: str = ""):
         print("")
         subprocess.run("ls -1", shell=False)
         print("")
-        pgrd = input("Choose a project to export, or input nothing to cancel.\n")
+        pgrd = input(
+            "Choose a project to export, or input nothing to cancel.\n"
+        )
         if not pgrd == "":
             if os.path.isdir(pgrd):
                 subprocess.run("tar -cf " + pgrd + ".ssa " + pgrd)
@@ -3308,7 +3554,9 @@ def inputloop(ia1: str = ""):
                 subprocess.run("cp projects/" + pgrd + ".ssa exports")
                 os.remove("projects/" + pgrd + ".ssa")
                 print(
-                    "Your project " + pgrd + ".ssa can be found in the exports folder."
+                    "Your project "
+                    + pgrd
+                    + ".ssa can be found in the exports folder."
                 )
             else:
                 error("directory " + pgrd + " does not exist.")

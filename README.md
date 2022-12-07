@@ -156,16 +156,45 @@ Settings added so far:
 
 ### Windows
 
-You need `zenity` ONLY IF YOU ARE PLANNING TO USE THE VERSION MADE IN SHELLSCRIPT.
-Download [here](https://github.com/ncruces/zenity/wiki/Zenity-for-WSL%2C-Cygwin%2C-MSYS2), or you can go into the old_scripts directory and run ./start.sh and input 7 to install zenity.
+#### MSYS2/MINGW64
+
+You need `zenity` ONLY IF YOU ARE PLANNING TO USE THE VERSION MADE IN SHELLSCRIPT.  
+Download [here](https://github.com/ncruces/zenity/wiki/Zenity-for-WSL%2C-Cygwin%2C-MSYS2), or you can go into the old_scripts directory and run ./start.sh and input 7 to install zenity.  
 
 You also need these.
 
 ```sh
-pacman -S python3 git bc unzip
+pacman -S python3 git bc unzip # bc is an optional dependency, so you don't have to install it.
 ```
 
-Once you've installed those, you'll need to install pip then install the requirements.txt with:
+#### Command Prompt/Powershell
+
+Command Prompt and Powershell isn't recommened to run ScratchLang, but you can if you want. But if you have the ability to install MSYS2, then use that instead.  
+Anyway, I don't have a quick and easy way to install the dependencies. All I know is this:
+
+- Install [Python](https://python.org)
+- Install git for windows (I don't have a link yet)
+- Get a windows binary of unzip and add it to the PATH environment variable.  
+
+Then, you need to enable ANSI escape codes (in order for things like color to work properly).
+
+- Press the Windows button and search for 'Registry Editor'
+- Click on 'HKEY_CURRENT_USER'
+- Click on 'Console'
+- Then click 'Edit > New > DWORD (32 bit) value'
+- Name the value 'VirtualTerminalLevel'
+- Then double click it and set the value to '1'  
+
+Now ANSI escape sequences should be enabled for Command Prompt/Powershell.
+
+In order for the 'click to place text cursor' thing to work... well... sort of properly, you're going have to right click the window, click properties, then uncheck the 'Quick Edit Mode' box.
+
+However, it doesn't really work for command prompt, as the lower the line you click on, the more off-target it is.
+
+#### pip requirements
+
+Once you've installed those, you'll need to install pip. (Most of the time pip is installed with Python, though.)  
+Then install the requirements.txt with:
 
 ```sh
 pip install -r requirements.txt
@@ -184,7 +213,7 @@ You also need these.
 ```sh
 sudo apt-get install -y python3
 sudo apt-get install -y git
-sudo apt-get install -y bc
+sudo apt-get install -y bc # Optional dependency, you can skip and it won't affect anything.
 sudo apt-get install -y unzip
 ```
 
