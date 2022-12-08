@@ -2,6 +2,8 @@ import pyautogui
 import win32gui
 import sys
 from io import StringIO
+import math
+import shutil
 
 
 def position(offsetx=0, offsety=0):
@@ -67,6 +69,8 @@ def position(offsetx=0, offsety=0):
         if relativeMY > height:
             relativeMY = height
             inWindow = False
-        return (relativeMX, relativeMY, inWindow)
+        return (relativeMX, relativeMY, inWindow, height, width)
     except:
         pass
+
+

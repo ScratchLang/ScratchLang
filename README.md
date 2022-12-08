@@ -119,6 +119,7 @@ You can even have the path to your project folder as the 1st argument to avoid t
 ### Editor controls
 
 - Arrow keys: Move around
+- You can also click to place the mouse pointer.
 - ctrl+s: Save project
 - ctrl+/: Toggle line comment
 - caps lock: Caps lock. Duh!

@@ -54,7 +54,7 @@ if (
     os.chdir(os.path.dirname(sys.argv[0]))
 currentWorkingDirectory = os.getcwd().replace("\\", "/")
 terminalHeight = (
-    shutil.get_terminal_size().lines + 1
+    shutil.get_terminal_size().lines
 )  # Set 'terminalHeight' to the terminal height
 terminalWidth = (
     shutil.get_terminal_size().columns
@@ -76,20 +76,40 @@ def increment():  # Cursor blink thread
 
 def mouseClicks(x, y, button, pressed):
     global mclick, mx, my, editorCurrentLine, editorChar, cursorBlink
-    global breaking, editorLines, realLine
+    global breaking, editorLines, realLine, terminalHeight, key, state
     mclick = False
     if pressed:
         mclick = True
-        mx, my, insideWindow = relative.position(20, 30)
-        mx = math.floor(mx / 7)
-        my = math.floor(my / 15)
+        mx, my, insideWindow, h, w = relative.position(20, 30)
+        mx = math.floor(mx / (w / terminalWidth))
+        my = math.floor(my / (h / terminalHeight))
         if insideWindow:
+            prevecl = editorCurrentLine
+            prevec = editorChar
             editorCurrentLine = my + realLine - 1
+            if editorCurrentLine < 1:
+                editorCurrentLine = 1
             if editorCurrentLine > len(editorLines):
                 editorCurrentLine = len(editorLines)
             editorChar = mx - 6
-            if editorChar < 0:
-                editorChar = 0
+            if editorChar < 1:
+                editorChar = 1
+            if editorCurrentLine == realLine + (terminalHeight - 2):
+                editorCurrentLine = prevecl
+                if editorChar > 1:
+                    if editorChar + 6 < 10:
+                        key = "save"
+                        while True:
+                            print("save")
+                    elif editorChar + 6 < 23:
+                        state = "new"
+                        while True:
+                            print("new")
+                    elif editorChar + 6 < 35:
+                        state = "tree"
+                        while True:
+                            print("tree")
+                editorChar = prevec
             if editorChar > len(editorLines[editorCurrentLine - 1]):
                 editorChar = len(editorLines[editorCurrentLine - 1])
             cursorBlink = 1
@@ -205,7 +225,7 @@ themeAnsi = (
     + "m"
 )
 if themeConfig == "Dark":
-    themeAnsi = "\033[48;2;33;38;41m"
+    themeAnsi = "\033[48;2;35;37;41m"
 elif themeConfig == "Light":
     themeAnsi = "\033[0;107m"
 elif themeConfig == "Black":
@@ -1082,12 +1102,12 @@ def on_press(keypressed):
         )
         editorChar += tabSize
     if key == "Key.page_down":
-        realLine += 37
+        realLine += terminalHeight - 3
         if realLine > len(editorLines):
             realLine = len(editorLines)
         editorCurrentLine = realLine
     if key == "Key.page_up":
-        realLine -= 37
+        realLine -= terminalHeight - 3
         if realLine < 1:
             realLine = 1
         editorCurrentLine = realLine
@@ -1218,7 +1238,7 @@ def editor_print(line):
     getLineCount = len(str(len(editorLines)))
     if showCwd:
         currentWorkingDirectoryString = (
-            "\033[46m\033[35;1mCurrent Working Directory: "
+            "\033[48;2;56;113;228m\033[35;1m Current Working Directory: "
             + (
                 folder.replace("/", "\\")
                 if cwdType == "Windows"
@@ -1229,7 +1249,7 @@ def editor_print(line):
             else "/project.ss1"
         )
         if (
-            len("Current Working Directory: ")
+            len(" Current Working Directory: ")
             + len(
                 (
                     folder.replace("/", "\\")
@@ -1247,7 +1267,7 @@ def editor_print(line):
                     currentWorkingDirectoryString[
                         terminalWidth
                         - (
-                            len("Current Working Directory: ")
+                            len(" Current Working Directory: ")
                             + len(
                                 (
                                     folder.replace("/", "\\")
@@ -1287,7 +1307,7 @@ def editor_print(line):
                 + (getLineCount - len(str(q))) * " "
                 + ("\033[93m" if editorCurrentLine == q else "")
                 + str(q)
-                + "\033[1;38;5;8m  |  "
+                + "\033[1;38;5;8m    |"
                 + "\033[0m"
                 + themeAnsi
                 + editorLinesWithSyntax[q - 1]
@@ -1579,7 +1599,7 @@ def editor_print(line):
                     + (getLineCount - len(str(editorCurrentLine))) * " "
                     + "\033[93m"
                     + str(editorCurrentLine)
-                    + "\033[1;38;5;8m  |  "
+                    + "\033[1;38;5;8m    |"
                     + "\033[0m"
                     + themeAnsi
                     + find
@@ -1600,7 +1620,12 @@ def editor_print(line):
             )
         editorBuffer += editorBufferLine
     print("\033[H\033[3J", end="")
-    print(editorBuffer.rstrip("\n") + "\033[A")
+    print(editorBuffer.rstrip("\n"), end="\n")
+    taskBar = (
+        "\033[48;2;56;113;228m\033[35;1m | Save | New Sprite | Open File |"
+        + (terminalWidth - 34) * " "
+    )
+    print(taskBar, end="")
 
 
 # https://stackoverflow.com/questions/7168508/background-function-in-python
@@ -1633,10 +1658,10 @@ def editor():
     if cmdTerm:
         os.system("cls")
     else:
-        subprocess.run("bash -c clear", shell=False)
+        subprocess.run("bash -c 'clear'", shell=False)
     editor_print(terminalHeight)
     while inEditor:
-        terminalHeight = shutil.get_terminal_size().lines + 1
+        terminalHeight = shutil.get_terminal_size().lines
         terminalWidth = shutil.get_terminal_size().columns
         editor_print(terminalHeight)
         cursorBlinkPrevious = cursorBlink
