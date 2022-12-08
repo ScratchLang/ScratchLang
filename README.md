@@ -106,6 +106,8 @@ One day I randomly decided to make an editor for ScratchLang. And here it is. It
 
 The editor is made completely in Python.
 
+Also, DO NOT use the editor in fullscreen. For some reason clicking to place the mouse pointer is a little bit off. But you can use fullscreen if you're fine using the arrow keys.
+
 ### Edit in the custom editor
 
 Start the editor with

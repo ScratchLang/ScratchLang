@@ -1,0 +1,3 @@
+Note to self:
+
+Maybe you could make the editor with the textual module? Probably not because I've already spent so much time on my editor engine thingy, but textual is still an option if I ever get stuck somewhere.

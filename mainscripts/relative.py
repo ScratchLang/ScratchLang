@@ -1,15 +1,14 @@
-import pyautogui
-import win32gui
 import sys
 from io import StringIO
-import math
-import shutil
+
+import pyautogui
+import win32gui
 
 
 def position(offsetx=0, offsety=0):
     try:
         windowName = win32gui.GetWindowText(win32gui.GetForegroundWindow())
-        windows = pyautogui.getAllWindows()
+        windows = pyautogui.getAllWindows()  # type: ignore
         allWindowsList = []
         buffer = StringIO()
         sys.stdout = buffer
@@ -72,5 +71,3 @@ def position(offsetx=0, offsety=0):
         return (relativeMX, relativeMY, inWindow, height, width)
     except:
         pass
-
-

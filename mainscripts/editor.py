@@ -1,5 +1,6 @@
 # TODO: Work on line wrapping.
 # TODO: Add comments to code.
+# TODO: Linting/Debugging? File tree?
 
 import math
 import os
@@ -13,10 +14,12 @@ from time import sleep
 from tkinter import filedialog as fd
 
 import pynput
-import yaml
-
 import relative
+import yaml
+from pynput.keyboard import Controller as kCon
+from pynput.keyboard import Key
 
+keySimulate = kCon()
 cmdTerm = False
 try:
     subprocess.run("bash -c clear", shell=False)
@@ -77,18 +80,19 @@ def increment():  # Cursor blink thread
 def mouseClicks(x, y, button, pressed):
     global mclick, mx, my, editorCurrentLine, editorChar, cursorBlink
     global breaking, editorLines, realLine, terminalHeight, key, state
+    global inEditor
     mclick = False
     if pressed:
         mclick = True
         mx, my, insideWindow, h, w = relative.position(20, 30)
-        mx = math.floor(mx / (w / terminalWidth))
-        my = math.floor(my / (h / terminalHeight))
+        mx = math.floor(mx / math.floor(w / terminalWidth))
+        my = math.floor(my / math.floor(h / terminalHeight))
         if insideWindow:
             prevecl = editorCurrentLine
             prevec = editorChar
             editorCurrentLine = my + realLine - 1
-            if editorCurrentLine < 1:
-                editorCurrentLine = 1
+            if editorCurrentLine < realLine:
+                editorCurrentLine = prevecl
             if editorCurrentLine > len(editorLines):
                 editorCurrentLine = len(editorLines)
             editorChar = mx - 6
@@ -96,19 +100,17 @@ def mouseClicks(x, y, button, pressed):
                 editorChar = 1
             if editorCurrentLine == realLine + (terminalHeight - 2):
                 editorCurrentLine = prevecl
-                if editorChar > 1:
+                if editorChar + 6 > 1:
                     if editorChar + 6 < 10:
-                        key = "save"
-                        while True:
-                            print("save")
+                        keySimulate.press("\x13")
+                        keySimulate.release("\x13")
+                        exit()
                     elif editorChar + 6 < 23:
-                        state = "new"
-                        while True:
-                            print("new")
+                        keySimulate.press(Key.f2)
+                        keySimulate.release(Key.f2)
                     elif editorChar + 6 < 35:
-                        state = "tree"
-                        while True:
-                            print("tree")
+                        keySimulate.press(Key.f1)
+                        keySimulate.release(Key.f1)
                 editorChar = prevec
             if editorChar > len(editorLines[editorCurrentLine - 1]):
                 editorChar = len(editorLines[editorCurrentLine - 1])
@@ -1623,38 +1625,27 @@ def editor_print(line):
     print(editorBuffer.rstrip("\n"), end="\n")
     taskBar = (
         "\033[48;2;56;113;228m\033[35;1m | Save | New Sprite | Open File |"
-        + (terminalWidth - 34) * " "
+        + ((terminalWidth - 34) * " ")
+        + "\033[0m"
     )
     print(taskBar, end="")
 
 
-# https://stackoverflow.com/questions/7168508/background-function-in-python
-# ---
-
-
-class threads(threading.Thread):
-    def __init__(self, increment):
-        threading.Thread.__init__(self)
-        self.runnable = increment
-        self.daemon = True
-
-    def run(self):
-        self.runnable()
-
-
-# ---
-
-
-cursorBlinkLoop = threads(increment)
-cursorBlinkLoop.start()
-keyPressLoop = threads(inputloop)
+try:
+    if sys.argv[2] == "f":
+        pass
+except IndexError:
+    mouseClicking = threading.Thread(target=clickedThread, daemon=True)
+    mouseClicking.start()
+keyPressLoop = threading.Thread(target=inputloop, daemon=True)
 keyPressLoop.start()
-mouseClicking = threads(clickedThread)
-mouseClicking.start()
+cursorBlinkLoop = threading.Thread(target=increment, daemon=True)
+cursorBlinkLoop.start()
 
 
 def editor():
-    global terminalHeight, terminalWidth, inEditor, cursorBlink, key, breaking, cmdTerm
+    global terminalHeight, terminalWidth, inEditor, cursorBlink, key, breaking
+    global cmdTerm, keySimulate
     if cmdTerm:
         os.system("cls")
     else:
@@ -1693,6 +1684,7 @@ while True:
     if state == "edit":
         editor()
     elif state == "tree":
+        pynput.keyboard.Listener.stop()
         print("Open a ScratchScript file.")
         folder = ""
         sleep(2)
@@ -1708,7 +1700,12 @@ while True:
         if folder == "":
             error("Empty path.")
             exit()
-        sys.argv = [currentWorkingDirectory + "\\\\editor.py", folder]
+        projectDir = os.getcwd().replace("\\", "/") + "/project.ss1"
+        print("Saving to " + projectDir + "...")
+        with open(projectDir, "w") as fp:
+            for item in editorLines:
+                fp.write("%s\n" % item.rstrip(" "))
+        sys.argv = [currentWorkingDirectory + "\\\\editor.py", folder, "f"]
         runpy.run_path(sys.argv[0])
     elif state == "new":
         os.chdir("..")
@@ -1726,5 +1723,7 @@ while True:
         sys.argv = [
             currentWorkingDirectory + "/editor.py",
             os.getcwd().replace("\\", "/") + "/project.ss1",
+            "f",
         ]
         runpy.run_path(sys.argv[0])
+        exit()
