@@ -13,7 +13,8 @@ def position(offsetx=0, offsety=0, x=-1, y=-1):
     height is the height of the window.
     width is the width of the window.
 
-    The offsetx and offsety arguments are a integer value shortening the x and y borders that you want the mouse cursor to relative to.
+    The offsetx and offsety arguments are a integer value shortening the x and y borders that you want the mouse cursor to relative to. Or you could see it as changing (0, 0) to where you want it to be.
+
     The x and y arguments are there just in case you already have the coordinates of the mouse cursor.
 
     (0, 0) is the top left corner of the window.
