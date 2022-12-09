@@ -14,11 +14,16 @@ from time import sleep
 from tkinter import filedialog as fd
 
 import pynput
-import relative
+import win32con
+import win32gui
 import yaml
 from pynput.keyboard import Controller as kCon
 from pynput.keyboard import Key
 
+import relative
+
+hwnd = win32gui.GetForegroundWindow()
+win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)  # put window in fullscreen
 keySimulate = kCon()
 cmdTerm = False
 try:
@@ -81,49 +86,6 @@ def increment():  # Cursor blink thread
         sleep(0.5)
         if key == "save":
             exit()
-
-
-def mouseClicks(x, y, button, pressed):
-    global mclick, mx, my, editorCurrentLine, editorChar, cursorBlink
-    global breaking, editorLines, realLine, terminalHeight, key, state
-    global inEditor
-    mclick = False
-    if pressed:
-        mclick = True
-        mx, my, insideWindow, h, w = relative.position(20, 30, x, y)
-        mx = math.floor(mx / round(w / terminalWidth))
-        my = math.floor(my / round(h / terminalHeight))
-        if insideWindow:
-            prevecl = editorCurrentLine
-            prevec = editorChar
-            editorCurrentLine = my + realLine - 1
-            if editorCurrentLine < realLine:
-                editorCurrentLine = prevecl
-            editorChar = mx - (4 + len(str(len(editorLines))))
-            if editorChar < 1:
-                editorChar = 1
-            if editorCurrentLine == realLine + (terminalHeight - 2):
-                editorCurrentLine = prevecl
-                if editorChar + (4 + len(str(len(editorLines)))) > 1:
-                    if editorChar + (4 + len(str(len(editorLines)))) < 10:
-                        keySimulate.press("\x13")
-                        keySimulate.release("\x13")
-                        exit()
-                    elif editorChar + (4 + len(str(len(editorLines)))) < 23:
-                        keySimulate.press(Key.f2)
-                        keySimulate.release(Key.f2)
-                        exit()
-                    elif editorChar + (4 + len(str(len(editorLines)))) < 35:
-                        keySimulate.press(Key.f1)
-                        keySimulate.release(Key.f1)
-                        exit()
-                editorChar = prevec
-            if editorCurrentLine > len(editorLines):
-                editorCurrentLine = len(editorLines)
-            if editorChar > len(editorLines[editorCurrentLine - 1]):
-                editorChar = len(editorLines[editorCurrentLine - 1])
-            cursorBlink = 1
-            breaking = True
 
 
 def error(text):  # Error function
@@ -222,6 +184,8 @@ try:
     themeGreen = editorSettings["tg"]
     themeBlue = editorSettings["tb"]
     cwdType = editorSettings["cwd_type"]
+    offsetx = editorSettings["offsetX"]
+    offsety = editorSettings["offsetY"]
 except KeyError:
     error("Invalid settings. Please fix.")
     exit()
@@ -249,6 +213,51 @@ else:
 NC = "\033[0m" + themeAnsi
 fileOpened.close()
 fileOpenedLength = previousFileOpenedLength
+
+
+def mouseClicks(x, y, button, pressed):
+    global mclick, mx, my, editorCurrentLine, editorChar, cursorBlink
+    global breaking, editorLines, realLine, terminalHeight, key, state
+    global inEditor, offsetx, offsety
+    mclick = False
+    if pressed:
+        mclick = True
+        mx, my, insideWindow, h, w = relative.position(20, 30, x, y)
+        mx = math.floor(mx / round(w / terminalWidth)) + offsetx
+        my = math.floor(my / round(h / terminalHeight)) + offsety
+        if insideWindow:
+            prevecl = editorCurrentLine
+            prevec = editorChar
+            editorCurrentLine = my + realLine - 1
+            if editorCurrentLine < realLine:
+                editorCurrentLine = prevecl
+            editorChar = mx - (4 + len(str(len(editorLines))))
+            if editorChar < 1:
+                editorChar = 1
+            if editorCurrentLine == realLine + (terminalHeight - 2):
+                editorCurrentLine = prevecl
+                if editorChar + (4 + len(str(len(editorLines)))) > 1:
+                    if editorChar + (4 + len(str(len(editorLines)))) < 10:
+                        keySimulate.press("\x13")
+                        keySimulate.release("\x13")
+                        exit()
+                    elif editorChar + (4 + len(str(len(editorLines)))) < 23:
+                        keySimulate.press(Key.f2)
+                        keySimulate.release(Key.f2)
+                        exit()
+                    elif editorChar + (4 + len(str(len(editorLines)))) < 35:
+                        keySimulate.press(Key.f1)
+                        keySimulate.release(Key.f1)
+                        exit()
+                editorChar = prevec
+            if editorCurrentLine > len(editorLines):
+                editorCurrentLine = len(editorLines)
+            if editorChar > len(editorLines[editorCurrentLine - 1]):
+                editorChar = len(editorLines[editorCurrentLine - 1])
+            cursorBlink = 1
+            breaking = True
+
+
 print("")
 print("Building syntax highlighting...")
 print("")

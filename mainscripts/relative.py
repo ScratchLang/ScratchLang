@@ -1,73 +1,41 @@
-import sys
-from io import StringIO
-
 import pyautogui
 import win32gui
 
 
 def position(offsetx=0, offsety=0, x=-1, y=-1):
-    try:
-        windowName = win32gui.GetWindowText(win32gui.GetForegroundWindow())
-        windows = pyautogui.getAllWindows()  # type: ignore
-        allWindowsList = []
-        buffer = StringIO()
-        sys.stdout = buffer
-        for window in windows:
-            print(window)
-            allWindowsList += buffer.getvalue().split("\n")
-        sys.stdout = sys.__stdout__
-        line = ""
-        for window in allWindowsList:
-            if windowName in window:
-                line = window
-                break
-        i = line.find('left="') + 5
-        windowX = ""
-        while True:
-            i += 1
-            if line[i] == '"':
-                break
-            windowX += line[i]
-        windowX = int(windowX) + 8
-        i = line.find('top="') + 4
-        windowY = ""
-        while True:
-            i += 1
-            if line[i] == '"':
-                break
-            windowY += line[i]
-        windowY = int(windowY) + 2 + offsety
-        i = line.find('width="') + 6
-        width = ""
-        while True:
-            i += 1
-            if line[i] == '"':
-                break
-            width += line[i]
-        width = int(width) - 15 - offsetx
-        i = line.find('height="') + 7
-        height = ""
-        while True:
-            i += 1
-            if line[i] == '"':
-                break
-            height += line[i]
-        height = int(height) - 41
-        relativeMX = (pyautogui.position()[0] if x == -1 else x) - windowX
-        relativeMY = (pyautogui.position()[1] if y == -1 else y) - windowY
-        inWindow = True
-        if relativeMX < 0:
-            relativeMX = 0
-            inWindow = False
-        if relativeMX > width:
-            relativeMX = width
-            inWindow = False
-        if relativeMY < 0:
-            relativeMY = 0
-            inWindow = False
-        if relativeMY > height:
-            relativeMY = height
-            inWindow = False
-        return (relativeMX, relativeMY, inWindow, height, width)
-    except:
-        pass
+    """
+    Get the position of the mouse cursor relative to the foreground window.
+
+    Returns (relative x, relative y, inWindow, height, width).
+
+    Relative x and y is the position of the mouse cursor relative to the window.
+    inWindow is the boolean indicating the mouse cursor is inside the window.
+    height is the height of the window.
+    width is the width of the window.
+
+    The offsetx and offsety arguments are a integer value shortening the x and y borders that you want the mouse cursor to relative to.
+    The x and y arguments are there just in case you already have the coordinates of the mouse cursor.
+
+    (0, 0) is the top left corner of the window.
+    """
+    rect = win32gui.GetWindowRect(win32gui.GetForegroundWindow())
+    windowX = rect[0] + 8
+    windowY = rect[1] + 2 + offsety
+    width = rect[2] - 15 - offsetx
+    height = rect[3] - 41
+    relativeMX = (pyautogui.position()[0] if x == -1 else x) - windowX
+    relativeMY = (pyautogui.position()[1] if y == -1 else y) - windowY
+    inWindow = True
+    if relativeMX < 0:
+        relativeMX = 0
+        inWindow = False
+    if relativeMX > width:
+        relativeMX = width
+        inWindow = False
+    if relativeMY < 0:
+        relativeMY = 0
+        inWindow = False
+    if relativeMY > height:
+        relativeMY = height
+        inWindow = False
+    return (relativeMX, relativeMY, inWindow, height, width)
