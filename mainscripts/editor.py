@@ -76,49 +76,6 @@ def increment():  # Cursor blink thread
             exit()
 
 
-def mouseClicks(x, y, button, pressed):
-    global mclick, mx, my, editorCurrentLine, editorChar, cursorBlink
-    global breaking, editorLines, realLine, terminalHeight, key, state
-    global inEditor
-    mclick = False
-    if pressed:
-        mclick = True
-        mx, my, insideWindow, h, w = relative.position(20, 30, x, y)
-        mx = math.floor(mx / round(w / terminalWidth))
-        my = math.floor(my / round(h / terminalHeight))
-        if insideWindow:
-            prevecl = editorCurrentLine
-            prevec = editorChar
-            editorCurrentLine = my + realLine - 1
-            if editorCurrentLine < realLine:
-                editorCurrentLine = prevecl
-            editorChar = mx - 6
-            if editorChar < 1:
-                editorChar = 1
-            if editorCurrentLine == realLine + (terminalHeight - 2):
-                editorCurrentLine = prevecl
-                if editorChar + 6 > 1:
-                    if editorChar + 6 < 10:
-                        keySimulate.press("\x13")
-                        keySimulate.release("\x13")
-                        exit()
-                    elif editorChar + 6 < 23:
-                        keySimulate.press(Key.f2)
-                        keySimulate.release(Key.f2)
-                        exit()
-                    elif editorChar + 6 < 35:
-                        keySimulate.press(Key.f1)
-                        keySimulate.release(Key.f1)
-                        exit()
-                editorChar = prevec
-            if editorCurrentLine > len(editorLines):
-                editorCurrentLine = len(editorLines)
-            if editorChar > len(editorLines[editorCurrentLine - 1]):
-                editorChar = len(editorLines[editorCurrentLine - 1])
-            cursorBlink = 1
-            breaking = True
-
-
 def error(text):  # Error function
     print(RED + "Error: " + text + NC)
 
@@ -215,6 +172,8 @@ try:
     themeGreen = editorSettings["tg"]
     themeBlue = editorSettings["tb"]
     cwdType = editorSettings["cwd_type"]
+    offsetx = editorSettings["offsetX"]
+    offsety = editorSettings["offsetY"]
 except KeyError:
     error("Invalid settings. Please fix.")
     exit()
@@ -517,6 +476,49 @@ shabang = [
     "//!sensing",
     "//!operators",
 ]
+
+
+def mouseClicks(x, y, button, pressed):
+    global mclick, mx, my, editorCurrentLine, editorChar, cursorBlink
+    global breaking, editorLines, realLine, terminalHeight, key, state
+    global inEditor, offsetx, offsety
+    mclick = False
+    if pressed:
+        mclick = True
+        mx, my, insideWindow, h, w = relative.position(20, 30, x, y)
+        mx = math.floor(mx / round(w / terminalWidth)) + offsetx
+        my = math.floor(my / round(h / terminalHeight)) + offsety
+        if insideWindow:
+            prevecl = editorCurrentLine
+            prevec = editorChar
+            editorCurrentLine = my + realLine - 1
+            if editorCurrentLine < realLine:
+                editorCurrentLine = prevecl
+            editorChar = mx - 7
+            if editorChar < 1:
+                editorChar = 1
+            if editorCurrentLine == realLine + (terminalHeight - 2):
+                editorCurrentLine = prevecl
+                if editorChar + 7 > 1:
+                    if editorChar + 7 < 10:
+                        keySimulate.press("\x13")
+                        keySimulate.release("\x13")
+                        exit()
+                    elif editorChar + 7 < 23:
+                        keySimulate.press(Key.f2)
+                        keySimulate.release(Key.f2)
+                        exit()
+                    elif editorChar + 7 < 35:
+                        keySimulate.press(Key.f1)
+                        keySimulate.release(Key.f1)
+                        exit()
+                editorChar = prevec
+            if editorCurrentLine > len(editorLines):
+                editorCurrentLine = len(editorLines)
+            if editorChar > len(editorLines[editorCurrentLine - 1]):
+                editorChar = len(editorLines[editorCurrentLine - 1])
+            cursorBlink = 1
+            breaking = True
 
 
 def determine_type(line):
