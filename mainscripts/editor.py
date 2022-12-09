@@ -18,6 +18,8 @@ import relative
 import yaml
 from pynput.keyboard import Controller as kCon
 from pynput.keyboard import Key
+import runpy
+
 
 keySimulate = kCon()
 cmdTerm = False
@@ -62,6 +64,14 @@ terminalHeight = (
 terminalWidth = (
     shutil.get_terminal_size().columns
 )  # Set 'terminalWidth' to the terminal width
+
+
+try:
+    if sys.argv[1] == "--calibrate":
+        runpy.run_path("editor_calibrate.py")
+        exit()
+except IndexError:
+    pass
 
 
 def increment():  # Cursor blink thread
@@ -494,21 +504,21 @@ def mouseClicks(x, y, button, pressed):
             editorCurrentLine = my + realLine - 1
             if editorCurrentLine < realLine:
                 editorCurrentLine = prevecl
-            editorChar = mx - 7
+            editorChar = mx - 6
             if editorChar < 1:
                 editorChar = 1
             if editorCurrentLine == realLine + (terminalHeight - 2):
                 editorCurrentLine = prevecl
-                if editorChar + 7 > 1:
-                    if editorChar + 7 < 10:
+                if editorChar + 6 > 1:
+                    if editorChar + 6 < 10:
                         keySimulate.press("\x13")
                         keySimulate.release("\x13")
                         exit()
-                    elif editorChar + 7 < 23:
+                    elif editorChar + 6 < 23:
                         keySimulate.press(Key.f2)
                         keySimulate.release(Key.f2)
                         exit()
-                    elif editorChar + 7 < 35:
+                    elif editorChar + 6 < 35:
                         keySimulate.press(Key.f1)
                         keySimulate.release(Key.f1)
                         exit()
