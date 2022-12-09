@@ -5,7 +5,7 @@ import pyautogui
 import win32gui
 
 
-def position(offsetx=0, offsety=0):
+def position(offsetx=0, offsety=0, x=-1, y=-1):
     try:
         windowName = win32gui.GetWindowText(win32gui.GetForegroundWindow())
         windows = pyautogui.getAllWindows()  # type: ignore
@@ -53,8 +53,8 @@ def position(offsetx=0, offsety=0):
                 break
             height += line[i]
         height = int(height) - 41
-        relativeMX = pyautogui.position()[0] - windowX
-        relativeMY = pyautogui.position()[1] - windowY
+        relativeMX = (pyautogui.position()[0] if x == -1 else x) - windowX
+        relativeMY = (pyautogui.position()[1] if y == -1 else y) - windowY
         inWindow = True
         if relativeMX < 0:
             relativeMX = 0

@@ -1,10 +1,10 @@
 # TODO: Work on line wrapping.
 # TODO: Add comments to code.
 # TODO: Linting/Debugging? File tree?
+# TODO: Click to place cursor calibration (sonetimes it is a little off)...
 
 import math
 import os
-import runpy
 import shutil
 import signal
 import subprocess
@@ -83,8 +83,8 @@ def mouseClicks(x, y, button, pressed):
     mclick = False
     if pressed:
         mclick = True
-        mx, my, insideWindow, h, w = relative.position(20, 30)
-        mx = math.floor(mx / round(w / terminalWidth)) - 1
+        mx, my, insideWindow, h, w = relative.position(20, 30, x, y)
+        mx = math.floor(mx / round(w / terminalWidth))
         my = math.floor(my / round(h / terminalHeight))
         if insideWindow:
             prevecl = editorCurrentLine
