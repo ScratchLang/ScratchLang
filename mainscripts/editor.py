@@ -65,16 +65,15 @@ terminalWidth = (
 
 
 def increment():  # Cursor blink thread
-    global cursorBlink
+    global cursorBlink, key
     cursorBlink = 1  # when cursorBlink is 1, then the cursor is being shown.
-    while inEditor:
+    while True:
         cursorBlink = 0  # If it's zero, it's hidden
         sleep(0.5)
         cursorBlink = 1
         sleep(0.5)
         if key == "save":
             exit()
-    exit()
 
 
 def mouseClicks(x, y, button, pressed):
@@ -85,16 +84,14 @@ def mouseClicks(x, y, button, pressed):
     if pressed:
         mclick = True
         mx, my, insideWindow, h, w = relative.position(20, 30)
-        mx = math.floor(mx / math.floor(w / terminalWidth))
-        my = math.floor(my / math.floor(h / terminalHeight))
+        mx = math.floor(mx / round(w / terminalWidth)) - 1
+        my = math.floor(my / round(h / terminalHeight))
         if insideWindow:
             prevecl = editorCurrentLine
             prevec = editorChar
             editorCurrentLine = my + realLine - 1
             if editorCurrentLine < realLine:
                 editorCurrentLine = prevecl
-            if editorCurrentLine > len(editorLines):
-                editorCurrentLine = len(editorLines)
             editorChar = mx - 6
             if editorChar < 1:
                 editorChar = 1
@@ -108,10 +105,14 @@ def mouseClicks(x, y, button, pressed):
                     elif editorChar + 6 < 23:
                         keySimulate.press(Key.f2)
                         keySimulate.release(Key.f2)
+                        exit()
                     elif editorChar + 6 < 35:
                         keySimulate.press(Key.f1)
                         keySimulate.release(Key.f1)
+                        exit()
                 editorChar = prevec
+            if editorCurrentLine > len(editorLines):
+                editorCurrentLine = len(editorLines)
             if editorChar > len(editorLines[editorCurrentLine - 1]):
                 editorChar = len(editorLines[editorCurrentLine - 1])
             cursorBlink = 1
@@ -1228,11 +1229,15 @@ def inputloop():
         on_press=on_press, on_release=resetkey
     ) as listener:
         listener.join()
+    listener.stop()
+    exit()
 
 
 def clickedThread():
     with pynput.mouse.Listener(on_click=mouseClicks) as ff:
         ff.join()
+    ff.stop()
+    exit()
 
 
 def editor_print(line):
@@ -1631,12 +1636,8 @@ def editor_print(line):
     print(taskBar, end="")
 
 
-try:
-    if sys.argv[2] == "f":
-        pass
-except IndexError:
-    mouseClicking = threading.Thread(target=clickedThread, daemon=True)
-    mouseClicking.start()
+mouseClicking = threading.Thread(target=clickedThread, daemon=True)
+mouseClicking.start()
 keyPressLoop = threading.Thread(target=inputloop, daemon=True)
 keyPressLoop.start()
 cursorBlinkLoop = threading.Thread(target=increment, daemon=True)
@@ -1661,6 +1662,8 @@ def editor():
                 break
             if not key == "":
                 if key == "save":
+                    pynput.keyboard.Listener.stop
+                    pynput.mouse.Listener.stop
                     projectDir = (
                         os.getcwd().replace("\\", "/") + "/project.ss1"
                     )
@@ -1669,7 +1672,7 @@ def editor():
                         for item in editorLines:
                             fp.write("%s\n" % item.rstrip(" "))
                     inEditor = False
-                    print("Done. Press ctrl+c to exit.")
+                    print("Done. Press ctrl+c twice to exit.")
                     while True:
                         pass
                 break
@@ -1682,10 +1685,11 @@ state = "edit"
 print("\033[?25l", end="")
 while True:
     if state == "edit":
+        inEditor = True
         editor()
     elif state == "tree":
-        pynput.keyboard.Listener.stop()
         print("Open a ScratchScript file.")
+        oldFolder = folder
         folder = ""
         sleep(2)
         folder = fd.askopenfilename(
@@ -1700,13 +1704,28 @@ while True:
         if folder == "":
             error("Empty path.")
             exit()
-        projectDir = os.getcwd().replace("\\", "/") + "/project.ss1"
+        projectDir = oldFolder + "/project.ss1"
         print("Saving to " + projectDir + "...")
         with open(projectDir, "w") as fp:
             for item in editorLines:
                 fp.write("%s\n" % item.rstrip(" "))
-        sys.argv = [currentWorkingDirectory + "\\\\editor.py", folder, "f"]
-        runpy.run_path(sys.argv[0])
+        editorLines = []
+        fff = open(folder, "r")
+        folder = folder.replace("\\", "/").replace("/project.ss1", "")
+        for line in fff.readlines():
+            line = line.strip("\n")
+            editorLines += [line + " "]
+        fff.close()
+        editorLinesWithSyntax = []
+        for line in editorLines:
+            editorLinesWithSyntax.append(add_syntax(line))
+        editorCurrentLine = 1
+        editorChar = len(editorLines[0])
+        realLine = 1
+        quoteComplete = False
+        parenthesisComplete = 0
+        capsLock = False
+        state = "edit"
     elif state == "new":
         os.chdir("..")
         z = 0
@@ -1720,10 +1739,14 @@ while True:
         h = open("project.ss1", "w")
         h.write("ss1")
         h.close()
-        sys.argv = [
-            currentWorkingDirectory + "/editor.py",
-            os.getcwd().replace("\\", "/") + "/project.ss1",
-            "f",
-        ]
-        runpy.run_path(sys.argv[0])
-        exit()
+        editorLines = ["ss1 "]
+        editorLinesWithSyntax = []
+        for line in editorLines:
+            editorLinesWithSyntax.append(add_syntax(line))
+        editorCurrentLine = 1
+        editorChar = len(editorLines[0])
+        realLine = 1
+        quoteComplete = False
+        parenthesisComplete = 0
+        capsLock = False
+        state = "edit"

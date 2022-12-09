@@ -118,6 +118,16 @@ py editor.py
 
 You can even have the path to your project folder as the 1st argument to avoid the folder select screen and go straight to the editor.
 
+Or you can run it with:
+
+```sh
+py scratchlang.py --edit
+# OR
+scratchlang --edit
+```
+
+But you can't have a folder as an argument, it won't work.
+
 ### Editor controls
 
 - Arrow keys: Move around
@@ -171,6 +181,8 @@ pacman -S python3 git bc unzip # bc is an optional dependency, so you don't have
 ```
 
 #### Command Prompt/Powershell
+
+WARNING! COMMAND PROMPT AND POWERSHELL ONLY WORK WITH THE SCRATCHLANG EDITOR! YOU WILL N OT BE ABLE TO COMPILE/DECOMPILE PROJECTS IF YOU DECIDE TO USE THESE!
 
 Command Prompt and Powershell isn't recommened to run ScratchLang, but you can if you want. But if you have the ability to install MSYS2, then use that instead.  
 Anyway, I don't have a quick and easy way to install the dependencies. All I know is this:

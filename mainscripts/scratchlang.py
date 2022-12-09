@@ -10,6 +10,18 @@ from tkinter import filedialog as fd
 import runpy
 import yaml
 
+commandP = False
+# Detect if using Command Prompt or Powershell
+try:
+    subprocess.run("bash -c 'echo'", shell=False)
+except FileNotFoundError:
+    commandP = (
+        True  # Doesn't work if the user has the MSYS2 bun added to their PATH.
+    )
+    print(
+        "ScratchLang is uncompatible with Command Prompt/Powershell. Sorry :("
+    )
+
 # Set ANSI escape colors
 
 RED = "\033[0;31m"
@@ -17,12 +29,12 @@ NC = "\033[0m"
 P = "\033[0;35m"
 
 # Set the CWD to the parent directory of the Python file
+realCWD = os.getcwd().replace("\\", "/")
 if not os.path.dirname(sys.argv[0]) == "":
     os.chdir(os.path.dirname(sys.argv[0]))
 cwd = os.getcwd().replace("\\", "/")
 jsonfile = ""
 removeJson = False
-global corr
 
 
 def error(text):  # Error prompt
@@ -120,6 +132,7 @@ def startpy(a1=""):  # Main menu.
                 "  --debug [FILE]    Debug a ScratchScript file. Currently not available."
             )
             print("  --help            Display this help message.")
+            print("  --edit            Edit a ScratchLang project.")
             exit()
         args = True  # If the script has at least 1 argument being passed to it, then set args to True
         try:
@@ -156,7 +169,11 @@ def startpy(a1=""):  # Main menu.
         )
         inputloop()
     else:
-        inputloop(sys.argv[1])
+        if sys.argv[1] == "--edit":
+            sys.argv = [cwd + "/editor.py"]
+            runpy.run_path(sys.argv[0])
+        else:
+            inputloop(sys.argv[1])
     os.chdir("..")
     if os.path.isdir("projects"):
         os.chdir("projects")
@@ -215,8 +232,8 @@ def decomp():
         else:
             ppath = os.getcwd()
             sb3file = sys.argv[2].replace("\\", "/")
-            if not os.path.isfile(sb3file):
-                error("File doesn't exist.")
+            if not os.path.isfile(realCWD + "/" + sb3file):
+                error("File (" + realCWD + "/" + sb3file + ") doesn't exist.")
                 exit()
             h = len(sb3file)
             while True:
