@@ -106,8 +106,6 @@ One day I randomly decided to make an editor for ScratchLang. And here it is. It
 
 The editor is made completely in Python.
 
-Also, DO NOT use the editor in fullscreen. For some reason clicking to place the mouse pointer is a little bit off. But you can use fullscreen if you're fine using the arrow keys.
-
 ### Edit in the custom editor
 
 Start the editor with
@@ -153,6 +151,10 @@ Settings added so far:
 - tr: N - Set RED to N
 - tg: N - Set GREEN to N
 - tb: N - Set BLUE to N
+- offsetX: N - Text cursor placement offset X
+- offsetY: N - Text cursor placement offset Y
+
+You can also run editor_calibrate.py (or `py editor.py --calibrate`) to set the offsets if the cursor placement is a little off.
 
 ### Added Features so far
 
@@ -160,6 +162,7 @@ Settings added so far:
 - Scuffed quote and bracket auto-complete
 - Auto-indent
 - Dark, Light, and custom RGB themes
+- Click to place text cursor
 
 ### Planned features
 
@@ -733,6 +736,10 @@ The decompiler is not complete yet, which means stuff like that may happen.
 
 Your .ss1 file is probably big.
 
+### Clicking to place the text cursor in the editor is not accurate
+
+Run editor_calibrate.py (or `py editor.py --calibrate`) to _hopefully_ fix that issue.
+
 ## Bugs
 
 ### V1 Decomp Bugs (This version is deprecated.)
@@ -747,7 +754,7 @@ Your .ss1 file is probably big.
 
 ### Python V1 Bugs
 
-- No known bugs yet.
+- Some decompilation bugs, too lazy to list.
 
 ---
 

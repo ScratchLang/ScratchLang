@@ -1,3 +1,5 @@
+# Turns out the clicking to place the cursor was a little off because of an oversight. But I'm gonna keep the option to calibrate just in case.
+
 import relative
 import pynput
 import threading
@@ -27,15 +29,14 @@ mouse.start()
 
 
 print(
-    "       # click on the hashtag."
-    + "\n" * (shutil.get_terminal_size().lines - 1),
+    "# click on the hashtag." + "\n" * (shutil.get_terminal_size().lines - 1),
     end="",
 )
 while True:
     if not mx == -1 or not my == -1:
         break
 print(mx, my)
-offsetx = 0 - (mx - 7)
+offsetx = 0 - mx
 offsety = 0 - my
 f = open("var/editor_settings.yaml", "r")
 offsetOptx = False

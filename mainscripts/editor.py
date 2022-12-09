@@ -1,10 +1,10 @@
 # TODO: Work on line wrapping.
 # TODO: Add comments to code.
 # TODO: Linting/Debugging? File tree?
-# TODO: Click to place cursor calibration (sonetimes it is a little off)...
 
 import math
 import os
+import runpy
 import shutil
 import signal
 import subprocess
@@ -18,8 +18,6 @@ import relative
 import yaml
 from pynput.keyboard import Controller as kCon
 from pynput.keyboard import Key
-import runpy
-
 
 keySimulate = kCon()
 cmdTerm = False
@@ -65,7 +63,6 @@ terminalWidth = (
     shutil.get_terminal_size().columns
 )  # Set 'terminalWidth' to the terminal width
 
-
 try:
     if sys.argv[1] == "--calibrate":
         runpy.run_path("editor_calibrate.py")
@@ -84,6 +81,49 @@ def increment():  # Cursor blink thread
         sleep(0.5)
         if key == "save":
             exit()
+
+
+def mouseClicks(x, y, button, pressed):
+    global mclick, mx, my, editorCurrentLine, editorChar, cursorBlink
+    global breaking, editorLines, realLine, terminalHeight, key, state
+    global inEditor
+    mclick = False
+    if pressed:
+        mclick = True
+        mx, my, insideWindow, h, w = relative.position(20, 30, x, y)
+        mx = math.floor(mx / round(w / terminalWidth))
+        my = math.floor(my / round(h / terminalHeight))
+        if insideWindow:
+            prevecl = editorCurrentLine
+            prevec = editorChar
+            editorCurrentLine = my + realLine - 1
+            if editorCurrentLine < realLine:
+                editorCurrentLine = prevecl
+            editorChar = mx - (4 + len(str(len(editorLines))))
+            if editorChar < 1:
+                editorChar = 1
+            if editorCurrentLine == realLine + (terminalHeight - 2):
+                editorCurrentLine = prevecl
+                if editorChar + (4 + len(str(len(editorLines)))) > 1:
+                    if editorChar + (4 + len(str(len(editorLines)))) < 10:
+                        keySimulate.press("\x13")
+                        keySimulate.release("\x13")
+                        exit()
+                    elif editorChar + (4 + len(str(len(editorLines)))) < 23:
+                        keySimulate.press(Key.f2)
+                        keySimulate.release(Key.f2)
+                        exit()
+                    elif editorChar + (4 + len(str(len(editorLines)))) < 35:
+                        keySimulate.press(Key.f1)
+                        keySimulate.release(Key.f1)
+                        exit()
+                editorChar = prevec
+            if editorCurrentLine > len(editorLines):
+                editorCurrentLine = len(editorLines)
+            if editorChar > len(editorLines[editorCurrentLine - 1]):
+                editorChar = len(editorLines[editorCurrentLine - 1])
+            cursorBlink = 1
+            breaking = True
 
 
 def error(text):  # Error function
@@ -182,8 +222,6 @@ try:
     themeGreen = editorSettings["tg"]
     themeBlue = editorSettings["tb"]
     cwdType = editorSettings["cwd_type"]
-    offsetx = editorSettings["offsetX"]
-    offsety = editorSettings["offsetY"]
 except KeyError:
     error("Invalid settings. Please fix.")
     exit()
@@ -486,49 +524,6 @@ shabang = [
     "//!sensing",
     "//!operators",
 ]
-
-
-def mouseClicks(x, y, button, pressed):
-    global mclick, mx, my, editorCurrentLine, editorChar, cursorBlink
-    global breaking, editorLines, realLine, terminalHeight, key, state
-    global inEditor, offsetx, offsety
-    mclick = False
-    if pressed:
-        mclick = True
-        mx, my, insideWindow, h, w = relative.position(20, 30, x, y)
-        mx = math.floor(mx / round(w / terminalWidth)) + offsetx
-        my = math.floor(my / round(h / terminalHeight)) + offsety
-        if insideWindow:
-            prevecl = editorCurrentLine
-            prevec = editorChar
-            editorCurrentLine = my + realLine - 1
-            if editorCurrentLine < realLine:
-                editorCurrentLine = prevecl
-            editorChar = mx - 6
-            if editorChar < 1:
-                editorChar = 1
-            if editorCurrentLine == realLine + (terminalHeight - 2):
-                editorCurrentLine = prevecl
-                if editorChar + 6 > 1:
-                    if editorChar + 6 < 10:
-                        keySimulate.press("\x13")
-                        keySimulate.release("\x13")
-                        exit()
-                    elif editorChar + 6 < 23:
-                        keySimulate.press(Key.f2)
-                        keySimulate.release(Key.f2)
-                        exit()
-                    elif editorChar + 6 < 35:
-                        keySimulate.press(Key.f1)
-                        keySimulate.release(Key.f1)
-                        exit()
-                editorChar = prevec
-            if editorCurrentLine > len(editorLines):
-                editorCurrentLine = len(editorLines)
-            if editorChar > len(editorLines[editorCurrentLine - 1]):
-                editorChar = len(editorLines[editorCurrentLine - 1])
-            cursorBlink = 1
-            breaking = True
 
 
 def determine_type(line):
@@ -1303,16 +1298,45 @@ def editor_print(line):
                 )
                 + "..."
             )
+            editorBuffer = (
+                "\033[48;2;56;113;228m"
+                + (terminalWidth + 3) * " "
+                + "\n\033[A"
+                + currentWorkingDirectoryString
+                + "\033[0m\n"
+                + themeAnsi
+            )
+        else:
+            editorBuffer = (
+                currentWorkingDirectoryString
+                + (
+                    terminalWidth
+                    - (
+                        len(" Current Working Directory: ")
+                        + len(
+                            (
+                                folder.replace("/", "\\")
+                                if cwdType == "Windows"
+                                else folder.replace("C:", "/c")
+                            )
+                            + "\\project.ss1"
+                            if cwdType == "Windows"
+                            else "/project.ss1"
+                        )
+                    )
+                )
+                * " "
+                + "\033[0m\n"
+                + themeAnsi
+            )
     else:
-        currentWorkingDirectoryString = (
-            "\033[46m\033[35;1m                           "
+        currentWorkingDirectoryString = "\033[48;2;56;113;228m\033[35;1m"
+        editorBuffer = (
+            currentWorkingDirectoryString
+            + terminalWidth * " "
+            + "\033[0m\n"
+            + themeAnsi
         )
-    editorBuffer = (
-        currentWorkingDirectoryString
-        + (terminalWidth - (len(currentWorkingDirectoryString) - 12)) * " "
-        + "\033[0m\n"
-        + themeAnsi
-    )
     q = realLine - 1
     for i in range(line - 2):
         q += 1
@@ -1631,10 +1655,12 @@ def editor_print(line):
                 )
         except IndexError:
             editorBufferLine = (
-                "\033[38;5;8m~\033[0m"
+                "\033[38;5;8m ~"
+                + ((len(str(len(editorLines))) - 2) * " ")
+                + "\033[1;38;5;8m    |"
+                + "\033[0m"
                 + themeAnsi
-                + "     "
-                + (terminalWidth - 6) * " "
+                + (terminalWidth - (len(str(len(editorLines))) + 5)) * " "
                 + "\n"
             )
         editorBuffer += editorBufferLine
@@ -1684,7 +1710,7 @@ def editor():
                         for item in editorLines:
                             fp.write("%s\n" % item.rstrip(" "))
                     inEditor = False
-                    print("Done. Press ctrl+c twice to exit.")
+                    print("Done. Press ctrl+c to exit.")
                     while True:
                         pass
                 break
