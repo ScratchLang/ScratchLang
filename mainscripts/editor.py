@@ -1,9 +1,12 @@
 # TODO: Work on line wrapping.
 # TODO: Add comments to code.
 # TODO: Linting/Debugging? File tree?
+# TODO: FIX SINGLE QUOTES!!!
+# TODO: Maybe store theme data in a json file to make it more customizable.
 
 import math
 import os
+from pickle import FALSE
 import runpy
 import shutil
 import signal
@@ -27,7 +30,7 @@ win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)  # put window in fullscreen
 keySimulate = kCon()
 cmdTerm = False
 try:
-    subprocess.run("bash -c clear", shell=False)
+    subprocess.run("bash -c 'echo'", shell=False)
 except FileNotFoundError:
     cmdTerm = True
     print(
@@ -856,17 +859,21 @@ editorCurrentLine = 1
 editorChar = len(editorLines[0])
 realLine = 1
 quoteComplete = False
+singleQuoteComplete = False
 parenthesisComplete = 0
 capsLock = False
 
 
 def on_press(keypressed):
     global realLine, editorCurrentLine, editorChar, cursorBlink, key, capsLock
-    global quoteComplete, parenthesisComplete, inEditor, state
+    global quoteComplete, parenthesisComplete, inEditor, state, singleQuoteComplete
     if len(str(keypressed)) == 5:
         key = str(keypressed)[1:-1]
     else:
-        key = str(keypressed).replace("'", "")
+        if str(keypressed)[0] == '"':
+            key = "'"
+        else:
+            key = str(keypressed).replace("'", "")
     if key == "Key.f1":
         inEditor = False
         state = "tree"
@@ -908,6 +915,8 @@ def on_press(keypressed):
                 editorChar = len(editorLines[editorCurrentLine - 1])
         if quoteComplete:
             quoteComplete = False
+        if singleQuoteComplete:
+            singleQuoteComplete = False
         cursorBlink = 1
     if key == "Key.right":
         if editorChar < len(editorLines[editorCurrentLine - 1]):
@@ -924,6 +933,8 @@ def on_press(keypressed):
                 editorChar = len(editorLines[editorCurrentLine - 1])
         if quoteComplete:
             quoteComplete = False
+        if singleQuoteComplete:
+            singleQuoteComplete = False
         cursorBlink = 1
     if key == "Key.backspace":
         if editorChar == 1:
@@ -1018,10 +1029,7 @@ def on_press(keypressed):
             )
             editorChar = len(editorLines[editorCurrentLine])
         else:
-            if (
-                editorLines[editorCurrentLine - 1][editorChar - 1] == "}"
-                and editorLines[editorCurrentLine - 1][editorChar - 2] == "{"
-            ):
+            if editorLines[editorCurrentLine - 1][editorChar - 2] == "{":
                 leadings = len(editorLines[editorCurrentLine - 1]) - len(
                     editorLines[editorCurrentLine - 1].lstrip(" ")
                 )
@@ -1131,9 +1139,7 @@ def on_press(keypressed):
             realLine = 1
         editorCurrentLine = realLine
     if len(str(key)) == 1:
-        if (
-            key == '"' or key == "'"
-        ):  # Bug when you press the (') key. nothing happenes. The cause of the bug is unknown, as this was working before.
+        if key == '"':
             if not quoteComplete:
                 newLine = (
                     editorLines[editorCurrentLine - 1][: editorChar - 1]
@@ -1146,20 +1152,49 @@ def on_press(keypressed):
                 )
                 editorChar += 1
                 cursorBlink = 1
-                quoteComplete = True
+                if editorLines[editorCurrentLine - 1][editorChar - 3] == " ":
+                    quoteComplete = True
+                    newLine = (
+                        editorLines[editorCurrentLine - 1][: editorChar - 1]
+                        + (key if not capsLock else key.upper())
+                        + editorLines[editorCurrentLine - 1][editorChar - 1 :]
+                    )
+                    editorLines[editorCurrentLine - 1] = newLine
+                    editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
+                        newLine, False
+                    )
+            else:
+                editorChar += 1
+                cursorBlink = 1
+                quoteComplete = False
+        elif key == "'":
+            if not singleQuoteComplete:
                 newLine = (
                     editorLines[editorCurrentLine - 1][: editorChar - 1]
-                    + (key if not capsLock else key.upper())
+                    + "'"
                     + editorLines[editorCurrentLine - 1][editorChar - 1 :]
                 )
                 editorLines[editorCurrentLine - 1] = newLine
                 editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
                     newLine, False
                 )
+                editorChar += 1
+                cursorBlink = 1
+                if editorLines[editorCurrentLine - 1][editorChar - 3] == " ":
+                    singleQuoteComplete = True
+                    newLine = (
+                        editorLines[editorCurrentLine - 1][: editorChar - 1]
+                        + "'"
+                        + editorLines[editorCurrentLine - 1][editorChar - 1 :]
+                    )
+                    editorLines[editorCurrentLine - 1] = newLine
+                    editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
+                        newLine, False
+                    )
             else:
                 editorChar += 1
                 cursorBlink = 1
-                quoteComplete = False
+                singleQuoteComplete = False
         elif key in startParenthesis:
             parenthesisComplete += 1
             previousKey = key
@@ -1309,10 +1344,10 @@ def editor_print(line):
             )
             editorBuffer = (
                 "\033[48;2;56;113;228m"
-                + (terminalWidth + 3) * " "
+                + terminalWidth * " "
                 + "\n\033[A"
                 + currentWorkingDirectoryString
-                + "\033[0m\n"
+                + "\n"
                 + themeAnsi
             )
         else:
@@ -1665,8 +1700,8 @@ def editor_print(line):
         except IndexError:
             editorBufferLine = (
                 "\033[38;5;8m ~"
-                + ((len(str(len(editorLines))) - 2) * " ")
-                + "\033[1;38;5;8m    |"
+                + (((len(str(len(editorLines))) + 4) - 2) * " ")
+                + "\033[1;38;5;8m|"
                 + "\033[0m"
                 + themeAnsi
                 + (terminalWidth - (len(str(len(editorLines))) + 5)) * " "
@@ -1708,6 +1743,7 @@ def editor():
             if not cursorBlinkPrevious == cursorBlink:
                 break
             if not key == "":
+                # print(key)
                 if key == "save":
                     pynput.keyboard.Listener.stop
                     pynput.mouse.Listener.stop
@@ -1770,6 +1806,7 @@ while True:
         editorChar = len(editorLines[0])
         realLine = 1
         quoteComplete = False
+        singleQuoteComplete = False
         parenthesisComplete = 0
         capsLock = False
         state = "edit"
@@ -1794,6 +1831,7 @@ while True:
         editorChar = len(editorLines[0])
         realLine = 1
         quoteComplete = False
+        singleQuoteComplete = False
         parenthesisComplete = 0
         capsLock = False
         state = "edit"

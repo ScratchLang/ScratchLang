@@ -143,7 +143,6 @@ def startpy(a1=""):  # Main menu.
             pass
     except IndexError:
         pass
-    print("\033[8;40;125t")  # Set the terminal size to 40x125
     subprocess.run("clear", shell=False)
     print(
         P
