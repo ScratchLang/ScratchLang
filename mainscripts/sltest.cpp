@@ -1,4 +1,6 @@
 /* I learn programming languages with a mix of recreating things I've already made in a different language, and searching up how to do things and just memorizing the function. (I learned most of my Python with this method. That other bit was from trying to convert a Python script to Shell Script.) I am making ScratchLang in C++ to try and learn it with this method. However, completing ScratchLang C++ won't be my #1 priority. */
+
+/* I would continue this if I knew how to OPEN A FUCKING DIRECTORY IN C++!!! But, I don't. So I can't continue this until I figure out how.*/
 #include <unistd.h>
 #include <iostream>
 #include <string>

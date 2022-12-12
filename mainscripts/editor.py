@@ -1,13 +1,11 @@
 # TODO: Work on line wrapping.
 # TODO: Add comments to code.
 # TODO: Linting/Debugging? File tree?
-# TODO: FIX SINGLE QUOTES!!!
 # TODO: Maybe store theme data in a json file to make it more customizable.
+# TODO: Autocomplete?
+# I'm planning on adding this stuff because I basically want this to be an IDE for the ScratchScript language.
 
-import math
 import os
-from pickle import FALSE
-import runpy
 import shutil
 import signal
 import subprocess
@@ -26,7 +24,7 @@ from pynput.keyboard import Key
 import relative
 
 hwnd = win32gui.GetForegroundWindow()
-win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)  # put window in fullscreen
+win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)  # put window in full-screen
 keySimulate = kCon()
 cmdTerm = False
 try:
@@ -34,7 +32,9 @@ try:
 except FileNotFoundError:
     cmdTerm = True
     print(
-        "\033[31mWARNING! The editor can be run in command prompt or powershell, but it's not recommended, as it has been tested and it's quite janky. Please use MSYS2 instead, but if you can't install it then you are free to use command prompt/powershell to run the editor.\033[0m"
+        "\033[31mWARNING! The editor can be run in command prompt or powershell, but it's not recommended, as it has "
+        "been tested and it's quite janky. Please use MSYS2 instead, but if you can't install it then you are free to "
+        "use command prompt/powershell to run the editor.\033[0m "
     )
     sleep(8)
 
@@ -47,33 +47,27 @@ def exitLamb():
     sys.exit(0)
 
 
-signal.signal(
-    signal.SIGINT, lambda x, y: exitLamb()
-)  # Don't print traceback if pressing ctrl+c
+signal.signal(signal.SIGINT, lambda x, y: exitLamb())  # Don't print traceback if pressing ctrl+c
 global syntaxType
-inEditor = True  # Define the 'inEditor' variable. When this variable is true, then you're in the editor. If false, then you're not.
+inEditor = True  # Define the 'inEditor' variable. When this variable is true, then you're in the editor. If false,
+# then you're not.
 mclick, breaking = False, False
 key = ""  # Define the 'key' variable.
 cursorBlink, mx, my = 0, 0, 0
 # Color constants
 RED = "\033[0;31m"
+NC = "\033[0m"
 P = "\033[0;35m"
 
-if (
-    not os.path.dirname(sys.argv[0]) == ""
-):  # Set currentWorkingDirectory to the directory of editor.py
+if not os.path.dirname(sys.argv[0]) == "":  # Set currentWorkingDirectory to the directory of editor.py
     os.chdir(os.path.dirname(sys.argv[0]))
 currentWorkingDirectory = os.getcwd().replace("\\", "/")
-terminalHeight = (
-    shutil.get_terminal_size().lines
-)  # Set 'terminalHeight' to the terminal height
-terminalWidth = (
-    shutil.get_terminal_size().columns
-)  # Set 'terminalWidth' to the terminal width
+terminalHeight = shutil.get_terminal_size().lines  # Set 'terminalHeight' to the terminal height
+terminalWidth = shutil.get_terminal_size().columns  # Set 'terminalWidth' to the terminal width
 
 try:
     if sys.argv[1] == "--calibrate":
-        runpy.run_path("editor_calibrate.py")
+        relative.calibrate()
         exit()
 except IndexError:
     pass
@@ -87,8 +81,6 @@ def increment():  # Cursor blink thread
         sleep(0.5)
         cursorBlink = 1
         sleep(0.5)
-        if key == "save":
-            exit()
 
 
 def error(text):  # Error function
@@ -101,54 +93,35 @@ print("")
 # Get the project folder that the user wants to edit
 folder = ""
 try:
-    if not sys.argv[1] is None:
-        folder = sys.argv[1].replace(
-            "\\", "/"
-        )  # If editor.py is ran with an argument, then set 'folder' to it.
-        # For example, the command ran is 'py editor.py ../projects/example', then it'll set 'folder' to '../projects/example'
-except IndexError:
+    if sys.argv[1]:
+        pass
+    folder = sys.argv[1].replace("\\", "/")  # If editor.py is run with an argument, then set 'folder' to it.
+    # For example, the command ran is 'py editor.py ../projects/example', then it'll set 'folder' to
+    # '../projects/example'
+except IndexError:  # This will run if there is no 2nd argument.
     sleep(2)
-    folder = fd.askdirectory(
-        title="Choose a project.", initialdir="../projects"
-    )
+    folder = fd.askdirectory(title="Choose a project.", initialdir="../projects")
     folder = folder.replace("\\", "/")
-if os.path.isdir(folder):
-    previousPath = os.getcwd()
-    os.chdir(folder)
-    folder = os.getcwd().replace("\\", "/") + "/Stage"
-    realFolderPath = os.path.dirname(folder)
-    os.chdir(previousPath)
-    if not os.path.isfile(
-        realFolderPath + "/.maindir"
-    ):  # Detect if current directory is a ScratchLang project
-        error(
-            "Not a ScratchScript project ("
-            + realFolderPath
-            + "), or .maindir file was deleted."
-        )
-        exit()
-    os.chdir(realFolderPath)
-    editorLines = []
-    print("Loading " + realFolderPath + "...")
-    print("")
-    os.chdir("Stage")
-    fileOpened = open("project.ss1", "r")
-    fileOpenedLength = len(fileOpened.readlines())
-    fileOpened.close()
-    fileOpened = open("project.ss1", "r")
-else:
-    editorLines = []
-    print("Loading " + folder + "...")
-    print("")
-    fileOpened = open(folder, "r")
-    fileOpenedLength = len(fileOpened.readlines())
-    fileOpened.close
-    fileOpened = open(folder, "r")
-    folder = os.path.dirname(folder)
-    os.chdir(folder)
+previousPath = os.getcwd()
+os.chdir(folder)
+folder = os.getcwd().replace("\\", "/") + "/Stage"
+realFolderPath = os.path.dirname(folder)
+os.chdir(previousPath)
+if not os.path.isfile(realFolderPath + "/.maindir"):  # Detect if current directory is a ScratchLang project
+    error("Not a ScratchScript project (" + realFolderPath + "), or .maindir file was deleted.")
+    exit()
+os.chdir(realFolderPath)
+editorLines = []
+print("Loading " + realFolderPath + "...")
+print("")
+os.chdir("Stage")
+fileOpened = open("project.ss1", "r")
+fileOpenedLength = len(fileOpened.readlines())
+fileOpened.close()
+fileOpened = open("project.ss1", "r")
 progressBarLength = 55
 q = 0
-for line in fileOpened.readlines():
+for line in fileOpened.readlines():  # Load each line of project.ss1 into the 'editorLines' list with an extra space.
     q += 1
     percent = q / fileOpenedLength
     print(
@@ -158,7 +131,7 @@ for line in fileOpened.readlines():
         + "] "
         + str(round(percent * 100))
         + "%"
-    )
+    )  # This prints the progress bar.
     line = line.strip("\n")
     editorLines += [line + " "]
 fileOpened.close()
@@ -190,17 +163,8 @@ try:
     offsetx = editorSettings["offsetX"]
     offsety = editorSettings["offsetY"]
 except KeyError:
-    error("Invalid settings. Please fix.")
-    exit()
-themeAnsi = (
-    "\033[48;2;"
-    + str(themeRed)
-    + ";"
-    + str(themeGreen)
-    + ";"
-    + str(themeBlue)
-    + "m"
-)
+    pass
+themeAnsi = "\033[48;2;" + str(themeRed) + ";" + str(themeGreen) + ";" + str(themeBlue) + "m"
 if themeConfig == "Dark":
     themeAnsi = "\033[48;2;35;37;41m"
 elif themeConfig == "Light":
@@ -210,10 +174,8 @@ elif themeConfig == "Black":
 elif themeConfig == "RGB":
     pass
 else:
-    error(
-        "Invalid theme configuration. Please set the theme to a valid option in the 'editor_settings.yaml'"
-    )
-NC = "\033[0m" + themeAnsi
+    error("Invalid theme configuration. Please set the theme to a valid option in the 'editor_settings.yaml'")
+NC += themeAnsi
 fileOpened.close()
 fileOpenedLength = previousFileOpenedLength
 
@@ -225,9 +187,9 @@ def mouseClicks(x, y, button, pressed):
     mclick = False
     if pressed:
         mclick = True
-        mx, my, insideWindow, h, w = relative.position(20, 30, x, y)
-        mx = math.floor(mx / round(w / terminalWidth)) + offsetx
-        my = math.floor(my / round(h / terminalHeight)) + offsety
+        mx, my, insideWindow, h, w = relative.termposition(20, 30, x, y)
+        mx += offsetx
+        my += offsety
         if insideWindow:
             prevecl = editorCurrentLine
             prevec = editorChar
@@ -243,7 +205,6 @@ def mouseClicks(x, y, button, pressed):
                     if editorChar + (4 + len(str(len(editorLines)))) < 10:
                         keySimulate.press("\x13")
                         keySimulate.release("\x13")
-                        exit()
                     elif editorChar + (4 + len(str(len(editorLines)))) < 23:
                         keySimulate.press(Key.f2)
                         keySimulate.release(Key.f2)
@@ -280,6 +241,7 @@ colors = {
     "7": "\033[38;2;92;177;214m",
     "8": "\033[38;2;89;192;89m",
     "9": "\033[38;2;15;189;140m",
+    "10": "\033[38;2;76;151;255m",
 }
 backgroundColors = {
     "c": "",
@@ -295,6 +257,7 @@ backgroundColors = {
     "7": "",
     "8": "",
     "9": "",
+    "10": "",
 }
 parenthesisColors = {
     "0": "",
@@ -311,7 +274,7 @@ looks = [
     "switch backdrop to (",
     "next backdrop",
     "change [c",
-    "change [fileOpened",
+    "change [f",
     "change [w",
     "change [pix",
     "change [m",
@@ -320,7 +283,7 @@ looks = [
     "clear graphic effects",
     "(backdrop [",
     "set [c",
-    "set [fileOpened",
+    "set [f",
     "set [w",
     "set [pix",
     "set [m",
@@ -520,6 +483,45 @@ operatorsFindType = [
     "in",
     "le",
 ]
+motion = [
+    "move (",
+    "turn cw (",
+    "turn ccw (",
+    "go to (",
+    "go to x: (",
+    "glide (",
+    "point in direction (",
+    "point towards (",
+    "change x by (",
+    "set x to (",
+    "change y by (",
+    "set y to (",
+    "if on edge, bounce",
+    "set rotation style [",
+    "(x position)",
+    "(y position)",
+    "(direction)",
+]
+motionFindType = [
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "eq",
+    "le",
+    "eq",
+    "eq",
+    "eq",
+]
 pen = ["erase all"]
 penFindType = ["eq"]
 startParenthesis = ["(", "[", "{", "<"]
@@ -535,6 +537,8 @@ shabang = [
     "//!control",
     "//!sensing",
     "//!operators",
+    "//!pen",
+    "//!motion",
 ]
 
 
@@ -650,6 +654,17 @@ def determine_type(line):
         elif penFindType[q] == "in":
             if i in line.lstrip(" "):
                 syntaxType = "9"
+    for i in motion:
+        q += 1
+        if motionFindType[q] == "le":
+            if i == line.lstrip(" ")[: len(i)]:
+                syntaxType = "10"
+        elif motionFindType[q] == "eq":
+            if i == line.lstrip(" ").rstrip(" "):
+                syntaxType = "10"
+        elif motionFindType[q] == "in":
+            if i in line.lstrip(" "):
+                syntaxType = "10"
     for i in shabang:
         syntaxTypeId += 1
         if i in line.lstrip(" "):
@@ -702,9 +717,7 @@ def add_syntax(line, progressBarEnabled=True):
         if character in startParenthesis:
             if not character == "{":
                 if character == "<":
-                    if not (
-                        syntaxLine[i - 1] == " " and syntaxLine[i + 1] == " "
-                    ):
+                    if not (syntaxLine[i - 1] == " " and syntaxLine[i + 1] == " "):
                         parenthesisCount += 1
                         c = 0
                         for z in range(parenthesisCount):
@@ -712,11 +725,7 @@ def add_syntax(line, progressBarEnabled=True):
                             if c == 9:
                                 c = 1
                         buildedLine = buildedLine.rstrip(buildedLine[-1])
-                        buildedLine += (
-                            parenthesisColors[str(c)]
-                            + character
-                            + colors[syntaxType]
-                        )
+                        buildedLine += parenthesisColors[str(c)] + character + colors[syntaxType]
                 else:
                     parenthesisCount += 1
                     c = 0
@@ -725,11 +734,7 @@ def add_syntax(line, progressBarEnabled=True):
                         if c == 9:
                             c = 1
                     buildedLine = buildedLine.rstrip(buildedLine[-1])
-                    buildedLine += (
-                        parenthesisColors[str(c)]
-                        + character
-                        + colors[syntaxType]
-                    )
+                    buildedLine += parenthesisColors[str(c)] + character + colors[syntaxType]
             else:
                 bracketCount += 1
                 c = 0
@@ -738,15 +743,11 @@ def add_syntax(line, progressBarEnabled=True):
                     if c == 9:
                         c = 1
                 buildedLine = buildedLine.rstrip(buildedLine[-1])
-                buildedLine += (
-                    parenthesisColors[str(c)] + character + colors[syntaxType]
-                )
+                buildedLine += parenthesisColors[str(c)] + character + colors[syntaxType]
         elif character in endParenthesis:
             if not character == "}":
                 if character == ">":
-                    if not (
-                        syntaxLine[i - 1] == " " and syntaxLine[i + 1] == " "
-                    ):
+                    if not (syntaxLine[i - 1] == " " and syntaxLine[i + 1] == " "):
                         if parenthesisCount > 0:
                             c = 0
                             for z in range(parenthesisCount):
@@ -754,11 +755,7 @@ def add_syntax(line, progressBarEnabled=True):
                                 if c == 9:
                                     c = 1
                             buildedLine = buildedLine.rstrip(buildedLine[-1])
-                            buildedLine += (
-                                parenthesisColors[str(c)]
-                                + character
-                                + colors[syntaxType]
-                            )
+                            buildedLine += parenthesisColors[str(c)] + character + colors[syntaxType]
                             parenthesisCount -= 1
                 else:
                     if parenthesisCount > 0:
@@ -768,11 +765,7 @@ def add_syntax(line, progressBarEnabled=True):
                             if c == 9:
                                 c = 1
                         buildedLine = buildedLine.rstrip(buildedLine[-1])
-                        buildedLine += (
-                            parenthesisColors[str(c)]
-                            + character
-                            + colors[syntaxType]
-                        )
+                        buildedLine += parenthesisColors[str(c)] + character + colors[syntaxType]
                         parenthesisCount -= 1
             else:
                 if bracketCount > 0:
@@ -782,11 +775,7 @@ def add_syntax(line, progressBarEnabled=True):
                         if c == 9:
                             c = 1
                     buildedLine = buildedLine.rstrip(buildedLine[-1])
-                    buildedLine += (
-                        parenthesisColors[str(c)]
-                        + character
-                        + colors[syntaxType]
-                    )
+                    buildedLine += parenthesisColors[str(c)] + character + colors[syntaxType]
                     bracketCount -= 1
         if character == '"':
             buildedLine = buildedLine.rstrip(buildedLine[-1])
@@ -831,13 +820,7 @@ def add_syntax(line, progressBarEnabled=True):
             else:
                 i += 1
     syntaxLine = buildedLine
-    syntaxBuild = (
-        backgroundColors[syntaxType]
-        + colors[syntaxType]
-        + syntaxLine
-        + "\033[0m"
-        + themeAnsi
-    )
+    syntaxBuild = backgroundColors[syntaxType] + colors[syntaxType] + syntaxLine + "\033[0m" + themeAnsi
     if syntaxBuild == "":
         syntaxBuild = line
     return syntaxBuild
@@ -852,7 +835,8 @@ for line in editorLines:
 if lineWrapWarning:
     print("")
     print(
-        "WARNING: Line wrap may occur and will make the editor glitch out. Instead of using this, you should use something like Notepad or VSCode to edit the ScratchScript file, as it's much better than this editor."
+        "WARNING: Line wrap may occur and will make the editor glitch out. Instead of using this, you should use "
+        "something like Notepad or VSCode to edit the ScratchScript file, as it's much better than this editor. "
     )
     sleep(2)
 editorCurrentLine = 1
@@ -862,18 +846,19 @@ quoteComplete = False
 singleQuoteComplete = False
 parenthesisComplete = 0
 capsLock = False
+taskbarMessage = ""
 
 
-def on_press(keypressed):
-    global realLine, editorCurrentLine, editorChar, cursorBlink, key, capsLock
-    global quoteComplete, parenthesisComplete, inEditor, state, singleQuoteComplete
-    if len(str(keypressed)) == 5:
-        key = str(keypressed)[1:-1]
+def on_press(keyPressed):
+    global realLine, editorCurrentLine, editorChar, cursorBlink, key, capsLock, quoteComplete, parenthesisComplete
+    global inEditor, state, singleQuoteComplete, taskbarMessage
+    if len(str(keyPressed)) == 5:
+        key = str(keyPressed)[1:-1]
     else:
-        if str(keypressed)[0] == '"':
+        if str(keyPressed)[0] == '"':
             key = "'"
         else:
-            key = str(keypressed).replace("'", "")
+            key = str(keyPressed).replace("'", "")
     if key == "Key.f1":
         inEditor = False
         state = "tree"
@@ -881,6 +866,7 @@ def on_press(keypressed):
         inEditor = False
         state = "new"
     if key == "Key.up" and editorCurrentLine > 1:
+        taskbarMessage = "Up Arrow"
         editorCurrentLine -= 1
         if editorCurrentLine == realLine and realLine > 1:
             realLine -= 1
@@ -890,20 +876,17 @@ def on_press(keypressed):
         if editorChar > len(editorLines[editorCurrentLine - 1]):
             editorChar = len(editorLines[editorCurrentLine - 1])
     if key == "Key.down" and editorCurrentLine < len(editorLines):
+        taskbarMessage = "Down Arrow"
         editorCurrentLine += 1
-        if (
-            editorCurrentLine == realLine + terminalHeight - 3
-            and not editorCurrentLine == len(editorLines)
-        ):
+        if editorCurrentLine == realLine + terminalHeight - 3 and not editorCurrentLine == len(editorLines):
             realLine += 1
         elif editorCurrentLine == realLine + (terminalHeight - 2):
-            realLine += 1 + (
-                1 if not editorCurrentLine == len(editorLines) else 0
-            )
+            realLine += 1 + (1 if not editorCurrentLine == len(editorLines) else 0)
         cursorBlink = 1
         if editorChar > len(editorLines[editorCurrentLine - 1]):
             editorChar = len(editorLines[editorCurrentLine - 1])
     if key == "Key.left":
+        taskbarMessage = "Left Arrow"
         if editorChar > 1:
             editorChar -= 1
         elif editorCurrentLine > 1:
@@ -919,15 +902,13 @@ def on_press(keypressed):
             singleQuoteComplete = False
         cursorBlink = 1
     if key == "Key.right":
+        taskbarMessage = "Right Arrow"
         if editorChar < len(editorLines[editorCurrentLine - 1]):
             editorChar += 1
         elif editorCurrentLine < len(editorLines):
             editorChar = 1
             editorCurrentLine += 1
-            if (
-                editorCurrentLine == realLine + terminalHeight - 3
-                and not editorCurrentLine == len(editorLines)
-            ):
+            if editorCurrentLine == realLine + terminalHeight - 3 and not editorCurrentLine == len(editorLines):
                 realLine += 1
             if editorChar > len(editorLines[editorCurrentLine - 1]):
                 editorChar = len(editorLines[editorCurrentLine - 1])
@@ -937,17 +918,13 @@ def on_press(keypressed):
             singleQuoteComplete = False
         cursorBlink = 1
     if key == "Key.backspace":
+        taskbarMessage = "Backspace"
         if editorChar == 1:
             if not editorCurrentLine == 1:
                 editorChar = len(editorLines[editorCurrentLine - 2])
-                transfer = (
-                    editorLines[editorCurrentLine - 2].rstrip(" ")
-                    + editorLines[editorCurrentLine - 1]
-                )
+                transfer = editorLines[editorCurrentLine - 2].rstrip(" ") + editorLines[editorCurrentLine - 1]
                 editorLines[editorCurrentLine - 2] = transfer
-                editorLinesWithSyntax[editorCurrentLine - 2] = add_syntax(
-                    transfer, False
-                )
+                editorLinesWithSyntax[editorCurrentLine - 2] = add_syntax(transfer, False)
                 del editorLines[editorCurrentLine - 1]
                 del editorLinesWithSyntax[editorCurrentLine - 1]
                 editorCurrentLine -= 1
@@ -960,9 +937,7 @@ def on_press(keypressed):
                 + editorLines[editorCurrentLine - 1][editorChar - 1 :]
             )
             editorLines[editorCurrentLine - 1] = backspaceSplit
-            editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
-                backspaceSplit, False
-            )
+            editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(backspaceSplit, False)
             if editorChar > 1:
                 editorChar -= 1
             editorChar = (
@@ -972,40 +947,25 @@ def on_press(keypressed):
             )
         cursorBlink = 1
     if key == "Key.delete":
+        taskbarMessage = "Delete"
         if not editorChar + 1 == len(editorLines[editorCurrentLine - 1]):
             backspaceSplit = (
-                editorLines[editorCurrentLine - 1][:editorChar]
-                + editorLines[editorCurrentLine - 1][editorChar + 1 :]
+                editorLines[editorCurrentLine - 1][:editorChar] + editorLines[editorCurrentLine - 1][editorChar + 1 :]
             )
             editorLines[editorCurrentLine - 1] = backspaceSplit
-            editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
-                backspaceSplit, False
-            )
+            editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(backspaceSplit, False)
         cursorBlink = 1
     if key == "Key.enter":
-        leadings = len(editorLines[editorCurrentLine - 1]) - len(
-            editorLines[editorCurrentLine - 1].lstrip(" ")
-        )
+        taskbarMessage = "Enter"
+        leadings = len(editorLines[editorCurrentLine - 1]) - len(editorLines[editorCurrentLine - 1].lstrip(" "))
         if editorChar == len(editorLines[editorCurrentLine - 1]):
-            if len(editorLines[editorCurrentLine - 1]) == len(
-                editorLines[editorCurrentLine - 1].lstrip(" ")
-            ):
+            if len(editorLines[editorCurrentLine - 1]) == len(editorLines[editorCurrentLine - 1].lstrip(" ")):
                 leadings -= 1
             editorLines.insert(
                 editorCurrentLine,
                 (
                     leadings
-                    + (
-                        2
-                        if leadings == -1
-                        else 1
-                        - (
-                            1
-                            if str.strip(editorLines[editorCurrentLine - 1])
-                            == ""
-                            else 0
-                        )
-                    )
+                    + (2 if leadings == -1 else 1 - (1 if str.strip(editorLines[editorCurrentLine - 1]) == "" else 0))
                 )
                 * " ",
             )
@@ -1013,99 +973,73 @@ def on_press(keypressed):
                 editorCurrentLine,
                 (
                     leadings
-                    + (
-                        2
-                        if leadings == -1
-                        else 1
-                        - (
-                            1
-                            if str.strip(editorLines[editorCurrentLine - 1])
-                            == ""
-                            else 0
-                        )
-                    )
+                    + (2 if leadings == -1 else 1 - (1 if str.strip(editorLines[editorCurrentLine - 1]) == "" else 0))
                 )
                 * " ",
             )
             editorChar = len(editorLines[editorCurrentLine])
         else:
             if editorLines[editorCurrentLine - 1][editorChar - 2] == "{":
-                leadings = len(editorLines[editorCurrentLine - 1]) - len(
-                    editorLines[editorCurrentLine - 1].lstrip(" ")
-                )
-                lineInsert = (
-                    leadings * " "
-                    + editorLines[editorCurrentLine - 1][editorChar - 1 :]
-                )
-                editorLines[editorCurrentLine - 1] = (
-                    editorLines[editorCurrentLine - 1].rstrip(lineInsert) + " "
-                )
+                leadings = len(editorLines[editorCurrentLine - 1]) - len(editorLines[editorCurrentLine - 1].lstrip(" "))
+                lineInsert = leadings * " " + editorLines[editorCurrentLine - 1][editorChar - 1 :]
+                editorLines[editorCurrentLine - 1] = editorLines[editorCurrentLine - 1].rstrip(lineInsert) + " "
                 editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
                     editorLines[editorCurrentLine - 1],
                     False,
                 )
-                editorLines.insert(
-                    editorCurrentLine, (leadings + tabSize + 1) * " "
-                )
-                editorLinesWithSyntax.insert(
-                    editorCurrentLine, (leadings + tabSize + 1) * " "
-                )
+                editorLines.insert(editorCurrentLine, (leadings + tabSize + 1) * " ")
+                editorLinesWithSyntax.insert(editorCurrentLine, (leadings + tabSize + 1) * " ")
                 editorLines.insert(editorCurrentLine + 1, lineInsert)
-                editorLinesWithSyntax.insert(
-                    editorCurrentLine + 1, add_syntax(lineInsert, False)
-                )
+                editorLinesWithSyntax.insert(editorCurrentLine + 1, add_syntax(lineInsert, False))
                 editorChar = leadings + tabSize + 1
                 if editorCurrentLine == realLine + terminalHeight - 3:
                     realLine += 1
             else:
-                lineInsert = editorLines[editorCurrentLine - 1][
-                    editorChar - 1 :
-                ]
-                editorLines[editorCurrentLine - 1] = (
-                    editorLines[editorCurrentLine - 1].rstrip(lineInsert) + " "
-                )
+                lineInsert = editorLines[editorCurrentLine - 1][editorChar - 1 :]
+                editorLines[editorCurrentLine - 1] = editorLines[editorCurrentLine - 1].rstrip(lineInsert) + " "
                 editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
                     editorLines[editorCurrentLine - 1],
                     False,
                 )
                 editorLines.insert(
                     editorCurrentLine,
-                    (leadings + (2 if leadings == -1 else 0)) * " "
-                    + lineInsert,
+                    (leadings + (2 if leadings == -1 else 0)) * " " + lineInsert,
                 )
                 editorLinesWithSyntax.insert(
                     editorCurrentLine,
                     add_syntax(
-                        (leadings + (2 if leadings == -1 else 0)) * " "
-                        + lineInsert,
+                        (leadings + (2 if leadings == -1 else 0)) * " " + lineInsert,
                         False,
                     ),
                 )
                 editorChar = leadings + 1
         editorCurrentLine += 1
-        if (
-            editorCurrentLine == realLine + terminalHeight - 2
-            or editorCurrentLine == realLine + terminalHeight - 3
-        ):
+        if editorCurrentLine == realLine + terminalHeight - 2 or editorCurrentLine == realLine + terminalHeight - 3:
             realLine += 1
         cursorBlink = 1
     if key == "Key.caps_lock":
+        taskbarMessage = "Toggle Caps Lock"
         if capsLock:
             capsLock = False
         else:
             capsLock = True
     if key == "Key.space":
+        taskbarMessage = "Spacebar"
         key = " "
     if key == "\\\\":
         key = "\\"
     if key == "\\x13":
-        key = "save"
-        exit()
+        projectDir = os.getcwd().replace("\\", "/") + "/project.ss1"
+        taskbarMessage = "Saving to " + projectDir + "..."
+        with open(projectDir, "w") as fp:
+            for item in editorLines:
+                fp.write("%s\n" % item.rstrip(" "))
+        sleep(0.1)
+        taskbarMessage = "Done."
+        key = ""
     if key == "191":
-        if (
-            not editorLines[editorCurrentLine - 1][: editorChar - 1][:3]
-            == "// "
-        ):
+        taskbarMessage = "CTRL+/"
+        if not editorLines[editorCurrentLine - 1][: editorChar - 1][:3] == "// ":
             key = "// "
             newLine = key + editorLines[editorCurrentLine - 1]
             editorChar += 3
@@ -1113,10 +1047,9 @@ def on_press(keypressed):
             newLine = editorLines[editorCurrentLine - 1][3:]
             editorChar -= 3
         editorLines[editorCurrentLine - 1] = newLine
-        editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
-            newLine, False
-        )
+        editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(newLine, False)
     if key == "Key.tab":
+        taskbarMessage = "Tab"
         key = tabSize * " "
         newLine = (
             editorLines[editorCurrentLine - 1][: editorChar - 1]
@@ -1124,21 +1057,22 @@ def on_press(keypressed):
             + editorLines[editorCurrentLine - 1][editorChar - 1 :]
         )
         editorLines[editorCurrentLine - 1] = newLine
-        editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
-            newLine, False
-        )
+        editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(newLine, False)
         editorChar += tabSize
     if key == "Key.page_down":
+        taskbarMessage = "Page Down"
         realLine += terminalHeight - 3
         if realLine > len(editorLines):
             realLine = len(editorLines)
         editorCurrentLine = realLine
     if key == "Key.page_up":
+        taskbarMessage = "Page Up"
         realLine -= terminalHeight - 3
         if realLine < 1:
             realLine = 1
         editorCurrentLine = realLine
     if len(str(key)) == 1:
+        taskbarMessage = key
         if key == '"':
             if not quoteComplete:
                 newLine = (
@@ -1147,12 +1081,17 @@ def on_press(keypressed):
                     + editorLines[editorCurrentLine - 1][editorChar - 1 :]
                 )
                 editorLines[editorCurrentLine - 1] = newLine
-                editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
-                    newLine, False
-                )
+                editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(newLine, False)
                 editorChar += 1
                 cursorBlink = 1
-                if editorLines[editorCurrentLine - 1][editorChar - 3] == " ":
+                if (
+                    editorLines[editorCurrentLine - 1][editorChar - 3] == " "
+                    and (
+                        editorLines[editorCurrentLine - 1][editorChar - 1] == " "
+                        or editorLines[editorCurrentLine - 1][editorChar - 1] == " "
+                    )
+                    or editorLines[editorCurrentLine - 1][editorChar - 3] in startParenthesis
+                ):
                     quoteComplete = True
                     newLine = (
                         editorLines[editorCurrentLine - 1][: editorChar - 1]
@@ -1160,9 +1099,7 @@ def on_press(keypressed):
                         + editorLines[editorCurrentLine - 1][editorChar - 1 :]
                     )
                     editorLines[editorCurrentLine - 1] = newLine
-                    editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
-                        newLine, False
-                    )
+                    editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(newLine, False)
             else:
                 editorChar += 1
                 cursorBlink = 1
@@ -1175,9 +1112,7 @@ def on_press(keypressed):
                     + editorLines[editorCurrentLine - 1][editorChar - 1 :]
                 )
                 editorLines[editorCurrentLine - 1] = newLine
-                editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
-                    newLine, False
-                )
+                editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(newLine, False)
                 editorChar += 1
                 cursorBlink = 1
                 if editorLines[editorCurrentLine - 1][editorChar - 3] == " ":
@@ -1188,9 +1123,7 @@ def on_press(keypressed):
                         + editorLines[editorCurrentLine - 1][editorChar - 1 :]
                     )
                     editorLines[editorCurrentLine - 1] = newLine
-                    editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
-                        newLine, False
-                    )
+                    editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(newLine, False)
             else:
                 editorChar += 1
                 cursorBlink = 1
@@ -1204,9 +1137,7 @@ def on_press(keypressed):
                 + editorLines[editorCurrentLine - 1][editorChar - 1 :]
             )
             editorLines[editorCurrentLine - 1] = newLine
-            editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
-                newLine, False
-            )
+            editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(newLine, False)
             editorChar += 1
             cursorBlink = 1
             if key == "(":
@@ -1225,9 +1156,7 @@ def on_press(keypressed):
             )
             key = previousKey
             editorLines[editorCurrentLine - 1] = newLine
-            editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
-                newLine, False
-            )
+            editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(newLine, False)
         elif key in endParenthesis:
             if parenthesisComplete > 0:
                 parenthesisComplete -= 1
@@ -1240,9 +1169,7 @@ def on_press(keypressed):
                     + editorLines[editorCurrentLine - 1][editorChar - 1 :]
                 )
                 editorLines[editorCurrentLine - 1] = newLine
-                editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
-                    newLine, False
-                )
+                editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(newLine, False)
                 editorChar += 1
                 cursorBlink = 1
         else:
@@ -1259,9 +1186,7 @@ def on_press(keypressed):
                     + editorLines[editorCurrentLine - 1][editorChar - 1 :]
                 )
             editorLines[editorCurrentLine - 1] = newLine
-            editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(
-                newLine, False
-            )
+            editorLinesWithSyntax[editorCurrentLine - 1] = add_syntax(newLine, False)
             editorChar += 1
             cursorBlink = 1
     if editorChar < 1:
@@ -1276,9 +1201,7 @@ def resetkey(release):
 
 
 def inputloop():
-    with pynput.keyboard.Listener(
-        on_press=on_press, on_release=resetkey
-    ) as listener:
+    with pynput.keyboard.Listener(on_press=on_press, on_release=resetkey) as listener:
         listener.join()
     listener.stop()
     exit()
@@ -1292,16 +1215,12 @@ def clickedThread():
 
 
 def editor_print(line):
-    global bracketCount
+    global bracketCount, taskbarMessage
     getLineCount = len(str(len(editorLines)))
     if showCwd:
         currentWorkingDirectoryString = (
             "\033[48;2;56;113;228m\033[35;1m Current Working Directory: "
-            + (
-                folder.replace("/", "\\")
-                if cwdType == "Windows"
-                else folder.replace("C:", "/c")
-            )
+            + (folder.replace("/", "\\") if cwdType == "Windows" else folder.replace("C:", "/c"))
             + "\\project.ss1"
             if cwdType == "Windows"
             else "/project.ss1"
@@ -1309,12 +1228,7 @@ def editor_print(line):
         if (
             len(" Current Working Directory: ")
             + len(
-                (
-                    folder.replace("/", "\\")
-                    if cwdType == "Windows"
-                    else folder.replace("C:", "/c")
-                )
-                + "\\project.ss1"
+                (folder.replace("/", "\\") if cwdType == "Windows" else folder.replace("C:", "/c")) + "\\project.ss1"
                 if cwdType == "Windows"
                 else "/project.ss1"
             )
@@ -1327,11 +1241,7 @@ def editor_print(line):
                         - (
                             len(" Current Working Directory: ")
                             + len(
-                                (
-                                    folder.replace("/", "\\")
-                                    if cwdType == "Windows"
-                                    else folder.replace("C:", "/c")
-                                )
+                                (folder.replace("/", "\\") if cwdType == "Windows" else folder.replace("C:", "/c"))
                                 + "\\project.ss1"
                                 if cwdType == "Windows"
                                 else "/project.ss1"
@@ -1358,11 +1268,7 @@ def editor_print(line):
                     - (
                         len(" Current Working Directory: ")
                         + len(
-                            (
-                                folder.replace("/", "\\")
-                                if cwdType == "Windows"
-                                else folder.replace("C:", "/c")
-                            )
+                            (folder.replace("/", "\\") if cwdType == "Windows" else folder.replace("C:", "/c"))
                             + "\\project.ss1"
                             if cwdType == "Windows"
                             else "/project.ss1"
@@ -1375,20 +1281,12 @@ def editor_print(line):
             )
     else:
         currentWorkingDirectoryString = "\033[48;2;56;113;228m\033[35;1m"
-        editorBuffer = (
-            currentWorkingDirectoryString
-            + terminalWidth * " "
-            + "\033[0m\n"
-            + themeAnsi
-        )
+        editorBuffer = currentWorkingDirectoryString + terminalWidth * " " + "\033[0m\n" + themeAnsi
     q = realLine - 1
     for i in range(line - 2):
         q += 1
         try:
-            filler = (
-                terminalWidth
-                - (len(editorLines[q - 1]) + len(str(len(editorLines))) + 5)
-            ) * " "
+            filler = (terminalWidth - (len(editorLines[q - 1]) + len(str(len(editorLines))) + 5)) * " "
             editorBufferLine = (
                 "\033[38;5;8m"
                 + (getLineCount - len(str(q))) * " "
@@ -1426,17 +1324,9 @@ def editor_print(line):
                             if editorBufferBuffer[j] == "/":
                                 j += 1
                                 if editorChar == j:
-                                    find += (
-                                        "\033[46;1m\033[38;5;8m/\033[0m\033[38;5;8m"
-                                        + themeAnsi
-                                        + "/"
-                                    )
+                                    find += "\033[46;1m\033[38;5;8m/\033[0m\033[38;5;8m" + themeAnsi + "/"
                                 elif editorChar == j + 1:
-                                    find += (
-                                        "\033[0m"
-                                        + themeAnsi
-                                        + "\033[38;5;8m/\033[46;1m/\033[0m"
-                                    )
+                                    find += "\033[0m" + themeAnsi + "\033[38;5;8m/\033[46;1m/\033[0m"
                                 else:
                                     find += "\033[38;5;8m//"
                                 comment = True
@@ -1452,10 +1342,7 @@ def editor_print(line):
                     if character in startParenthesis:
                         if not character == "{":
                             if character == "<":
-                                if not (
-                                    editorBufferBuffer[j - 1] == " "
-                                    or editorBufferBuffer[j + 1] == " "
-                                ):
+                                if not (editorBufferBuffer[j - 1] == " " or editorBufferBuffer[j + 1] == " "):
                                     parenthesisCount += 1
                                     c = 0
                                     for z in range(parenthesisCount):
@@ -1465,13 +1352,12 @@ def editor_print(line):
                                     find = find.rstrip(find[-1])
                                     find += (
                                         parenthesisColors[str(c)]
-                                        + (
-                                            character
-                                            if not editorChar == j + 1
-                                            else ""
-                                        )
+                                        + (character if not editorChar == j + 1 else "")
                                         + colors[syntaxType]
                                     )
+                                else:
+                                    find = find.rstrip(find[-1])
+                                    find += (character if not editorChar == j + 1 else "") + colors[syntaxType]
                             else:
                                 parenthesisCount += 1
                                 c = 0
@@ -1482,11 +1368,7 @@ def editor_print(line):
                                 find = find.rstrip(find[-1])
                                 find += (
                                     parenthesisColors[str(c)]
-                                    + (
-                                        character
-                                        if not editorChar == j + 1
-                                        else ""
-                                    )
+                                    + (character if not editorChar == j + 1 else "")
                                     + colors[syntaxType]
                                 )
                         else:
@@ -1499,20 +1381,13 @@ def editor_print(line):
                             find = find.rstrip(find[-1])
                             find += (
                                 parenthesisColors[str(c)]
-                                + (
-                                    character
-                                    if not editorChar == j + 1
-                                    else ""
-                                )
+                                + (character if not editorChar == j + 1 else "")
                                 + colors[syntaxType]
                             )
                     elif character in endParenthesis:
                         if not character == "}":
                             if character == ">":
-                                if not (
-                                    editorBufferBuffer[j - 1] == " "
-                                    and editorBufferBuffer[j + 1] == " "
-                                ):
+                                if not (editorBufferBuffer[j - 1] == " " and editorBufferBuffer[j + 1] == " "):
                                     if parenthesisCount > 0:
                                         c = 0
                                         for z in range(parenthesisCount):
@@ -1522,11 +1397,7 @@ def editor_print(line):
                                         find = find.rstrip(find[-1])
                                         find += (
                                             parenthesisColors[str(c)]
-                                            + (
-                                                character
-                                                if not editorChar == j + 1
-                                                else ""
-                                            )
+                                            + (character if not editorChar == j + 1 else "")
                                             + colors[syntaxType]
                                         )
                                         parenthesisCount -= 1
@@ -1540,11 +1411,7 @@ def editor_print(line):
                                     find = find.rstrip(find[-1])
                                     find += (
                                         parenthesisColors[str(c)]
-                                        + (
-                                            character
-                                            if not editorChar == j + 1
-                                            else ""
-                                        )
+                                        + (character if not editorChar == j + 1 else "")
                                         + colors[syntaxType]
                                     )
                                     parenthesisCount -= 1
@@ -1558,11 +1425,7 @@ def editor_print(line):
                                 find = find.rstrip(find[-1])
                                 find += (
                                     parenthesisColors[str(c)]
-                                    + (
-                                        character
-                                        if not editorChar == j + 1
-                                        else ""
-                                    )
+                                    + (character if not editorChar == j + 1 else "")
                                     + colors[syntaxType]
                                 )
                                 bracketCount -= 1
@@ -1580,9 +1443,7 @@ def editor_print(line):
                                 character = editorBufferBuffer[j]
                                 find += character
                                 if editorChar == j + 1:
-                                    find += (
-                                        "\033[0m" + themeAnsi + "\033[38;5;34m"
-                                    )
+                                    find += "\033[0m" + themeAnsi + "\033[38;5;34m"
                                 if character == '"':
                                     find += colors[syntaxType]
                                     break
@@ -1613,9 +1474,7 @@ def editor_print(line):
                                 character = editorBufferBuffer[j]
                                 find += character
                                 if editorChar == j + 1:
-                                    find += (
-                                        "\033[0m" + themeAnsi + "\033[38;5;34m"
-                                    )
+                                    find += "\033[0m" + themeAnsi + "\033[38;5;34m"
                                 if character == "'":
                                     find += colors[syntaxType]
                                     break
@@ -1649,19 +1508,11 @@ def editor_print(line):
                                     character = editorBufferBuffer[j]
                                     find += character
                                     if editorChar == j + 1:
-                                        find += (
-                                            "\033[0m"
-                                            + themeAnsi
-                                            + "\033[38;5;8m"
-                                        )
+                                        find += "\033[0m" + themeAnsi + "\033[38;5;8m"
                             else:
                                 find = find.rstrip("//")
                                 if editorChar == j:
-                                    find += (
-                                        "\033[46;1m\033[38;5;8m/\033[0m\033[38;5;8m"
-                                        + themeAnsi
-                                        + "/"
-                                    )
+                                    find += "\033[46;1m\033[38;5;8m/\033[0m\033[38;5;8m" + themeAnsi + "/"
                                 elif editorChar == j + 1:
                                     find += "\033[38;5;8m/\033[46;1m/\033[0m"
                                 else:
@@ -1711,8 +1562,9 @@ def editor_print(line):
     print("\033[H\033[3J", end="")
     print(editorBuffer.rstrip("\n"), end="\n")
     taskBar = (
-        "\033[48;2;56;113;228m\033[35;1m | Save | New Sprite | Open File |"
-        + ((terminalWidth - 34) * " ")
+        "\033[48;2;56;113;228m\033[35;1m | Save | New Sprite | Open File | "
+        + taskbarMessage
+        + ((terminalWidth - (35 + len(taskbarMessage))) * " ")
         + "\033[0m"
     )
     print(taskBar, end="")
@@ -1728,7 +1580,7 @@ cursorBlinkLoop.start()
 
 def editor():
     global terminalHeight, terminalWidth, inEditor, cursorBlink, key, breaking
-    global cmdTerm, keySimulate
+    global cmdTerm, keySimulate, taskbarMessage
     if cmdTerm:
         os.system("cls")
     else:
@@ -1740,24 +1592,9 @@ def editor():
         editor_print(terminalHeight)
         cursorBlinkPrevious = cursorBlink
         while True:
-            if not cursorBlinkPrevious == cursorBlink:
-                break
-            if not key == "":
-                # print(key)
-                if key == "save":
-                    pynput.keyboard.Listener.stop
-                    pynput.mouse.Listener.stop
-                    projectDir = (
-                        os.getcwd().replace("\\", "/") + "/project.ss1"
-                    )
-                    print("Saving to " + projectDir + "...")
-                    with open(projectDir, "w") as fp:
-                        for item in editorLines:
-                            fp.write("%s\n" % item.rstrip(" "))
-                    inEditor = False
-                    print("Done. Press ctrl+c to exit.")
-                    while True:
-                        pass
+            if not cursorBlinkPrevious == cursorBlink or not key == "":
+                # if not key == "":
+                #     print(key)
                 break
             if breaking:
                 breaking = False
@@ -1771,9 +1608,7 @@ while True:
         inEditor = True
         editor()
     elif state == "tree":
-        print("Open a ScratchScript file.")
         oldFolder = folder
-        folder = ""
         sleep(2)
         folder = fd.askopenfilename(
             title="Choose a file.",
@@ -1788,7 +1623,6 @@ while True:
             error("Empty path.")
             exit()
         projectDir = oldFolder + "/project.ss1"
-        print("Saving to " + projectDir + "...")
         with open(projectDir, "w") as fp:
             for item in editorLines:
                 fp.write("%s\n" % item.rstrip(" "))
@@ -1835,3 +1669,4 @@ while True:
         parenthesisComplete = 0
         capsLock = False
         state = "edit"
+        taskbarMessage = "Created new sprite."

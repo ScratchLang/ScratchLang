@@ -1,13 +1,13 @@
 # Imports
 
 import os
+import runpy
 import shutil
 import subprocess
 import sys
 import time
 from tkinter import filedialog as fd
 
-import runpy
 import yaml
 
 commandP = False
@@ -15,12 +15,8 @@ commandP = False
 try:
     subprocess.run("bash -c 'echo'", shell=False)
 except FileNotFoundError:
-    commandP = (
-        True  # Doesn't work if the user has the MSYS2 bun added to their PATH.
-    )
-    print(
-        "ScratchLang is uncompatible with Command Prompt/Powershell. Sorry :("
-    )
+    commandP = True  # Doesn't work if the user has the MSYS2 bun added to their PATH.
+    print("ScratchLang is uncompatible with Command Prompt/Powershell. Sorry :(")
 
 # Set ANSI escape colors
 
@@ -48,16 +44,10 @@ def createdir(
 
 
 def getinput():  # Gets input from the user
-    return (
-        subprocess.check_output("bash -c 'read -rsn 1 x && echo $x'")
-        .decode("utf-8")
-        .strip()
-    )
+    return subprocess.check_output("bash -c 'read -rsn 1 x && echo $x'").decode("utf-8").strip()
 
 
-def writetofile(
-    file, towrite
-):  # Write to a file. If it doesn't exist, then create it.
+def writetofile(file, towrite):  # Write to a file. If it doesn't exist, then create it.
     if os.path.isfile(file):
         f = open(file, "r")
         fcontents = f.read()
@@ -77,9 +67,7 @@ def startpy(a1=""):  # Main menu.
     os.chdir("mainscripts")
     if not os.path.isfile("var/asked"):
         if not os.path.isfile("var/vc"):
-            print(
-                "Would you like ScratchLang to check its version every time you start it? [Y/N]"
-            )
+            print("Would you like ScratchLang to check its version every time you start it? [Y/N]")
             ff = getinput()
             if "h" + ff.lower() == "hy":
                 writetofile("var/vc", "Don't remove this file please.")
@@ -116,21 +104,15 @@ def startpy(a1=""):  # Main menu.
     global args2
     args2 = False
     try:
-        if (
-            sys.argv[1] == "--help"
-        ):  # If --help is passed as an arguent, then print the help screen.
-            print(
-                "scratchlang (or 'python3 scratchlang.py' if you haven't created the scratchlang command)\n"
-            )
+        if sys.argv[1] == "--help":  # If --help is passed as an arguent, then print the help screen.
+            print("scratchlang (or 'python3 scratchlang.py' if you haven't created the scratchlang command)\n")
             print("  -1                Create a project.")
             print("  -2                Remove a project.")
             print("  -3                Compile a project.")
             print("  -4                Decompile a project.")
             print("  -5                Export a project.")
             print("  -6                Import a project.")
-            print(
-                "  --debug [FILE]    Debug a ScratchScript file. Currently not available."
-            )
+            print("  --debug [FILE]    Debug a ScratchScript file. Currently not available.")
             print("  --help            Display this help message.")
             print("  --edit            Edit a ScratchLang project.")
             exit()
@@ -161,11 +143,7 @@ def startpy(a1=""):  # Main menu.
     )  # logo
     print("")
     if not args or a1 == "nope":
-        print(
-            "Welcome to ScratchLang "
-            + ver
-            + ". (Name suggested by @MagicCrayon9342 on Scratch.)"
-        )
+        print("Welcome to ScratchLang " + ver + ". (Name suggested by @MagicCrayon9342 on Scratch.)")
         inputloop()
     else:
         if sys.argv[1] == "--edit":
@@ -202,15 +180,11 @@ def decomp():
             print("")
             print(RED + "Todo list:" + NC)
             print("Higher Priorities go first.")
-            print(
-                "-------------------------------------------------------------------"
-            )
+            print("-------------------------------------------------------------------")
             print(RED + "* " + NC + "Make custom blocks")
             print("")
             print("Order of items may change.")
-            print(
-                "-------------------------------------------------------------------"
-            )
+            print("-------------------------------------------------------------------")
         print("")
         print(
             "Select the .sb3 you want to decompile. "
@@ -266,11 +240,7 @@ def decomp():
             exit()
         sb3file = sb3file.replace("/", "\\")
         name = input(
-            "Name of project? "
-            + RED
-            + "Keep in mind that it cannot be empty or it will not be created."
-            + NC
-            + "\n"
+            "Name of project? " + RED + "Keep in mind that it cannot be empty or it will not be created." + NC + "\n"
         )
         print("")
         if name == "":
@@ -413,17 +383,8 @@ def decomp():
                 i = jsonfile.find('"' + word + '":{"opcode":')
                 nq(18)
                 word = extdata()
-                writetofile(
-                    dcd + "/project.ss1", 'switch backdrop to ("' + word + '")'
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"switch backdrop to ("'
-                    + word
-                    + '")"'
-                )
+                writetofile(dcd + "/project.ss1", 'switch backdrop to ("' + word + '")')
+                print(RED + "Added block: " + NC + '"switch backdrop to ("' + word + '")"')
             elif a1 == "looks_switchbackdroptoandwait":
                 nq(5)
                 word = extdata()
@@ -434,14 +395,7 @@ def decomp():
                     dcd + "/project.ss1",
                     'switch backdrop to ("' + word + '") and wait',
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"switch backdrop to ("'
-                    + word
-                    + '") and wait"'
-                )
+                print(RED + "Added block: " + NC + '"switch backdrop to ("' + word + '") and wait"')
             elif a1 == "looks_nextbackdrop":
                 writetofile(dcd + "/project.ss1", "next backdrop")
                 print(RED + "Added block: " + NC + '"next backdrop"')
@@ -460,16 +414,7 @@ def decomp():
                     dcd + "/project.ss1",
                     "change [" + word + '] effect by ("' + amt + '")',
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"change ['
-                    + word
-                    + '] effect by ("'
-                    + amt
-                    + '")"'
-                )
+                print(RED + "Added block: " + NC + '"change [' + word + '] effect by ("' + amt + '")"')
             elif a1 == "looks_seteffectto":
                 nq(5)
                 word = extdata()
@@ -485,16 +430,7 @@ def decomp():
                     dcd + "/project.ss1",
                     "set [" + word + '] effect to ("' + amt + '")',
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"set ['
-                    + word
-                    + '] effect to ("'
-                    + amt
-                    + '")"'
-                )
+                print(RED + "Added block: " + NC + '"set [' + word + '] effect to ("' + amt + '")"')
             elif a1 == "looks_cleargraphiceffects":
                 writetofile(dcd + "/project.ss1", "clear graphic effects")
                 print(RED + "Added block: " + NC + '"clear graphic effects"')
@@ -515,31 +451,15 @@ def decomp():
                     dcd + "/project.ss1",
                     'play sound ("' + word + '") until done',
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"play sound ("'
-                    + word
-                    + '") until done"'
-                )
+                print(RED + "Added block: " + NC + '"play sound ("' + word + '") until done"')
             elif a1 == "sound_play":
                 nq(5)
                 word = extdata()
                 i = jsonfile.find('"' + word + '":{"opcode":')
                 nq(18)
                 word = extdata()
-                writetofile(
-                    dcd + "/project.ss1", 'start sound ("' + word + '")'
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"start sound ("'
-                    + word
-                    + '")"'
-                )
+                writetofile(dcd + "/project.ss1", 'start sound ("' + word + '")')
+                print(RED + "Added block: " + NC + '"start sound ("' + word + '")"')
             elif a1 == "sound_stopallsounds":
                 writetofile(dcd + "/project.ss1", "stop all sounds")
                 print(RED + "Added block: " + NC + '"stop all sounds"')
@@ -558,16 +478,7 @@ def decomp():
                     dcd + "/project.ss1",
                     "change [" + word + '] effect by ("' + amt + '")',
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"change ['
-                    + word
-                    + '] effect by ("'
-                    + amt
-                    + '")"'
-                )
+                print(RED + "Added block: " + NC + '"change [' + word + '] effect by ("' + amt + '")"')
             elif a1 == "sound_seteffectto":
                 nq(5)
                 word = extdata()
@@ -583,16 +494,7 @@ def decomp():
                     dcd + "/project.ss1",
                     "set [" + word + '] effect to ("' + amt + '")',
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"set ['
-                    + word
-                    + '] effect to ("'
-                    + amt
-                    + '")"'
-                )
+                print(RED + "Added block: " + NC + '"set [' + word + '] effect to ("' + amt + '")"')
             elif a1 == "sound_cleareffects":
                 writetofile(dcd + "/project.ss1", "clear sound effects")
                 print(RED + "Added block: " + NC + '"clear sound effects"')
@@ -601,33 +503,15 @@ def decomp():
                 word = extdata()
                 if word == "fields":
                     word = ""
-                writetofile(
-                    dcd + "/project.ss1", 'change volume by ("' + word + '")'
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"change volume by ("'
-                    + word
-                    + '")"'
-                )
+                writetofile(dcd + "/project.ss1", 'change volume by ("' + word + '")')
+                print(RED + "Added block: " + NC + '"change volume by ("' + word + '")"')
             elif a1 == "sound_setvolumeto":
                 nq(5)
                 word = extdata()
                 if word == "fields":
                     word = ""
-                writetofile(
-                    dcd + "/project.ss1", 'set volume to ("' + word + '") %'
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"set volume to ("'
-                    + word
-                    + '") %"'
-                )
+                writetofile(dcd + "/project.ss1", 'set volume to ("' + word + '") %')
+                print(RED + "Added block: " + NC + '"set volume to ("' + word + '") %"')
             elif a1 == "sound_volume":
                 con += "(volume)"
                 if dcon == 1:
@@ -639,17 +523,8 @@ def decomp():
             elif a1 == "event_whenkeypressed":
                 nq(7)
                 word = extdata()
-                writetofile(
-                    dcd + "/project.ss1", "when [" + word + "] key pressed"
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"when ['
-                    + word
-                    + '] key pressed"'
-                )
+                writetofile(dcd + "/project.ss1", "when [" + word + "] key pressed")
+                print(RED + "Added block: " + NC + '"when [' + word + '] key pressed"')
             elif a1 == "event_whenstageclicked":
                 writetofile(dcd + "/project.ss1", "when flag clicked")
                 print(RED + "Added block: " + NC + '"when flag clicked"')
@@ -660,14 +535,7 @@ def decomp():
                     dcd + "/project.ss1",
                     "when backdrop switches to [" + word + "]",
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"when backdrop switches to ['
-                    + word
-                    + ']"'
-                )
+                print(RED + "Added block: " + NC + '"when backdrop switches to [' + word + ']"')
             elif a1 == "event_whengreaterthan":
                 nq(5)
                 word = extdata()
@@ -683,97 +551,41 @@ def decomp():
                     dcd + "/project.ss1",
                     "when [" + word + '] > ("' + amt + '")',
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"when ['
-                    + word
-                    + '] > ("'
-                    + amt
-                    + '")"'
-                )
+                print(RED + "Added block: " + NC + '"when [' + word + '] > ("' + amt + '")"')
             elif a1 == "event_whenbroadcastreceived":
                 nq(7)
                 word = extdata()
-                writetofile(
-                    dcd + "/project.ss1", "when I receive [" + word + "]"
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"when I receive ['
-                    + word
-                    + ']"'
-                )
+                writetofile(dcd + "/project.ss1", "when I receive [" + word + "]")
+                print(RED + "Added block: " + NC + '"when I receive [' + word + ']"')
             elif a1 == "event_broadcast":
                 nq(5)
                 word = extdata()
                 writetofile(dcd + "/project.ss1", "broadcast [" + word + "]")
-                print(
-                    RED + "Added block: " + NC + '"broadcast [' + word + ']"'
-                )
+                print(RED + "Added block: " + NC + '"broadcast [' + word + ']"')
             elif a1 == "event_broadcastandwait":
                 nq(5)
                 word = extdata()
-                writetofile(
-                    dcd + "/project.ss1", "broadcast [" + word + "] and wait"
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"broadcast ['
-                    + word
-                    + '] and wait"'
-                )
+                writetofile(dcd + "/project.ss1", "broadcast [" + word + "] and wait")
+                print(RED + "Added block: " + NC + '"broadcast [' + word + '] and wait"')
             elif a1 == "control_wait":
                 nq(5)
                 word = extdata()
                 if word == "fields":
                     word = ""
-                writetofile(
-                    dcd + "/project.ss1", 'wait ("' + word + '") seconds'
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"wait ("'
-                    + word
-                    + '") seconds"'
-                )
+                writetofile(dcd + "/project.ss1", 'wait ("' + word + '") seconds')
+                print(RED + "Added block: " + NC + '"wait ("' + word + '") seconds"')
             elif a1 == "control_repeat":
                 cnext = nxt
                 nq(5)
                 word = extdata()
                 if word == "SUBSTACK":
                     word = ""
-                    writetofile(
-                        dcd + "/project.ss1", 'repeat ("' + word + '") {'
-                    )
-                    print(
-                        RED
-                        + "Starting repeat |"
-                        + NC
-                        + ' repeat ("'
-                        + word
-                        + '") {'
-                    )
+                    writetofile(dcd + "/project.ss1", 'repeat ("' + word + '") {')
+                    print(RED + "Starting repeat |" + NC + ' repeat ("' + word + '") {')
                 else:
                     nq()
-                    writetofile(
-                        dcd + "/project.ss1", "repeat (" + word + ") {"
-                    )
-                    print(
-                        RED
-                        + "Starting repeat |"
-                        + NC
-                        + ' repeat ("'
-                        + word
-                        + '") {'
-                    )
+                    writetofile(dcd + "/project.ss1", "repeat (" + word + ") {")
+                    print(RED + "Starting repeat |" + NC + ' repeat ("' + word + '") {')
                     word = extdata()
                 if not word == "SUBSTACK":
                     writetofile(dcd + "/project.ss1", "}")
@@ -912,14 +724,7 @@ def decomp():
                         word = extdata()
                         addblock(word)
                         writetofile(dcd + "/project.ss1", "if " + con + " {")
-                        print(
-                            RED
-                            + "Starting if/else |"
-                            + NC
-                            + " if "
-                            + con
-                            + " {"
-                        )
+                        print(RED + "Starting if/else |" + NC + " if " + con + " {")
                     else:
                         writetofile(dcd + "/project.ss1", "if <> {")
                         print(RED + "Starting if/else |" + NC + " if <> {")
@@ -1017,14 +822,7 @@ def decomp():
                             dcd + "/project.ss1",
                             "wait until " + con + "<>" if con == "" else "",
                         )
-                        print(
-                            RED
-                            + "Added block: "
-                            + NC
-                            + '"wait until '
-                            + con
-                            + '"'
-                        )
+                        print(RED + "Added block: " + NC + '"wait until ' + con + '"')
                     else:
                         writetofile(dcd + "/project.ss1", "wait until <>")
                         print(RED + "Added block: " + NC + '"wait until <>')
@@ -1034,14 +832,7 @@ def decomp():
                         print(RED + "Added block: " + NC + '"wait until <>"')
                     else:
                         writetofile(dcd + "/project.ss1", "wait until " + con)
-                        print(
-                            RED
-                            + "Added block: "
-                            + NC
-                            + '"wait until '
-                            + con
-                            + '"'
-                        )
+                        print(RED + "Added block: " + NC + '"wait until ' + con + '"')
                 i = j
                 nxt = cnext
             elif a1 == "control_repeat_until":
@@ -1072,33 +863,14 @@ def decomp():
                         nq(4)
                         word = extdata()
                         addblock(word)
-                        writetofile(
-                            dcd + "/project.ss1", "repeat until " + con + " {"
-                        )
-                        print(
-                            RED
-                            + "Starting repeat until |"
-                            + NC
-                            + " repeat until "
-                            + con
-                            + " {"
-                        )
+                        writetofile(dcd + "/project.ss1", "repeat until " + con + " {")
+                        print(RED + "Starting repeat until |" + NC + " repeat until " + con + " {")
                     else:
                         writetofile(dcd + "/project.ss1", "repeat until <> {")
-                        print(
-                            RED
-                            + "Starting repeat until |"
-                            + NC
-                            + " repeat until <> {"
-                        )
+                        print(RED + "Starting repeat until |" + NC + " repeat until <> {")
                 else:
                     writetofile(dcd + "/project.ss1", "repeat until <> {")
-                    print(
-                        RED
-                        + "Starting repeat until |"
-                        + NC
-                        + " repeat until <> {"
-                    )
+                    print(RED + "Starting repeat until |" + NC + " repeat until <> {")
                 i = j
                 while True:
                     word = extdata()
@@ -1157,17 +929,8 @@ def decomp():
                         nq(4)
                         word = extdata()
                         addblock(word)
-                        writetofile(
-                            dcd + "/project.ss1", "while " + con + " {"
-                        )
-                        print(
-                            RED
-                            + "Starting while |"
-                            + NC
-                            + " while "
-                            + con
-                            + " {"
-                        )
+                        writetofile(dcd + "/project.ss1", "while " + con + " {")
+                        print(RED + "Starting while |" + NC + " while " + con + " {")
                     else:
                         writetofile(dcd + "/project.ss1", "while <> {")
                         print(RED + "while |" + NC + " while <> {")
@@ -1225,16 +988,7 @@ def decomp():
                     dcd + "/project.ss1",
                     "for [" + var + '] in ("' + value + '") {',
                 )
-                print(
-                    RED
-                    + "Starting for |"
-                    + NC
-                    + " for ["
-                    + var
-                    + '] in ("'
-                    + value
-                    + '") {'
-                )
+                print(RED + "Starting for |" + NC + " for [" + var + '] in ("' + value + '") {')
                 i = j
                 while True:
                     word = extdata()
@@ -1271,17 +1025,8 @@ def decomp():
                 i = jsonfile.find('"' + word + '":{"opcode":')
                 nq(18)
                 word = extdata()
-                writetofile(
-                    dcd + "/project.ss1", 'create a clone of ("' + word + '")'
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"create a clone of ("'
-                    + word
-                    + '")"'
-                )
+                writetofile(dcd + "/project.ss1", 'create a clone of ("' + word + '")')
+                print(RED + "Added block: " + NC + '"create a clone of ("' + word + '")"')
             elif a1 == "control_stop":
                 nq(7)
                 word = extdata()
@@ -1290,17 +1035,8 @@ def decomp():
             elif a1 == "sensing_askandwait":
                 nq(5)
                 word = extdata()
-                writetofile(
-                    dcd + "/project.ss1", 'ask ("' + word + '") and wait'
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"ask ("'
-                    + word
-                    + '") and wait"'
-                )
+                writetofile(dcd + "/project.ss1", 'ask ("' + word + '") and wait')
+                print(RED + "Added block: " + NC + '"ask ("' + word + '") and wait"')
             elif a1 == "sensing_answer":
                 con += "(answer)"  # fixed 'anwser' typo!
                 if dcon == 1:
@@ -2331,35 +2067,13 @@ def decomp():
             elif a1 == "data_showvariable":
                 nq(7)
                 word = extdata()
-                writetofile(
-                    dcd + "/project.ss1", "show variable [" + word + "]"
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"'
-                    + "show variable ["
-                    + word
-                    + "]"
-                    + '"'
-                )
+                writetofile(dcd + "/project.ss1", "show variable [" + word + "]")
+                print(RED + "Added block: " + NC + '"' + "show variable [" + word + "]" + '"')
             elif a1 == "data_hidevariable":
                 nq(7)
                 word = extdata()
-                writetofile(
-                    dcd + "/project.ss1", "hide variable [" + word + "]"
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"'
-                    + "hide variable ["
-                    + word
-                    + "]"
-                    + '"'
-                )
+                writetofile(dcd + "/project.ss1", "hide variable [" + word + "]")
+                print(RED + "Added block: " + NC + '"' + "hide variable [" + word + "]" + '"')
             elif a1 == "data_addtolist":
                 con = ""
                 nq(2)
@@ -2445,17 +2159,8 @@ def decomp():
             elif a1 == "data_deletealloflist":
                 nq(7)
                 word = extdata()
-                writetofile(
-                    dcd + "/project.ss1", "delete all of [" + word + "]"
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"delete all of ['
-                    + word
-                    + ']"'
-                )
+                writetofile(dcd + "/project.ss1", "delete all of [" + word + "]")
+                print(RED + "Added block: " + NC + '"delete all of [' + word + ']"')
             elif a1 == "data_insertatlist":
                 con = ""
                 nq(2)
@@ -2770,45 +2475,18 @@ def decomp():
             elif a1 == "motion_movesteps":  # Sprite exclusive blocks
                 nq(5)
                 word = extdata()
-                writetofile(
-                    dcd + "/project.ss1", 'move ("' + word + '") steps'
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"move ("'
-                    + word
-                    + '") steps"'
-                )
+                writetofile(dcd + "/project.ss1", 'move ("' + word + '") steps')
+                print(RED + "Added block: " + NC + '"move ("' + word + '") steps"')
             elif a1 == "motion_turnright":
                 nq(5)
                 word = extdata()
-                writetofile(
-                    dcd + "/project.ss1", 'turn cw ("' + word + '") degrees'
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"turn cw ("'
-                    + word
-                    + '") degrees"'
-                )
+                writetofile(dcd + "/project.ss1", 'turn cw ("' + word + '") degrees')
+                print(RED + "Added block: " + NC + '"turn cw ("' + word + '") degrees"')
             elif a1 == "motion_turnleft":
                 nq(5)
                 word = extdata()
-                writetofile(
-                    dcd + "/project.ss1", 'turn ccw ("' + word + '") degrees'
-                )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"turn ccw ("'
-                    + word
-                    + '") degrees"'
-                )
+                writetofile(dcd + "/project.ss1", 'turn ccw ("' + word + '") degrees')
+                print(RED + "Added block: " + NC + '"turn ccw ("' + word + '") degrees"')
             elif a1 == "motion_goto":
                 nq(5)
                 word = extdata()
@@ -2830,16 +2508,7 @@ def decomp():
                     dcd + "/project.ss1",
                     'go to x: ("' + x + '") y: ("' + y + '")',
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"go to x: ("'
-                    + x
-                    + '") y: ("'
-                    + y
-                    + '")"'
-                )
+                print(RED + "Added block: " + NC + '"go to x: ("' + x + '") y: ("' + y + '")"')
             elif a1 == "motion_glideto":
                 nq(5)
                 secs = extdata()
@@ -2856,16 +2525,7 @@ def decomp():
                     dcd + "/project.ss1",
                     'glide ("' + secs + '") secs to ("' + word + '")',
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"glide ("'
-                    + secs
-                    + '") secs to ("'
-                    + word
-                    + '")"'
-                )
+                print(RED + "Added block: " + NC + '"glide ("' + secs + '") secs to ("' + word + '")"')
             elif a1 == "motion_glidesecstoxy":
                 nq(5)
                 secs = extdata()
@@ -2875,26 +2535,9 @@ def decomp():
                 y = extdata()
                 writetofile(
                     dcd + "/project.ss1",
-                    'glide ("'
-                    + secs
-                    + '") secs to x: ("'
-                    + x
-                    + '") y: ("'
-                    + y
-                    + '")',
+                    'glide ("' + secs + '") secs to x: ("' + x + '") y: ("' + y + '")',
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"glide ("'
-                    + secs
-                    + '") secs to x: ("'
-                    + x
-                    + '") y: ("'
-                    + y
-                    + '")"'
-                )
+                print(RED + "Added block: " + NC + '"glide ("' + secs + '") secs to x: ("' + x + '") y: ("' + y + '")"')
             elif a1 == "motion_pointindirection":
                 nq(5)
                 word = extdata()
@@ -2902,14 +2545,7 @@ def decomp():
                     dcd + "/project.ss1",
                     'point in direction ("' + word + '")',
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"point in direction ("'
-                    + word
-                    + '")"'
-                )
+                print(RED + "Added block: " + NC + '"point in direction ("' + word + '")"')
             elif a1 == "motion_pointtowards":
                 nq(5)
                 word = extdata()
@@ -2924,14 +2560,7 @@ def decomp():
                     dcd + "/project.ss1",
                     'point towards ("' + word + '")',
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"point towards ("'
-                    + word
-                    + '")"'
-                )
+                print(RED + "Added block: " + NC + '"point towards ("' + word + '")"')
             elif a1 == "motion_changexby":
                 nq(5)
                 word = extdata()
@@ -2939,14 +2568,7 @@ def decomp():
                     dcd + "/project.ss1",
                     'change x by ("' + word + '")',
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"change x by ("'
-                    + word
-                    + '")"'
-                )
+                print(RED + "Added block: " + NC + '"change x by ("' + word + '")"')
             elif a1 == "motion_setx":
                 nq(5)
                 word = extdata()
@@ -2954,9 +2576,26 @@ def decomp():
                     dcd + "/project.ss1",
                     'set x to ("' + word + '")',
                 )
-                print(
-                    RED + "Added block: " + NC + '"set x to ("' + word + '")"'
+                print(RED + "Added block: " + NC + '"set x to ("' + word + '")"')
+            elif a1 == "motion_changeyby":
+                nq(5)
+                word = extdata()
+                writetofile(
+                    dcd + "/project.ss1",
+                    'change y by ("' + word + '")',
                 )
+                print(RED + "Added block: " + NC + '"change y by ("' + word + '")"')
+            elif a1 == "motion_sety":
+                nq(5)
+                word = extdata()
+                writetofile(
+                    dcd + "/project.ss1",
+                    'set y to ("' + word + '")',
+                )
+                print(RED + "Added block: " + NC + '"set y to ("' + word + '")"')
+            elif a1 == "motion_ifonedgebounce":
+                writetofile(dcd + "/project.ss1", "if on edge, bounce")
+                print(RED + "Added block: " + NC + '"if on edge, bounce"')
             elif a1 == "motion_setrotationstyle":
                 nq(7)
                 word = extdata()
@@ -2964,14 +2603,78 @@ def decomp():
                     dcd + "/project.ss1",
                     "set rotation style [" + word + "]",
                 )
-                print(
-                    RED
-                    + "Added block: "
-                    + NC
-                    + '"set rotation style ['
-                    + word
-                    + ']"'
-                )
+                print(RED + "Added block: " + NC + '"set rotation style [' + word + ']"')
+            elif a1 == "motion_xposition":
+                con += "(x position)"
+                if dcon == 1:
+                    writetofile(dcd + "/project.ss1", con)
+                    print(RED + "Added block: " + NC + '"' + con + '"')
+            elif a1 == "motion_yposition":
+                con += "(y position)"
+                if dcon == 1:
+                    writetofile(dcd + "/project.ss1", con)
+                    print(RED + "Added block: " + NC + '"' + con + '"')
+            elif a1 == "motion_direction":
+                con += "(direction)"
+                if dcon == 1:
+                    writetofile(dcd + "/project.ss1", con)
+                    print(RED + "Added block: " + NC + '"' + con + '"')
+            elif a1 == "looks_sayforsecs":
+                nq(5)
+                word = extdata()
+                nq(3)
+                secs = extdata()
+                writetofile(dcd + "/project.ss1", 'say ("' + word + '") for ("' + secs + '") seconds')
+                print(RED + "Added block: " + NC + '"say ("' + word + '") for ("' + secs + '") seconds"')
+            elif a1 == "looks_say":
+                nq(5)
+                word = extdata()
+                writetofile(dcd + "/project.ss1", 'say ("' + word + '")')
+                print(RED + "Added block: " + NC + '"say ("' + word + '")"')
+            elif a1 == "looks_thinkforsecs":
+                nq(5)
+                word = extdata()
+                nq(3)
+                secs = extdata()
+                writetofile(dcd + "/project.ss1", 'think ("' + word + '") for ("' + secs + '") seconds')
+                print(RED + "Added block: " + NC + '"think ("' + word + '") for ("' + secs + '") seconds"')
+            elif a1 == "looks_think":
+                nq(5)
+                word = extdata()
+                writetofile(dcd + "/project.ss1", 'think ("' + word + '")')
+                print(RED + "Added block: " + NC + '"think ("' + word + '")"')
+            elif a1 == "looks_switchcostumeto":
+                nq(5)
+                word = extdata()
+                i = jsonfile.find('"' + word + '":{"opcode":')
+                nq(18)
+                word = extdata()
+                writetofile(dcd + "/project.ss1", 'switch costume to ("' + word + '")')
+                print(RED + "Added block: " + NC + '"switch costume to ("' + word + '")"')
+            elif a1 == "looks_nextcostume":
+                writetofile(dcd + "/project.ss1", "next costume")
+                print(RED + "Added block: " + NC + '"next costume"')
+            elif a1 == "looks_changesizeby":
+                nq(5)
+                word = extdata()
+                writetofile(dcd + "/project.ss1", "change size by (\"" + word + '")')
+                print(RED + "Added block: " + NC + '"change size by ("' + word + '")')
+            elif a1 == "looks_setsizeto":
+                nq(5)
+                word = extdata()
+                writetofile(dcd + "/project.ss1", "set size to (\"" + word + '") %')
+                print(RED + "Added block: " + NC + '"set size to ("' + word + '") %')
+            elif a1 == "looks_show":
+                writetofile(dcd + "/project.ss1", "show")
+                print(RED + "Added block: " + NC + '"show"')
+            elif a1 == "looks_hide":
+                writetofile(dcd + "/project.ss1", "hide")
+                print(RED + "Added block: " + NC + '"hide"')
+            elif a1 == "looks_gotofrontback":
+                nq(7)
+                word = extdata()
+                writetofile(dcd + "/project.ss1", "go to [" + word + "] layer")
+                print(RED + "Added block: " + NC + '"go to [' + word + '] layer"')
             else:
                 print(RED + 'Unknown block: "' + a1 + '" Skipping.' + NC)
                 writetofile(
@@ -3034,14 +2737,7 @@ def decomp():
                             "Stage/project.ss1",
                             "var: " + varname + "=" + varvalue,
                         )
-                        print(
-                            RED
-                            + "Added variable: "
-                            + NC
-                            + '"'
-                            + varname
-                            + '".'
-                        )
+                        print(RED + "Added variable: " + NC + '"' + varname + '".')
                         print(RED + "Value: " + NC + varvalue)
                         print("")
                         b = False
@@ -3153,18 +2849,12 @@ def decomp():
                             "Stage/project.ss1",
                             "list: " + listname + "=" + list,
                         )
-                        print(
-                            RED + "Added list: " + NC + '"' + listname + '".'
-                        )
+                        print(RED + "Added list: " + NC + '"' + listname + '".')
                         print(RED + "Contents: " + NC + list)
                         print("")
                     else:
-                        writetofile(
-                            "Stage/project.ss1", "list: " + listname + "=,"
-                        )
-                        print(
-                            RED + "Added list: " + NC + '"' + listname + '".'
-                        )
+                        writetofile("Stage/project.ss1", "list: " + listname + "=,")
+                        print(RED + "Added list: " + NC + '"' + listname + '".')
                         print(RED + "Contents: " + NC + "Nothing.")
                         print("")
                         if novars == "1":
@@ -3222,9 +2912,7 @@ def decomp():
                             break
                         varname += char
                     writetofile("Stage/project.ss1", "broadcast: " + varname)
-                    print(
-                        RED + "Loaded broadcast: " + NC + '"' + varname + '"'
-                    )
+                    print(RED + "Loaded broadcast: " + NC + '"' + varname + '"')
                     print("")
                     ip()
                     b = False
@@ -3284,9 +2972,7 @@ def decomp():
                 nq()
                 asset_file = extdata()
                 try:
-                    shutil.move(
-                        "./" + asset_file, dcd + "/assets/" + asset_file
-                    )
+                    shutil.move("./" + asset_file, dcd + "/assets/" + asset_file)
                     print(asset_file + " >> " + dcd + "/assets/" + asset_file)
                 except FileNotFoundError:
                     pass
@@ -3305,15 +2991,11 @@ def decomp():
                 nq()
                 asset_file = extdata()
                 try:
-                    shutil.move(
-                        "./" + asset_file, dcd + "/assets/" + asset_file
-                    )
+                    shutil.move("./" + asset_file, dcd + "/assets/" + asset_file)
                     print(asset_file + " >> " + dcd + "/assets/" + asset_file)
                 except FileNotFoundError:
                     pass
-            print(
-                "\nFormatting code to make it easier to read (Please wait)..."
-            )
+            print("\nFormatting code to make it easier to read (Please wait)...")
             print("")
             try:
                 f = open(dcd + "/project.ss1", "r")
@@ -3399,9 +3081,7 @@ def decomp():
         dir = os.getcwd().replace("\\", "/")
         if removeJson:
             os.remove(dir + "/" + name + "/project.json")
-        print(
-            RED + "Your project can be found in " + dir + "/" + name + "." + NC
-        )
+        print(RED + "Your project can be found in " + dir + "/" + name + "." + NC)
         print("Open in ScratchLang editor? [Y/N]")
         os.chdir("../mainscripts")
         openInEditor = getinput()
@@ -3427,9 +3107,7 @@ def inputloop(ia1: str = ""):
         print("4. Decompile a .sb3 file.")
         print("5. Export project.")
         print("6. Import project.")
-        print(
-            "7. Are options 3 and 4 not working? Input 7 to install dependencies."
-        )
+        print("7. Are options 3 and 4 not working? Input 7 to install dependencies.")
         print("8. Create scratchlang command.")
         print("9. Remove scratchlang command.")
         if not os.path.isfile("var/devmode"):
@@ -3452,9 +3130,7 @@ def inputloop(ia1: str = ""):
     if inp == "1":
         pdir = os.getcwd()
         print("")
-        name = input(
-            "Name your project. Keep in mind that it cannot be empty or it will not be created properly.\n"
-        )
+        name = input("Name your project. Keep in mind that it cannot be empty or it will not be created properly.\n")
         os.chdir("..")
         if name == "":
             error("Project name empty.")
@@ -3469,11 +3145,7 @@ def inputloop(ia1: str = ""):
             else:
                 error(yessor + " is not an input.")
                 exit()
-        print(
-            "You named your project "
-            + name
-            + ". If you want to rename it, use the File Explorer."
-        )
+        print("You named your project " + name + ". If you want to rename it, use the File Explorer.")
         if not os.path.isdir("projects"):
             os.mkdir("projects")
         os.chdir("projects")
@@ -3485,9 +3157,7 @@ def inputloop(ia1: str = ""):
         os.mkdir("assets")
         os.chdir("../../..")
         subprocess.run(
-            "cp resources/cd21514d0531fdffb22204e0ec5ed84a.svg projects/"
-            + name
-            + "/Stage/assets",
+            "cp resources/cd21514d0531fdffb22204e0ec5ed84a.svg projects/" + name + "/Stage/assets",
             shell=False,
         )
         os.chdir("projects/" + name + "/Stage")
@@ -3501,15 +3171,11 @@ def inputloop(ia1: str = ""):
         os.mkdir("assets")
         os.chdir("../../..")
         subprocess.run(
-            "cp resources/341ff8639e74404142c11ad52929b021.svg projects/"
-            + name
-            + "/Sprite1/assets",
+            "cp resources/341ff8639e74404142c11ad52929b021.svg projects/" + name + "/Sprite1/assets",
             shell=False,
         )
         subprocess.run(
-            "cp resources/c9466893cdbdda41de3ec986256e5a47.svg projects/"
-            + name
-            + "/Sprite1/assets",
+            "cp resources/c9466893cdbdda41de3ec986256e5a47.svg projects/" + name + "/Sprite1/assets",
             shell=False,
         )
         os.chdir("mainscripts")
@@ -3525,9 +3191,7 @@ def inputloop(ia1: str = ""):
         print("")
         subprocess.run("ls -1", shell=False)
         print("")
-        pgrd = input(
-            "Choose a project to get rid of, or input nothing to cancel.\n"
-        )
+        pgrd = input("Choose a project to get rid of, or input nothing to cancel.\n")
         if not pgrd == "":
             if os.path.isdir(pgrd):
                 subprocess.run("rm -rf " + pgrd)
@@ -3560,20 +3224,14 @@ def inputloop(ia1: str = ""):
         print("")
         subprocess.run("ls -1", shell=False)
         print("")
-        pgrd = input(
-            "Choose a project to export, or input nothing to cancel.\n"
-        )
+        pgrd = input("Choose a project to export, or input nothing to cancel.\n")
         if not pgrd == "":
             if os.path.isdir(pgrd):
                 subprocess.run("tar -cf " + pgrd + ".ssa " + pgrd)
                 os.chdir("..")
                 subprocess.run("cp projects/" + pgrd + ".ssa exports")
                 os.remove("projects/" + pgrd + ".ssa")
-                print(
-                    "Your project "
-                    + pgrd
-                    + ".ssa can be found in the exports folder."
-                )
+                print("Your project " + pgrd + ".ssa can be found in the exports folder.")
             else:
                 error("directory " + pgrd + " does not exist.")
         os.chdir("mainscripts")
@@ -3607,9 +3265,7 @@ def inputloop(ia1: str = ""):
     elif inp == "8":
         pdir = os.getcwd().replace("\\", "/")
         if not os.path.isfile("var/alias"):
-            print(
-                "Which version of the Python command to use?\n\n1. python\n\n2. python3\n\n3. py"
-            )
+            print("Which version of the Python command to use?\n\n1. python\n\n2. python3\n\n3. py")
             f = getinput()
             if not (f == "1" or f == "2" or f == "3"):
                 error(f + " is not an input.")
@@ -3623,23 +3279,11 @@ def inputloop(ia1: str = ""):
             except subprocess.CalledProcessError:
                 error("Command failed. Please run:")
                 if f == "1":
-                    print(
-                        'echo >>/usr/bin/scratchlang "cd '
-                        + pdir
-                        + ' && python scratchlang.py $*"'
-                    )
+                    print('echo >>/usr/bin/scratchlang "cd ' + pdir + ' && python scratchlang.py $*"')
                 elif f == "2":
-                    print(
-                        'echo >>/usr/bin/scratchlang "cd '
-                        + pdir
-                        + ' && python3 scratchlang.py $*"'
-                    )
+                    print('echo >>/usr/bin/scratchlang "cd ' + pdir + ' && python3 scratchlang.py $*"')
                 else:
-                    print(
-                        'echo >>/usr/bin/scratchlang "cd '
-                        + pdir
-                        + ' && py scratchlang.py $*"'
-                    )
+                    print('echo >>/usr/bin/scratchlang "cd ' + pdir + ' && py scratchlang.py $*"')
             writetofile(
                 "var/alias",
                 "This file tells the program that the command is already created. Please don't touch this.",
@@ -3651,16 +3295,9 @@ def inputloop(ia1: str = ""):
         while True:
             print("")
             if not os.path.isfile("var/alias"):
-                error(
-                    "scratchlang command has not been created or var/alias file has been deleted."
-                )
+                error("scratchlang command has not been created or var/alias file has been deleted.")
                 exit()
-            print(
-                RED
-                + "WARNING:"
-                + NC
-                + " This will remove the scratchlang command.\nContinue? [Y/N]"
-            )
+            print(RED + "WARNING:" + NC + " This will remove the scratchlang command.\nContinue? [Y/N]")
             inp2 = getinput()
             print("")
             if inp2.lower() == "y":
@@ -3709,16 +3346,9 @@ def inputloop(ia1: str = ""):
                     while True:
                         print("")
                         if not os.path.isfile("var/alias"):
-                            error(
-                                "scratchlang command has not been created or var/alias file has been deleted."
-                            )
+                            error("scratchlang command has not been created or var/alias file has been deleted.")
                             exit()
-                        print(
-                            RED
-                            + "WARNING:"
-                            + NC
-                            + " This will remove the scratchlang command.\nContinue? [Y/N]"
-                        )
+                        print(RED + "WARNING:" + NC + " This will remove the scratchlang command.\nContinue? [Y/N]")
                         inp2 = getinput()
                         print("")
                         if inp2.lower() == "y":
@@ -3738,9 +3368,7 @@ def inputloop(ia1: str = ""):
                         os.remove("var/alias")
                 else:
                     error(yn + " is not an input.")
-                    print(
-                        "If you want to remove the command now, get rid of the command in your /usr/bin directory."
-                    )
+                    print("If you want to remove the command now, get rid of the command in your /usr/bin directory.")
                     exit()
         exit()
     if os.path.isfile("var/devmode"):
@@ -3771,16 +3399,9 @@ def inputloop(ia1: str = ""):
                     while True:
                         print("")
                         if not os.path.isfile("var/alias"):
-                            error(
-                                "scratchlang command has not been created or var/alias file has been deleted."
-                            )
+                            error("scratchlang command has not been created or var/alias file has been deleted.")
                             exit()
-                        print(
-                            RED
-                            + "WARNING:"
-                            + NC
-                            + " This will remove the scratchlang command.\nContinue? [Y/N]"
-                        )
+                        print(RED + "WARNING:" + NC + " This will remove the scratchlang command.\nContinue? [Y/N]")
                         inp2 = getinput()
                         print("")
                         if inp2.lower() == "y":
@@ -3800,9 +3421,7 @@ def inputloop(ia1: str = ""):
                         os.remove("var/alias")
                 else:
                     error(yn + " is not an input.")
-                    print(
-                        "If you want to remove the command now, get rid of the command in your /usr/bin directory."
-                    )
+                    print("If you want to remove the command now, get rid of the command in your /usr/bin directory.")
                     exit()
         elif inp.lower() == "d":
             print("")
@@ -3819,9 +3438,7 @@ def inputloop(ia1: str = ""):
                     "ScratchScript1 language. "
                 )
                 print("")
-                print(
-                    "2. decompiler.v2.ss1.sh - Most up-to-date version of the decompiler. ScratchScript1 language."
-                )
+                print("2. decompiler.v2.ss1.sh - Most up-to-date version of the decompiler. ScratchScript1 language.")
                 print("")
                 print(
                     "3. decompilerpy.v1.ss1.py - Decompiler V2 remade in Python for speed and more capabilities. "
@@ -3849,9 +3466,7 @@ def inputloop(ia1: str = ""):
                 corr = "1"
                 if os.path.isfile("var/ds"):
                     os.remove("var/ds")
-                decom = fd.askopenfilename(
-                    title="Choose a Custom Decompiler", initialdir="."
-                )
+                decom = fd.askopenfilename(title="Choose a Custom Decompiler", initialdir=".")
                 writetofile("var/ds", decom.replace("\\", "/"))
             elif inf == "3":
                 corr = "1"
