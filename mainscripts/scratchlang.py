@@ -186,12 +186,7 @@ def decomp():
             print("Order of items may change.")
             print("-------------------------------------------------------------------")
         print("")
-        print(
-            "Select the .sb3 you want to decompile. "
-            + RED
-            + "WARNING! THE NAME OF THE FILE CANNOT HAVE ANY SPACES OR IT WILL NOT UNZIP CORRECTLY!!!"
-            + NC
-        )
+        print("Select the .sb3 you want to decompile.")
         print("")
         if not args2:
             time.sleep(2)
@@ -266,7 +261,7 @@ def decomp():
             f.write("Please don't remove this file.")
         print("Extracting .sb3...\n")
         print(sb3file)
-        subprocess.run("unzip " + sb3file, shell=False)
+        subprocess.run("unzip '" + sb3file + "'", shell=False)
         createdir("Stage")
         os.chdir("Stage")
         createdir("assets")
@@ -1025,6 +1020,8 @@ def decomp():
                 i = jsonfile.find('"' + word + '":{"opcode":')
                 nq(18)
                 word = extdata()
+                if word == "_myself_":
+                    word = "myself"
                 writetofile(dcd + "/project.ss1", 'create a clone of ("' + word + '")')
                 print(RED + "Added block: " + NC + '"create a clone of ("' + word + '")"')
             elif a1 == "control_stop":
@@ -2657,12 +2654,12 @@ def decomp():
             elif a1 == "looks_changesizeby":
                 nq(5)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "change size by (\"" + word + '")')
+                writetofile(dcd + "/project.ss1", 'change size by ("' + word + '")')
                 print(RED + "Added block: " + NC + '"change size by ("' + word + '")')
             elif a1 == "looks_setsizeto":
                 nq(5)
                 word = extdata()
-                writetofile(dcd + "/project.ss1", "set size to (\"" + word + '") %')
+                writetofile(dcd + "/project.ss1", 'set size to ("' + word + '") %')
                 print(RED + "Added block: " + NC + '"set size to ("' + word + '") %')
             elif a1 == "looks_show":
                 writetofile(dcd + "/project.ss1", "show")
@@ -2675,6 +2672,155 @@ def decomp():
                 word = extdata()
                 writetofile(dcd + "/project.ss1", "go to [" + word + "] layer")
                 print(RED + "Added block: " + NC + '"go to [' + word + '] layer"')
+            elif a1 == "looks_goforwardbackwardlayers":
+                nq(5)
+                layers = extdata()
+                nq(5)
+                word = extdata()
+                writetofile(dcd + "/project.ss1", "go [" + word + '] ("' + layers + '") layers')
+                print(RED + "Added block: " + NC + '"go [' + word + '] ("' + layers + '") layers"')
+            elif a1 == "looks_size":
+                con += "(size)"
+                if dcon == 1:
+                    writetofile(dcd + "/project.ss1", con)
+                    print(RED + "Added block: " + NC + '"' + con + '"')
+            elif a1 == "looks_costumenumbername":
+                nq(7)
+                word = extdata()
+                con += "(costume [" + word + "])"
+                if dcon == 1:
+                    writetofile(dcd + "/project.ss1", con)
+                    print(RED + "Added block: " + NC + '"' + con + '"')
+            elif a1 == "event_whenthisspriteclicked":
+                writetofile(dcd + "/project.ss1", "when this sprite clicked")
+                print(RED + "Added block: " + NC + '"when this sprite clicked"')
+            elif a1 == "control_start_as_clone":
+                writetofile(dcd + "/project.ss1", "when I start as a clone")
+                print(RED + "Added block: " + NC + '"when I start as a clone"')
+            elif a1 == "control_delete_this_clone":
+                writetofile(dcd + "/project.ss1", "delete this clone")
+                print(RED + "Added block: " + NC + '"delete this clone"')
+            elif a1 == "sensing_touchingobject":
+                nq(5)
+                word = extdata()
+                i = jsonfile.find('"' + word + '":{"opcode":')
+                nq(18)
+                word = extdata()
+                if word == "_mouse_":
+                    word = "mouse pointer"
+                con += '<touching ("' + word + '") ?>'
+                if dcon == 1:
+                    writetofile(dcd + "/project.ss1", con)
+                    print(RED + "Added block: " + NC + '"' + con + '"')
+            elif a1 == "sensing_touchingcolor":
+                nq(5)
+                word = extdata()
+                con += '<touching color ("' + word + '") ?>'
+                if dcon == 1:
+                    writetofile(dcd + "/project.ss1", con)
+                    print(RED + "Added block: " + NC + '"' + con + '"')
+            elif a1 == "sensing_coloristouchingcolor":
+                nq(5)
+                color = extdata()
+                nq(3)
+                word = extdata()
+                con += '<color ("' + color + '") is touching ("' + word + '") ?>'
+                if dcon == 1:
+                    writetofile(dcd + "/project.ss1", con)
+                    print(RED + "Added block: " + NC + '"' + con + '"')
+            elif a1 == "sensing_distanceto":
+                nq(5)
+                word = extdata()
+                i = jsonfile.find('"' + word + '":{"opcode":')
+                nq(18)
+                word = extdata()
+                if word == "_mouse_":
+                    word = "mouse pointer"
+                con += '(distance to ("' + word + '"))'
+                if dcon == 1:
+                    writetofile(dcd + "/project.ss1", con)
+                    print(RED + "Added block: " + NC + '"' + con + '"')
+            elif a1 == "sensing_setdragmode":
+                nq(7)
+                word = extdata()
+                writetofile(dcd + "/project.ss1", "set drag mode [" + word + "]")
+                print(RED + "Added block: " + NC + '"set drag mode [' + word + "]")
+            elif a1 == "pen_stamp":
+                writetofile(dcd + "/project.ss1", "stamp")
+                print(RED + "Added block: " + NC + '"stamp"')
+            elif a1 == "pen_penUp":
+                writetofile(dcd + "/project.ss1", "pen up")
+                print(RED + "Added block: " + NC + '"pen up"')
+            elif a1 == "pen_penDown":
+                writetofile(dcd + "/project.ss1", "pen down")
+                print(RED + "Added block: " + NC + '"pen down"')
+            elif a1 == "pen_setPenColorToColor":
+                nq(5)
+                word = extdata()
+                if not word[0] == "#":
+                    writetofile(dcd + "/project.ss1", "set pen color to (" + word + ")")
+                    print(RED + "Added block: " + NC + '"set pen color to (' + word + ')"')
+                else:
+                    writetofile(dcd + "/project.ss1", 'set pen color to ("' + word + '")')
+                    print(RED + "Added block: " + NC + '"set pen color to ("' + word + '")"')
+            elif a1 == "pen_changePenColorParamBy":
+                nq(5)
+                param = extdata()
+                ip()
+                b = getchar("-[")
+                if b:
+                    nq(3)
+                    word = extdata()
+                    i = jsonfile.find('"' + param + '":{"opcode":')
+                    nq(18)
+                    param = extdata()
+                else:
+                    nq(7)
+                    word = extdata()
+                if isinstance(word, int):
+                    writetofile(dcd + "/project.ss1", "change pen (" + param + ') by ("' + word + '")')
+                    print(RED + "Added block: " + NC + '"change pen (' + param + ') by ("' + word + '")')
+                else:
+                    writetofile(dcd + "/project.ss1", "change pen (" + param + ") by (" + word + ")")
+                    print(RED + "Added block: " + NC + '"change pen (' + param + ") by (" + word + ")")
+            elif a1 == "pen_setPenColorParamTo":
+                nq(5)
+                param = extdata()
+                ip()
+                b = getchar("-[")
+                if b:
+                    nq(3)
+                    word = extdata()
+                    i = jsonfile.find('"' + param + '":{"opcode":')
+                    nq(18)
+                    param = extdata()
+                else:
+                    nq(7)
+                    word = extdata()
+                if isinstance(word, int):
+                    writetofile(dcd + "/project.ss1", "set pen (" + param + ') to ("' + word + '")')
+                    print(RED + "Added block: " + NC + '"set pen (' + param + ') by ("' + word + '")')
+                else:
+                    writetofile(dcd + "/project.ss1", "set pen (" + param + ") to (" + word + ")")
+                    print(RED + "Added block: " + NC + '"set pen (' + param + ") to (" + word + ")")
+            elif a1 == "pen_changePenSizeBy":
+                nq(5)
+                word = extdata()
+                if isinstance(word, int):
+                    writetofile(dcd + "/project.ss1", 'change pen size by ("' + word + '")')
+                    print(RED + "Added block: " + NC + '"change pen size by ("' + word + '")"')
+                else:
+                    writetofile(dcd + "/project.ss1", "change pen size by (" + word + ")")
+                    print(RED + "Added block: " + NC + '"change pen size by (' + word + ')"')
+            elif a1 == "pen_setPenSizeTo":
+                nq(5)
+                word = extdata()
+                if isinstance(word, int):
+                    writetofile(dcd + "/project.ss1", 'set pen size to ("' + word + '")')
+                    print(RED + "Added block: " + NC + '"set pen size to ("' + word + '")"')
+                else:
+                    writetofile(dcd + "/project.ss1", "set pen size to (" + word + ")")
+                    print(RED + "Added block: " + NC + '"set pen size to (' + word + ')"')
             else:
                 print(RED + 'Unknown block: "' + a1 + '" Skipping.' + NC)
                 writetofile(

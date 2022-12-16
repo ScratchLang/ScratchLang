@@ -59,6 +59,7 @@ RED = "\033[0;31m"
 NC = "\033[0m"
 P = "\033[0;35m"
 
+realCWD = os.getcwd().replace("\\", "/")
 if not os.path.dirname(sys.argv[0]) == "":  # Set currentWorkingDirectory to the directory of editor.py
     os.chdir(os.path.dirname(sys.argv[0]))
 currentWorkingDirectory = os.getcwd().replace("\\", "/")
@@ -95,7 +96,9 @@ folder = ""
 try:
     if sys.argv[1]:
         pass
-    folder = sys.argv[1].replace("\\", "/")  # If editor.py is run with an argument, then set 'folder' to it.
+    folder = (
+        realCWD + "/" + sys.argv[1].replace("\\", "/")
+    )  # If editor.py is run with an argument, then set 'folder' to it.
     # For example, the command ran is 'py editor.py ../projects/example', then it'll set 'folder' to
     # '../projects/example'
 except IndexError:  # This will run if there is no 2nd argument.
@@ -103,7 +106,11 @@ except IndexError:  # This will run if there is no 2nd argument.
     folder = fd.askdirectory(title="Choose a project.", initialdir="../projects")
     folder = folder.replace("\\", "/")
 previousPath = os.getcwd()
-os.chdir(folder)
+try:
+    os.chdir(folder)
+except FileNotFoundError:
+    error("Project directory does not exist (" + folder + ")")
+    exit()
 folder = os.getcwd().replace("\\", "/") + "/Stage"
 realFolderPath = os.path.dirname(folder)
 os.chdir(previousPath)
@@ -289,6 +296,20 @@ looks = [
     "set [m",
     "set [b",
     "set [g",
+    "say (",  # sprite blocks
+    "think (",
+    "switch costume to (",
+    "next costume",
+    "change size by (",
+    "set size to (",
+    "show",
+    "hide",
+    "go to [f",
+    "go to [b",
+    "go [f",
+    "go [b",
+    "(size)",
+    "(costume [",
 ]
 looksFindType = [
     "le",
@@ -308,6 +329,20 @@ looksFindType = [
     "le",
     "le",
     "le",
+    "le",
+    "le",
+    "le",
+    "le",
+    "eq",
+    "le",
+    "le",
+    "eq",
+    "eq",
+    "le",
+    "le",
+    "le",
+    "le",
+    "eq",
     "le",
 ]
 dataVar = [
@@ -361,8 +396,9 @@ events = [
     "when [",
     "when flag clicked",
     "when backdrop switches to [",
+    "when this sprite clicked",
 ]
-eventsFindType = ["le", "le", "le", "le", "eq", "le"]
+eventsFindType = ["le", "le", "le", "le", "eq", "le", "eq"]
 sounds = [
     "play sound (",
     "start sound (",
@@ -401,6 +437,8 @@ control = [
     "create a clone of (",
     "for [",
     "stop [",
+    "when I start as a clone",
+    "delete this clone",
 ]
 controlFindType = [
     "le",
@@ -414,6 +452,8 @@ controlFindType = [
     "le",
     "le",
     "le",
+    "eq",
+    "eq",
 ]
 sensing = [
     "ask (",
@@ -429,6 +469,11 @@ sensing = [
     "(current [",
     "(days since 2000)",
     "(username)",
+    "<touching (",  # sprite blocks
+    "<touching color (",
+    "<color (",
+    "(distance to (",
+    "set drag mode [",
 ]
 sensingFindType = [
     "le",
@@ -444,6 +489,11 @@ sensingFindType = [
     "le",
     "eq",
     "eq",
+    "le",
+    "le",
+    "le",
+    "le",
+    "le",
 ]
 operators = [
     ") + (",
@@ -515,15 +565,24 @@ motionFindType = [
     "le",
     "le",
     "le",
-    "le",
     "eq",
     "le",
     "eq",
     "eq",
     "eq",
 ]
-pen = ["erase all"]
-penFindType = ["eq"]
+pen = [
+    "erase all",
+    "stamp",
+    "pen down",
+    "pen up",
+    "set pen color to (",
+    "change pen (",
+    "set pen (",
+    "change pen size by (",
+    "set pen size to (",
+]
+penFindType = ["eq", "eq", "eq", "eq", "le", "le", "le", "le", "le"]
 startParenthesis = ["(", "[", "{", "<"]
 endParenthesis = [")", "]", "}", ">"]
 excludes = ["46;1", "38;5;8", "0", "37", "35", "7", "1"]
@@ -654,6 +713,7 @@ def determine_type(line):
         elif penFindType[q] == "in":
             if i in line.lstrip(" "):
                 syntaxType = "9"
+    q = -1
     for i in motion:
         q += 1
         if motionFindType[q] == "le":
@@ -1562,9 +1622,10 @@ def editor_print(line):
     print("\033[H\033[3J", end="")
     print(editorBuffer.rstrip("\n"), end="\n")
     taskBar = (
-        "\033[48;2;56;113;228m\033[35;1m | Save | New Sprite | Open File | "
-        + taskbarMessage
+        "\033[48;2;56;113;228m\033[35;1m | Save | New Sprite | Open File |"
         + ((terminalWidth - (35 + len(taskbarMessage))) * " ")
+        + taskbarMessage
+        + " "
         + "\033[0m"
     )
     print(taskBar, end="")
@@ -1609,7 +1670,6 @@ while True:
         editor()
     elif state == "tree":
         oldFolder = folder
-        sleep(2)
         folder = fd.askopenfilename(
             title="Choose a file.",
             initialdir="../ ",

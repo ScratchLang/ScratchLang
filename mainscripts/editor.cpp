@@ -4,9 +4,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <string>
-#include <windows.h>
-#include <shobjidl.h>
-
+#include <shlobj.h>
 using namespace std;
 
 bool inEditor = true;
@@ -16,28 +14,40 @@ string RED = "\033[0;31m";
 string NC = "\033[0m";
 string P = "\033[0;35m";
 
-int increment() {
+int increment()
+{
   cursor_blink = 1;
-  while (inEditor) {
+  while (inEditor)
+  {
     cursor_blink = 0;
-    sleep(static_cast<unsigned int>(0.5));
+    sleep(0.5);
     cursor_blink = 1;
-    sleep(static_cast<unsigned int>(0.5));
-    if (key == "save") {
+    sleep(0.5);
+    if (key == "save")
+    {
       exit(0);
     }
   }
   exit(0);
 }
 
-void eeee(const string& text) {
+void eeee(const string text)
+{
   cout << RED << "Error: " << text << NC << endl;
 }
 
-int main() {
+int main(int argc, char **argv)
+{
   string b;
-  cout << "\nSelect your project folder.\n";
+  cout << "\nType in your project directory, as I can't figure out how to make directory selection dialog.\n";
   sleep(2);
-  string fold;
+  string folder;
+  if (argc > 1)
+  {
+    folder = "";
+  }
+  string path;
+  getline(cin, path);
+  cout << path << endl;
   return 0;
 }

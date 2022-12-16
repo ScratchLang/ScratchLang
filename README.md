@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.6.9p**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.7p**
 
 Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 
@@ -191,8 +191,8 @@ Command Prompt and Powershell isn't recommened to run ScratchLang, but you can i
 Anyway, I don't have a quick and easy way to install the dependencies. All I know is this:
 
 - Install [Python](https://python.org)
-- Install git for windows (I don't have a link yet)
-- Get a windows binary of unzip and add it to the PATH environment variable.  
+- Install [git for windows](https://gitforwindows.org/)
+- Get a windows binary of [unzip](https://gnuwin32.sourceforge.net/packages/unzip.htm) and add it to the PATH environment variable.  
 
 Then, you need to enable ANSI escape codes (in order for things like color to work properly).
 
@@ -206,8 +206,6 @@ Then, you need to enable ANSI escape codes (in order for things like color to wo
 Now ANSI escape sequences should be enabled for Command Prompt/Powershell.
 
 In order for the 'click to place text cursor' thing to work... well... sort of properly, you're going have to right click the window, click properties, then uncheck the 'Quick Edit Mode' box.
-
-However, it doesn't really work for command prompt, as the lower the line you click on, the more off-target it is.
 
 #### pip requirements
 
@@ -288,6 +286,10 @@ var: foo=string - (Define a variable)
 - //!events
 - //!sound
 - //!control
+- //!sensing
+- //!operators
+- //!pen
+- //!motion
 
 ## Decompiler Python V1
 
@@ -300,8 +302,8 @@ Pen
 
 ### Added blocks
 
-78/80 Stage Blocks + Pen | 90.00% Done **Only Custom Blocks left!**  
-78/139 Every Block + Pen | 51.80% Done
+84/86 Stage Blocks + Pen | 97.67% Done **Only Custom Blocks left!**  
+132/134 Every Block + Pen | 98.51% Done **Only Custom Blocks left!**
 
 Write every block in the order they are defined.
 
@@ -323,9 +325,7 @@ None yet.
 
 ### Stable blocks
 
-Just decompile the "every-block-+-pen.sb3" which is in the resources folder.  
-You will get an unknown block error for blocks that the decompiler can't read yet.  
-Every other block is most likely a stable block
+Every block is added, except custom blocks.
 
 ### Limitations
 

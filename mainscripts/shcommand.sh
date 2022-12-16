@@ -4,11 +4,11 @@ if [ "$1" == "1" ]; then
     rm /usr/bin/scratchlang
   else
     if [ "$3" == "1" ]; then
-      echo >>/usr/bin/scratchlang "cd $2 && python scratchlang.py \$*"
+      echo >>/usr/bin/scratchlang "python ${2}/scratchlang.py \$*"
     elif [ "$3" == "2" ]; then
-      echo >>/usr/bin/scratchlang "cd $2 && python3 scratchlang.py \$*"
+      echo >>/usr/bin/scratchlang "python3 ${2}/scratchlang.py \$*"
     else
-      echo >>/usr/bin/scratchlang "cd $2 && py scratchlang.py \$*"
+      echo >>/usr/bin/scratchlang "py ${2}/scratchlang.py \$*"
     fi
   fi
 elif [ "$1" == 2 ]; then # This script is not needed anymore, but I don't want to remove it for some reason...
