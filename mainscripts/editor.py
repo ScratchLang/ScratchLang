@@ -54,7 +54,6 @@ inEditor = True  # Define the 'inEditor' variable. When this variable is true, t
 mclick, breaking = False, False
 key = ""  # Define the 'key' variable.
 cursorBlink, mx, my = 0, 0, 0
-taskButtons = "\033[48;2;56;113;228m\033[35;1m | Save | New Sprite | Open File |"
 # Color constants
 RED = "\033[0;31m"
 NC = "\033[0m"
@@ -188,9 +187,7 @@ fileOpenedLength = previousFileOpenedLength
 
 
 def mouseClicks(x, y, button, pressed):
-    global mclick, mx, my, editorCurrentLine, editorChar, cursorBlink
-    global breaking, editorLines, realLine, terminalHeight
-    global inEditor, offsetx, offsety
+    global mclick, mx, my, editorCurrentLine, editorChar, cursorBlink, breaking, editorLines, realLine, terminalHeight, inEditor, offsetx, offsety
     mclick = False
     mx, my, insideWindow, h, w = relative.termposition(20, 30, x, y)
     mx += offsetx
@@ -215,7 +212,7 @@ def mouseClicks(x, y, button, pressed):
                     keySimulate.press(Key.f2)
                     keySimulate.release(Key.f2)
                     exit()
-                elif editorChar + (4 + len(str(len(editorLines)))) < 35:
+                elif editorChar + (4 + len(str(len(editorLines)))) < 34:
                     keySimulate.press(Key.f1)
                     keySimulate.release(Key.f1)
                     exit()
@@ -226,36 +223,6 @@ def mouseClicks(x, y, button, pressed):
             editorChar = len(editorLines[editorCurrentLine - 1])
         cursorBlink = 1
         breaking = True
-
-
-def mouseMove(x, y):
-    global mclick, mx, my, editorCurrentLine, editorChar, cursorBlink
-    global breaking, editorLines, realLine, terminalHeight, inEditor, offsetx, offsety, taskButtons
-    mx, my, insideWindow, h, w = relative.termposition(20, 30, x, y)
-    mx += offsetx
-    my += offsety
-    ecl = editorCurrentLine
-    ec = editorChar
-    if insideWindow:
-        prevecl = ecl
-        ecl = my + realLine - 1
-        if ecl < realLine:
-            ecl = prevecl
-        ec = mx - (4 + len(str(len(editorLines))))
-        if ec < 1:
-            ec = 1
-        if ecl == realLine + (terminalHeight - 2):
-            if ec + (4 + len(str(len(editorLines)))) > 1:
-                if ec + (4 + len(str(len(editorLines)))) < 10:
-                    taskButtons = "\033[48;2;56;113;228m\033[35;1m |\033[0m Save | New Sprite | Open File |"
-                elif ec + (4 + len(str(len(editorLines)))) < 23:
-                    taskButtons = "\033[48;2;56;113;228m\033[35;1m | Save |\033[0m New Sprite | Open File |"
-                elif ec + (4 + len(str(len(editorLines)))) < 35:
-                    taskButtons = "\033[48;2;56;113;228m\033[35;1m | Save | New Sprite |\033[0m Open File |"
-                else:
-                    taskButtons = "\033[48;2;56;113;228m\033[35;1m | Save | New Sprite | Open File |"
-        else:
-            taskButtons = "\033[48;2;56;113;228m\033[35;1m | Save | New Sprite | Open File |"
 
 
 print("")
@@ -1296,25 +1263,15 @@ def inputloop():
     exit()
 
 
-def scrolling(x, y, dx, dy):
-    global keySimulate
-    if dy < 0:
-        keySimulate.press(Key.down)
-        keySimulate.release(Key.down)
-    else:
-        keySimulate.press(Key.up)
-        keySimulate.release(Key.up)
-
-
 def clickedThread():
-    with pynput.mouse.Listener(on_move=mouseMove, on_scroll=scrolling, on_click=mouseClicks) as ff:
+    with pynput.mouse.Listener(on_click=mouseClicks) as ff:
         ff.join()
     ff.stop()
     exit()
 
 
 def editor_print(line):
-    global bracketCount, taskbarMessage, taskButtons
+    global bracketCount, taskbarMessage, cwdType
     getLineCount = len(str(len(editorLines)))
     if showCwd:
         currentWorkingDirectoryString = (
@@ -1660,7 +1617,7 @@ def editor_print(line):
         editorBuffer += editorBufferLine
     print("\033[H\033[3J", end="")
     print(editorBuffer.rstrip("\n"), end="\n")
-    taskBar = taskButtons + ((terminalWidth - (35 + len(taskbarMessage))) * " ") + taskbarMessage + " " + "\033[0m"
+    taskBar = "\033[48;2;56;113;228m\033[35;1m | Save | New Sprite | Open File |" + ((terminalWidth - (42 + len(taskbarMessage))) * " ") + taskbarMessage + " " + "\033[0m"
     print(taskBar, end="")
 
 
