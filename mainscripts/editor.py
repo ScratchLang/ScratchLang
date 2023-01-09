@@ -5,6 +5,7 @@
 # TODO: Autocomplete?
 # I'm planning on adding this stuff because I basically want this to be an IDE for the ScratchScript language.
 
+import colorama
 import os
 import shutil
 import signal
@@ -23,6 +24,7 @@ from pynput.keyboard import Key
 
 import relative
 
+colorama.init(autoreset=True)
 hwnd = win32gui.GetForegroundWindow()
 win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)  # put window in full-screen
 keySimulate = kCon()
@@ -725,9 +727,9 @@ def determine_type(line):
         syntaxTypeId += 1
         if i in line.lstrip(" "):
             syntaxType = str(syntaxTypeId)
-    if "\\n" in line.lstrip(" "):
+    if "\\nscript" in line.lstrip(" "):
         syntaxType = "n"
-    if "\\p" in line.lstrip(" "):
+    if "\\prep" in line.lstrip(" "):
         syntaxType = "p"
 
 
@@ -1617,7 +1619,13 @@ def editor_print(line):
         editorBuffer += editorBufferLine
     print("\033[H\033[3J", end="")
     print(editorBuffer.rstrip("\n"), end="\n")
-    taskBar = "\033[48;2;56;113;228m\033[35;1m | Save | New Sprite | Open File |" + ((terminalWidth - (42 + len(taskbarMessage))) * " ") + taskbarMessage + " " + "\033[0m"
+    taskBar = (
+        "\033[48;2;56;113;228m\033[35;1m | Save | New Sprite | Open File |"
+        + ((terminalWidth - (42 + len(taskbarMessage))) * " ")
+        + taskbarMessage
+        + " "
+        + "\033[0m"
+    )
     print(taskBar, end="")
 
 

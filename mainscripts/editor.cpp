@@ -5,6 +5,9 @@
 #include <iostream>
 #include <string>
 #include <shlobj.h>
+#include <Commdlg.h>
+#include <winuser.h>
+#include <Windows.h>
 using namespace std;
 
 bool inEditor = true;

@@ -1,4 +1,4 @@
-# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.7p**
+# ![logo](https://user-images.githubusercontent.com/78574005/191553528-5a2a13a1-ac75-4fd5-a9e8-b01c01c4a2d2.png) **Version 0.71p**
 
 Logo by [MagicCrayon9342](https://scratch.mit.edu/users/MagicCrayon9342/)
 
@@ -12,7 +12,7 @@ Also, a devlog is in the releases. If the version is not in the releases, then i
 
 ## Latest big updates
 
-The editor is looking really good, and the decompiler can decompile every sprite (including the stage) and add all the assets.
+Started the compiler, can now compile variables, lists, and assets
 
 ## The bug list
 
@@ -51,7 +51,9 @@ Right now the default decompiler is set to the Python version. If you want to us
 Also, I renamed the file extension to .ss1 because I am planning on having multiple formats.  
 ss1 Will be its own language **Current**  
 ss2 Will be similar to c  
-ss3 Python or javascript? **These 2 won't be worked on anytime soon**
+ss3 Python or javascript?  
+
+**ss2 and ss1 won't be worked on anytime soon.**
 
 ## How to use
 
@@ -251,11 +253,11 @@ This is what people will do.
 
 ### 0K9090
 
-Program the decompiler in Python (and work on the editor!)
+Program everything
 
 ### wendiner
 
-I don't know what they're doing
+I don't know what they're doing, I think they quit
 
 ### redstone-scratch
 
@@ -273,7 +275,7 @@ ScratchLang's language is called ScratchScript.
 
 \nscript - (Tells the compiler that it's a new script. Or maybe we could get rid of this and just detect for hat blocks.)  
 **\prep - (Everything below this [until the next instance of \nscript] is used for compiling the .json)**  
-list: foo=item1, item2, item3, etc - (For an empty list, just add a comma after the equal sign.)  
+list: foo="item1", "item2", "item3", etc - (For an empty list, just add a comma after the equal sign.)  
 **broadcast: broadcastexample - (Define a broadcast. The brackets tell the program that it is not defining a variable or a list.)**  
 var: foo=string - (Define a variable)  
 **//!\<TYPE\> - (Use sha-bangs after a block to set the block type to the desired one if it's not right. For example, replace \<TYPE\> with 'looks' to make it a looks block. This also changes the syntax highlighting in the editor.)**
@@ -290,6 +292,13 @@ var: foo=string - (Define a variable)
 - //!operators
 - //!pen
 - //!motion
+
+## Compiler V1
+
+So far it can compile lists, variables, broadcasts, and add the assets.  
+Then it packs the assets into a file called 'project.sb3' which is in the 'exports' folder. There is also a folder named 'a' which is for debugging purposes, but it is the contents of the .sb3 before it gets archived.
+
+If you want to compile multiple projects, then you'll have to delete/move the 'a' folder and the 'project.sb3' to somewhere else, or else the script will give an error saying the directory/file already exists.
 
 ## Decompiler Python V1
 

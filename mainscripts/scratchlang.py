@@ -49,12 +49,14 @@ def getinput():  # Gets input from the user
 
 def writetofile(file, towrite):  # Write to a file. If it doesn't exist, then create it.
     if os.path.isfile(file):
-        f = open(file, "r")
+        f = open(file, encoding="latin-1")
         fcontents = f.read()
-        f = open(file, "w")
+        f = open(file, "w", encoding="latin-1")
         f.write(fcontents + "\n" + towrite)
     else:
-        f = open(file, "w")
+        f = open(file, "x")
+        f.close()
+        f = open(file, "w", encoding="latin-1")
         f.write(towrite)
         f.close()
 
@@ -156,7 +158,7 @@ def startpy(a1=""):  # Main menu.
         os.chdir("projects")
         if len(os.listdir()) == 0:
             os.chdir("..")
-            subprocess.run("rm -rf projects", shell=False)
+            shutil.rmtree("projects")
             os.chdir("mainscripts")
     else:
         os.chdir("mainscripts")
@@ -200,9 +202,11 @@ def decomp():
         else:
             ppath = os.getcwd()
             sb3file = sys.argv[2].replace("\\", "/")
-            if not os.path.isfile(realCWD + "/" + sb3file):
-                error("File (" + realCWD + "/" + sb3file + ") doesn't exist.")
+            os.chdir(realCWD)
+            if not os.path.isfile(sb3file):
+                error("File (" + sb3file + ") doesn't exist.")
                 exit()
+            os.chdir(ppath)
             h = len(sb3file)
             while True:
                 h -= 1
@@ -249,7 +253,7 @@ def decomp():
             print("Project " + name + " already exists. Replace? [Y/N]")
             anss = getinput()
             if anss.lower() == "y":
-                subprocess.run("rm -rf " + name, shell=False)
+                shutil.rmtree(name)
             else:
                 exit()
             print("")
@@ -257,16 +261,19 @@ def decomp():
         time.sleep(1)
         createdir(name)
         os.chdir(name)
+        baseDir = os.getcwd().replace("\\", "/")
         with open(".maindir", "w") as f:
             f.write("Please don't remove this file.")
         print("Extracting .sb3...\n")
         print(sb3file)
         subprocess.run("unzip '" + sb3file + "'", shell=False)
         createdir("Stage")
+        with open("assets_key.yaml", "x") as f:
+            f.close()
         os.chdir("Stage")
         createdir("assets")
         os.chdir("..")
-        file = open("project.json", "r")
+        file = open("project.json", encoding="latin-1")
         jsonfile = file.read()
         file.close()
         global i
@@ -2944,30 +2951,28 @@ def decomp():
                     b = False
                     b = getchar("-]")
                     if not b:
-                        if char == '"':
+                        while True:
                             b = False
-                            while True:
-                                b = False
-                                varname = ""
-                                while True:
-                                    ip()
-                                    b = getchar('-"')
-                                    if b:
-                                        break
-                                    varname += char
+                            b = getchar("-]")
+                            if b:
+                                break
+                            if char == '"':
+                                varname = extdata()
                                 ip()
                                 b = False
                                 b = getchar("-]")
                                 if not b:
-                                    writetofile("st", varname + ",")
+                                    writetofile("st", '"' + varname + '", ')
                                     ip()
                                 else:
-                                    writetofile("st", varname)
+                                    writetofile("st", '"' + varname + '"')
                                     break
-                        else:
-                            im()
-                            b = False
-                            while True:
+                                b = False
+                                b = getchar("- ")
+                                if b:
+                                    ip()
+                            else:
+                                im()
                                 b = False
                                 varname = ""
                                 while True:
@@ -2982,15 +2987,21 @@ def decomp():
                                 b = False
                                 b = getchar("-]")
                                 if not b:
-                                    writetofile("st", varname + ",")
+                                    writetofile("st", '"' + varname + '", ')
                                 else:
-                                    writetofile("st", varname)
+                                    writetofile("st", '"' + varname + '"')
                                     break
+                                ip()
+                                b = False
+                                b = getchar("- ")
+                                if b:
+                                    ip()
                         f = open("st", "r")
                         list = ""
-                        for k in f:
-                            list += f.readline().replace("\n", "")
+                        for k in f.readlines():
+                            list += k.replace("\n", "")
                         f.close()
+                        os.remove("st")
                         writetofile(
                             "Stage/project.ss1",
                             "list: " + listname + "=" + list,
@@ -3104,6 +3115,8 @@ def decomp():
                     break
             di = i
             print("\nAdding assets...")
+            f = open(baseDir + "/assets_key.yaml", "a")
+            f.write(("\n" if not dcd == "Stage" else "") + dcd + ":")
             while True:
                 word = extdata()
                 if word == "costumes":
@@ -3117,11 +3130,18 @@ def decomp():
                     break
                 nq()
                 asset_file = extdata()
+                f.write('\n  - "' + asset_file + '"')
                 try:
                     shutil.move("./" + asset_file, dcd + "/assets/" + asset_file)
                     print(asset_file + " >> " + dcd + "/assets/" + asset_file)
                 except FileNotFoundError:
                     pass
+                nq(2)
+                a1d = extdata()
+                nq()
+                a2d = extdata()
+                f.write("\n  - " + a1d.lstrip(":").rstrip(","))
+                f.write("\n  - " + a2d.lstrip(":").rstrip("},{").rstrip("}]"))
             if not word == "sounds":
                 while True:
                     word = extdata()
@@ -3136,11 +3156,13 @@ def decomp():
                     break
                 nq()
                 asset_file = extdata()
+                f.write('\n  - "' + asset_file + '"')
                 try:
                     shutil.move("./" + asset_file, dcd + "/assets/" + asset_file)
                     print(asset_file + " >> " + dcd + "/assets/" + asset_file)
                 except FileNotFoundError:
                     pass
+            f.close()
             print("\nFormatting code to make it easier to read (Please wait)...")
             print("")
             try:
@@ -3285,7 +3307,7 @@ def inputloop(ia1: str = ""):
             print("Project " + name + " already exists. Replace? [Y/N]")
             yessor = getinput()
             if yessor.lower() == "y":
-                subprocess.run("rm -rf projects/" + name, shell=False)
+                shutil.rmtree(name)
             elif yessor.lower() == "n":
                 exit()
             else:
@@ -3340,7 +3362,7 @@ def inputloop(ia1: str = ""):
         pgrd = input("Choose a project to get rid of, or input nothing to cancel.\n")
         if not pgrd == "":
             if os.path.isdir(pgrd):
-                subprocess.run("rm -rf " + pgrd)
+                shutil.rmtree(pgrd)
             else:
                 error("directory " + pgrd + " does not exist.")
         exit()
@@ -3533,8 +3555,8 @@ def inputloop(ia1: str = ""):
             writetofile("var/ds", "py")
             os.chdir("..")
             if os.path.isdir("projects"):
-                subprocess.run("rm -rf projects", shell=False)
-                subprocess.run("rm -rf exports")
+                shutil.rmtree("projects")
+                shutil.rmtree("exports")
                 os.mkdir("exports")
                 writetofile("exports/.temp", "")
                 os.chdir("mainscripts")
