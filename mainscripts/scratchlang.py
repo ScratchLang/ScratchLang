@@ -3166,13 +3166,13 @@ def decomp():
             print("\nFormatting code to make it easier to read (Please wait)...")
             print("")
             try:
-                f = open(dcd + "/project.ss1", "r")
+                f = open(dcd + "/project.ss1", "r", encoding="latin-1")
             except FileNotFoundError:
                 writetofile(
                     dcd + "/project.ss1",
                     "// There should be no empty lines.\nss1",
                 )
-                f = open(dcd + "/project.ss1", "r")
+                f = open(dcd + "/project.ss1", "r", encoding="latin-1")
             spaces = ""
             i = 0
             q = 0
