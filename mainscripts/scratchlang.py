@@ -528,8 +528,8 @@ def decomp():
                 writetofile(dcd + "/project.ss1", "when [" + word + "] key pressed")
                 print(RED + "Added block: " + NC + '"when [' + word + '] key pressed"')
             elif a1 == "event_whenstageclicked":
-                writetofile(dcd + "/project.ss1", "when flag clicked")
-                print(RED + "Added block: " + NC + '"when flag clicked"')
+                writetofile(dcd + "/project.ss1", "when stage clicked")
+                print(RED + "Added block: " + NC + '"when stage clicked"')
             elif a1 == "event_whenbackdropswitchesto":
                 nq(7)
                 word = extdata()
