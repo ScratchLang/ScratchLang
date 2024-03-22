@@ -2,7 +2,7 @@
 #Decompiler coded by
 #0K9090 (ThatCoder77471 on Scratch)
 #No comments will be added because this version is not being programmed anymore.
-#
+#And holy shit now that I'm looking at this code again I'm just realising how horribly unomptimizzed it is...
 #
 echo
 RED='\033[0;31m'

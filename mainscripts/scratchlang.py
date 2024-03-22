@@ -10,13 +10,9 @@ from tkinter import filedialog as fd
 
 import yaml
 
-commandP = False
-# Detect if using Command Prompt or Powershell
-try:
-    subprocess.run("bash -c 'echo'", shell=False)
-except FileNotFoundError:
-    commandP = True  # Doesn't work if the user has the MSYS2 bun added to their PATH.
-    print("ScratchLang is uncompatible with Command Prompt/Powershell. Sorry :(")
+if os.system("clear") == 1:
+    print("\033[2AUnfortunately, the Python version of this project is unavailable for Windows. Please use the C# port of ScratchLang instead.")
+    exit()
 
 # Set ANSI escape colors
 
@@ -127,7 +123,7 @@ def startpy(a1=""):  # Main menu.
             pass
     except IndexError:
         pass
-    subprocess.run("clear", shell=False)
+    os.system("clear")
     print(
         P
         + """\n      /$$$$$$                                 /$$               /$$       /$$                                    
